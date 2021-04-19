@@ -24,11 +24,18 @@ void Communicator::bindAndListen()
 	}
 }
 
-void Communicator::handleNewClient(SOCKET clientSocket)
+void Communicator::handleNewClient(SOCKET client_socket)
 {
-	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(clientSocket, nullptr));
+	LoginRequestHandler * client_handler = new LoginRequestHandler;
+	std::string server_message = STARTER_SERVER_MESSAGE;
+	char* message_buffer = new char [BUFFER_CAPACITY];
+	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, client_handler));
 	try
 	{
+		// sending starter message to client
+		send(client_socket, server_message.c_str(), server_message.size(), 0);
+		recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0);
+		std::cout << message_buffer << std::endl;
 		while (true)
 		{
 		}
@@ -36,14 +43,13 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 	}
 	catch (const std::exception& e)
 	{
-		closesocket(clientSocket); // closing the client socket
+		closesocket(client_socket); // closing the client socket
 	}
 
 }
 
 Communicator::Communicator()
 {
-	this->m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	this->m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	struct sockaddr_in sa = { 0 };
 
