@@ -60,11 +60,10 @@ Communicator::Communicator()
 		std::cout << "not working2\n";
 	std::cout << "Listening on port 4000 " << std::endl;
 	// creates the MT server
-	std::thread t(&Communicator::bindAndListen, this);
-	t.detach();
 }
 
 void Communicator::startHandleRequests()
 {
-	bindAndListen();
+	std::thread t(&Communicator::bindAndListen, this);
+	t.detach();
 }
