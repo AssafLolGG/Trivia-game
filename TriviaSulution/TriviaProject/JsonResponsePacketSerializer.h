@@ -3,6 +3,14 @@
 #include <vector>
 #include "..//../single_include///nlohmann/json.hpp"
 
+#define MAX_BITS_SIZE_OF_RESPONSE_CONTENT 32
+
+#define ERROR_CODE 1
+#define LOGIN_CODE 2
+#define SIGNUP_CODE 3
+
+#define BINARY_BASE 2
+
 using json = nlohmann::json;
 struct LoginResponse
 {
@@ -18,6 +26,9 @@ struct ErrorResponse
 {
 	std::string message;
 };
+
+void decToBinary(int numToConvert, unsigned char* buffer, int lengthOfBuffer);
+std::vector<unsigned char> GetCompleteMessage(unsigned char ResponseCode, std::string jsonResponse);
 
 class JsonResponsePacketSerializer
 {

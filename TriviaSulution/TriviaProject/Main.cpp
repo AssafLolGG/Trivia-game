@@ -10,10 +10,10 @@ int main()
 	std::string userInput = "";
 	while (userInput != "EXIT")
 	{
-		//SignupResponse err{ 1};
-		//auto v = JsonResponsePacketSerializer::serializeResponse(err);
-		//std::string SerializerString(v.begin(), v.end());
-		//std::cout << SerializerString << "\n";
+		SignupResponse err{ 1};
+		auto v = JsonResponsePacketSerializer::serializeResponse(err);
+		std::string SerializerString(v.begin(), v.end());
+		std::cout << SerializerString << "\n";
 		std::cin >> userInput;
 	}
 	std::cout << "Goodbye :>" << std::endl;
