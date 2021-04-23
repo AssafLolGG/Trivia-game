@@ -65,7 +65,6 @@ Communicator::Communicator()
 	// Start listening for incoming requests of clients
 	if (listen(this->m_serverSocket, SOMAXCONN) == SOCKET_ERROR)
 		std::cout << "not working2\n";
-	std::cout << "Listening on port 4000 " << std::endl;
 	// creates the MT server
 }
 
