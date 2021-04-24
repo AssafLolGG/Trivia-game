@@ -1,6 +1,9 @@
 #pragma once
 #include "LoginRequestHandler.h"
 #include <iostream>
+#include "..//../single_include///nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 struct LoginRequest
 {
@@ -15,9 +18,9 @@ struct SignupRequest
 	std::string email;
 };
 
-
-
 class JsonRequestPacketDeserializer : public LoginRequestHandler
 {
+	static LoginRequest deserializeLoginRequest(static std::vector<unsigned char>);
+	static SignupRequest deserializeSignupRequest(static std::vector<unsigned char>);
 };
 
