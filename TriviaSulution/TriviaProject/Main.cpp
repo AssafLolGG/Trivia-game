@@ -14,5 +14,6 @@ int main()
 		std::cin >> userInput;
 	}
 	std::cout << "Goodbye :>" << std::endl;
+
 	return 69;
 }

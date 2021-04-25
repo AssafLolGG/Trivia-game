@@ -1,9 +1,16 @@
 #pragma once
-#include "LoginRequestHandler.h"
 #include <iostream>
 #include "..//../single_include///nlohmann/json.hpp"
+#include "Converter.h"
 
 using json = nlohmann::json;
+
+#define MESSAGE_SIZE_PLACE 1
+#define MESSAGE_SIZE 4
+
+#define PASSWORD "password"
+#define USERNAME "username"
+#define EMAIL "email"
 
 struct LoginRequest
 {
@@ -18,9 +25,9 @@ struct SignupRequest
 	std::string email;
 };
 
-class JsonRequestPacketDeserializer : public LoginRequestHandler
+class JsonRequestPacketDeserializer
 {
-	static LoginRequest deserializeLoginRequest(static std::vector<unsigned char>);
-	static SignupRequest deserializeSignupRequest(static std::vector<unsigned char>);
+	static LoginRequest deserializeLoginRequest(std::vector<uint8_t> buffer);
+	static SignupRequest deserializeSignupRequest(std::vector<uint8_t> buffer);
 };
 

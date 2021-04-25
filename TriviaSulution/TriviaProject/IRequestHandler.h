@@ -6,12 +6,12 @@
 #include <string>
 #include "..//../single_include///nlohmann/json.hpp"
 #include "Converter.h"
+#include "JsonResponsePacketSerializer.h"
+
+#define STATUS_FAIL 0
+#define STATUS_OK 1
 
 using json = nlohmann::json;
-
-// can be changed later, to avoid conflict with simular defines.
-#define LOGIN 1
-#define SIGNUP 2
 
 class IRequestHandler;
 struct RequestInfo;
@@ -26,7 +26,7 @@ struct RequestInfo
 
 struct RequestResult
 {
-	std::string respone;
+	std::vector<uint8_t> respone;
 	IRequestHandler* newHandler;
 };
 

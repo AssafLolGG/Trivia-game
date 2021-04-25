@@ -20,7 +20,7 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<
 
     result = json::from_bson(content);
     login.username = result.value(USERNAME, "");
-    login.username = result.value(PASSWORD, "");
+    login.password = result.value(PASSWORD, "");
 
     return login;
 }
@@ -45,8 +45,8 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vecto
 
     result = json::from_bson(content);
     sign.username = result.value(USERNAME, "");
-    sign.username = result.value(PASSWORD, "");
-    sign.username = result.value(EMAIL, "");
+    sign.password = result.value(PASSWORD, "");
+    sign.email = result.value(EMAIL, "");
 
     return sign;
 }

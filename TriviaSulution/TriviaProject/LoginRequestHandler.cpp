@@ -7,10 +7,16 @@
 */
 bool LoginRequestHandler::isRequestRelevant(RequestInfo& info)
 {
-    return false;
+    return (info.id = LOGIN_CODE);
 }
 
 RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
 {
-    return RequestResult();
+    LoginResponse login;
+    login.status = STATUS_OK;
+    RequestResult result;
+    result.respone = JsonResponsePacketSerializer::serializeResponse(login);
+    result.newHandler = nullptr;
+
+    return result;
 }
