@@ -71,3 +71,15 @@ void vectorToCharArray(char* charArray, std::vector<uint8_t>& charVector)
 		charArray[i] = charVector[i];
 	}
 }
+
+int bitsToBytes(int startingIndex, uint8_t* bitsArray)
+{
+	int byte = bitsArray[startingIndex];
+	int bit = 0;
+	for (int j = 0; j < 7; j++)
+	{
+		bit = bitsArray[startingIndex + j + 1];
+		byte = stringNumbers(byte, bit);
+	}
+	return byte;
+}

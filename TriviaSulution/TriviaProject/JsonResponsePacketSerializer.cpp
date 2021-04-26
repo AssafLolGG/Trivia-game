@@ -47,18 +47,19 @@ output: the completed message.
 std::vector<unsigned char> GetCompleteMessage(unsigned char ResponseCode, std::string jsonResponse)
 {
 	int jsonSize = jsonResponse.size();
-	unsigned char jsonSizeInBinary[MAX_BITS_SIZE_OF_RESPONSE_CONTENT] = {};
-	std::vector<unsigned char> fullBinaryMessage = std::vector<unsigned char>();
+	uint8_t jsonSizeInBinary[MAX_BITS_SIZE_OF_RESPONSE_CONTENT] = {};
+	std::vector<uint8_t> fullBinaryMessage = std::vector<uint8_t>();
 
 	// gets the size of the response's json in binary
-	decToBinary(jsonSize, jsonSizeInBinary, MAX_BITS_SIZE_OF_RESPONSE_CONTENT);
+	decToBinary(jsonSize, jsonSizeInBinary, MAX_BITS_SIZE_OF_RESPONSE_CONTENT); // 0x32 0x8 0x8
 	// writes the response code 
 	fullBinaryMessage.push_back(ResponseCode);
 
 	// writes the size of the json in 4 bytes.
-	for (int i = 0; i < MAX_BITS_SIZE_OF_RESPONSE_CONTENT; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		fullBinaryMessage.push_back(jsonSizeInBinary[i]);
+		
+		fullBinaryMessage.push_back((uint8_t)binToDecimal(bitsToBytes(i*8, jsonSizeInBinary)));
 	}
 	
 	// writes the response's json

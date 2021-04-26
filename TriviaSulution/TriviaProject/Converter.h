@@ -16,3 +16,5 @@ int stringNumbers(int num1, int num2);
 void CharPointerToVector(char* charArray, int sizeOfCharArray, std::vector<uint8_t>& charVector);
 
 void vectorToCharArray(char* charArray, std::vector<uint8_t>& charVector);
+
+int bitsToBytes(int startingIndex, uint8_t* bitsArray);
