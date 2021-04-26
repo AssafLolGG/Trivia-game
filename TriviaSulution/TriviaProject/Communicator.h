@@ -3,8 +3,16 @@
 #include <WinSock2.h>
 #include "IRequestHandler.h"
 #include <map>
+#include "LoginRequestHandler.h"
 #include <thread>
+#include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
+
+#define	STARTER_SERVER_MESSAGE "hello"
+#define BUFFER_CAPACITY 1024
+
 using std::map;
+
 class Communicator
 {
 private:
