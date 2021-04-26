@@ -42,9 +42,11 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0);
 			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector);
 			// checks the wanted request from user, to send a proper response.
+			std::cout << buffer_vector[0] << std::endl;
 			if (buffer_vector[0] == LOGIN_CODE)
 			{
 				LoginRequest loginRequestFromClient = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer_vector);
+				std::cout << loginRequestFromClient.username;
 				LoginResponse theLoginResponse{ STATUS_OK }; // CHECKS if the login request from the client is valid.
 				// Serializing the response.
 				std::vector<uint8_t> serializedResponse = JsonResponsePacketSerializer::serializeResponse(theLoginResponse);

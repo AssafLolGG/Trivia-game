@@ -1,24 +1,27 @@
 #include "JsonRequestPacketDeserializer.h"
 
+json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
+{
+    int size = buffer[MESSAGE_SIZE_PLACE];
+
+    // getting message size
+    for (int i = MESSAGE_SIZE_PLACE + 1; i < MESSAGE_SIZE + MESSAGE_SIZE_PLACE; i++)
+    {
+        size = stringNumbers(size, buffer[i]);
+    }
+
+    std::vector<uint8_t> content = { buffer.begin() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE, buffer.begin() + size + MESSAGE_SIZE + MESSAGE_SIZE_PLACE }; // getting message content
+
+    return json::parse(content.begin(), content.end());
+}
+
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<uint8_t> buffer)
 {
     json result;
-    long long int four_bytes = buffer[MESSAGE_SIZE_PLACE];
-    int size = 0;
     LoginRequest login;
-    
-    // combining all four bytes together
-    for (int i = MESSAGE_SIZE_PLACE + 1; i < MESSAGE_SIZE + MESSAGE_SIZE_PLACE; i++)
-    {
-        four_bytes = stringNumbers(four_bytes, buffer[i]);
-    }
 
-    size = binToDecimal(four_bytes); // converting binary to decimal
-    size = size - buffer.size() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE; // resizing to the total size from the end of the vector
-    
-    std::vector<uint8_t> content = { buffer.begin() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE, buffer.end() - size };
+    result = JsonRequestPacketDeserializer::getJson(buffer);
 
-    result = json::from_bson(content);
     login.username = result.value(USERNAME, "");
     login.password = result.value(PASSWORD, "");
 
@@ -28,22 +31,10 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vector<uint8_t> buffer)
 {
     json result;
-    long long int four_bytes = buffer[MESSAGE_SIZE_PLACE];
-    int size = 0;
     SignupRequest sign;
 
-    // combining all four bytes together
-    for (int i = MESSAGE_SIZE_PLACE + 1; i < MESSAGE_SIZE + MESSAGE_SIZE_PLACE; i++)
-    {
-        four_bytes = stringNumbers(four_bytes, buffer[i]);
-    }
+    result = JsonRequestPacketDeserializer::getJson(buffer);
 
-    size = binToDecimal(four_bytes); // converting binary to decimal
-    size = size - buffer.size() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE; // resizing to the total size from the end of the vector
-
-    std::vector<uint8_t> content = { buffer.begin() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE, buffer.end() - size };
-
-    result = json::from_bson(content);
     sign.username = result.value(USERNAME, "");
     sign.password = result.value(PASSWORD, "");
     sign.email = result.value(EMAIL, "");
