@@ -1,27 +1,39 @@
 #pragma once
 
 #include <ctime>
-#include <bitset>
+#include <vector>
+#include <cstdint>
+#include <string>
+#include "..//../single_include///nlohmann/json.hpp"
+#include "Converter.h"
+#include "JsonResponsePacketSerializer.h"
 
-#define BITS_IN_BYTE 8
+#define STATUS_FAIL 0
+#define STATUS_OK 1
 
+using json = nlohmann::json;
 
-//	taken from here:
-//		https://stackoverflow.com/questions/20024690/is-there-byte-data-type-in-c
-typedef std::bitset<BITS_IN_BYTE> byte;
+class IRequestHandler;
+struct RequestInfo;
+struct RequestResult;
 
 struct RequestInfo
 {
 	int id;
 	std::time_t recivalTime;
-	std::vector<byte> buffer;
+	std::vector<uint8_t> buffer;
 };
 
+struct RequestResult
+{
+	std::vector<uint8_t> respone;
+	IRequestHandler* newHandler;
+};
 
 class IRequestHandler
 {
 public:
-	virtual bool isRequestRelevent(RequestInfo) = 0;
-	virtual RequestResult handleRequest(RequestInfo) = 0;
+	virtual bool isRequestRelevant(RequestInfo& info) = 0;
+	virtual RequestResult handleRequest(RequestInfo& info) = 0;
 };
 

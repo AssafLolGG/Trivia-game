@@ -2,6 +2,7 @@
 #include "WSAInitializer.h"
 #include "Server.h"
 #include "JsonResponsePacketSerializer.h"
+
 int main()
 {
 	WSAInitializer wsa;
@@ -13,5 +14,6 @@ int main()
 		std::cin >> userInput;
 	}
 	std::cout << "Goodbye :>" << std::endl;
+
 	return 69;
 }
