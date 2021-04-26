@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <string>
+#include <vector>
 
 #define BINARY_BASE 2
 #define DECIMAL_BASE 10
@@ -11,3 +12,5 @@ void decToBinary(int numToConvert, unsigned char* buffer, int lengthOfBuffer); /
 int binToDecimal(long long n);
 
 int stringNumbers(int num1, int num2);
+
+void CharPointerToVector(char* charArray, int sizeOfCharArray, std::vector<uint8_t>& charVector);

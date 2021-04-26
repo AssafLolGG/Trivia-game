@@ -44,3 +44,16 @@ int stringNumbers(int num1, int num2)
 
     return std::stoi(combined_numbers);
 }
+
+/*
+function that converts char pointer to vector of unsinged char.
+input: char array, its size and the vector to store the char array.
+output: None.
+*/
+void CharPointerToVector(char* charArray, int sizeOfCharArray, std::vector<uint8_t>& charVector)
+{
+	for (int i = 0; i < sizeOfCharArray; i++)
+	{
+		charVector.push_back(charArray[i]);
+	}
+}

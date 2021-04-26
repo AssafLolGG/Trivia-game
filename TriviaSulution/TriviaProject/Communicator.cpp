@@ -28,7 +28,8 @@ void Communicator::handleNewClient(SOCKET client_socket)
 {
 	LoginRequestHandler * client_handler = new LoginRequestHandler;
 	std::string server_message = STARTER_SERVER_MESSAGE;
-	char* message_buffer = new char [BUFFER_CAPACITY];
+	char* message_buffer = new char[BUFFER_CAPACITY];
+	std::vector<uint8_t> buffer_vector;
 	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, client_handler));
 	try
 	{
@@ -38,6 +39,20 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		std::cout << message_buffer << std::endl;
 		while (true)
 		{
+			recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0);
+			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector);
+			// checks the wanted request from user, to send a proper response.
+			if (buffer_vector[0] == LOGIN_CODE)
+			{
+				LoginRequest loginRequestFromClient = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer_vector);
+
+			}
+			else if (buffer_vector[0] == SIGNUP_CODE)
+			{
+
+
+			}
+
 		}
 		
 	}
