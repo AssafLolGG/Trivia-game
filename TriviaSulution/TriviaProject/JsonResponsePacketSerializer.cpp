@@ -40,23 +40,6 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Signu
 }
 
 /*
-function that converts the base of a num from decimal to binary.
-input: the num to be converted to binary, the buffer which the num in binary base will be stored in,
-and the length of the buffer.
-output: None.
-*/
-void decToBinary(int numToConvert, unsigned char* buffer, int lengthOfBuffer)
-{
-	int i = 0;
-	while (numToConvert > 0 && i < lengthOfBuffer)
-	{
-		buffer[lengthOfBuffer - i - 1] = numToConvert % BINARY_BASE;
-		numToConvert /= BINARY_BASE;
-		i++;
-	}
-}
-
-/*
 function that adds into one byte array the response code, the size of the response , the responce json itself.
 input: the response code, and the json of the response.
 output: the completed message.

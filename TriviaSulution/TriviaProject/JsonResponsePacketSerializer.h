@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "..//../single_include///nlohmann/json.hpp"
+#include "Converter.h"
 
 #define MAX_BITS_SIZE_OF_RESPONSE_CONTENT 32
 
@@ -27,7 +28,6 @@ struct ErrorResponse
 	std::string message;
 };
 
-void decToBinary(int numToConvert, unsigned char* buffer, int lengthOfBuffer);
 std::vector<unsigned char> GetCompleteMessage(unsigned char ResponseCode, std::string jsonResponse);
 
 class JsonResponsePacketSerializer
