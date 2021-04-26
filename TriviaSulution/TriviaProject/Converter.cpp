@@ -57,3 +57,17 @@ void CharPointerToVector(char* charArray, int sizeOfCharArray, std::vector<uint8
 		charVector.push_back(charArray[i]);
 	}
 }
+
+/*
+function that converts vector to a char array.
+input: char array to store the vector content, its size and a vector of unsinged char.
+output: None.
+*/
+void vectorToCharArray(char* charArray, std::vector<uint8_t>& charVector)
+{
+	int lengthOfVector = charVector.size();
+	for (int i = 0; i < lengthOfVector; i++)
+	{
+		charArray[i] = charVector[i];
+	}
+}

@@ -45,12 +45,24 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			if (buffer_vector[0] == LOGIN_CODE)
 			{
 				LoginRequest loginRequestFromClient = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer_vector);
-
+				LoginResponse theLoginResponse{ STATUS_OK }; // CHECKS if the login request from the client is valid.
+				// Serializing the response.
+				std::vector<uint8_t> serializedResponse = JsonResponsePacketSerializer::serializeResponse(theLoginResponse);
+				char serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
+				vectorToCharArray(serializedResponseInCharArray, serializedResponse);
+				// sends the serialized response from the server to the client, after analyizing his response.
+				send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
 			}
 			else if (buffer_vector[0] == SIGNUP_CODE)
 			{
-
-
+				SignupRequest loginRequestFromClient = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer_vector);
+				SignupResponse theLoginResponse{ STATUS_OK }; // CHECKS if the login request from the client is valid.
+				// Serializing the response.
+				std::vector<uint8_t> serializedResponse = JsonResponsePacketSerializer::serializeResponse(theLoginResponse);
+				char serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
+				vectorToCharArray(serializedResponseInCharArray, serializedResponse);
+				// sends the serialized response from the server to the client, after analyizing his response.
+				send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
 			}
 
 		}
