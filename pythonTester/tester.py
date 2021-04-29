@@ -49,7 +49,7 @@ def main():
         print("connection broke")
         exit(1)
     client_socket.send(message.encode())
-    print(client_socket.recv(1024))
+    print(f"message received: {client_socket.recv(1024)}")
 
     while(True):
         pass

@@ -23,7 +23,7 @@ int SqliteDataBase::callbackPasswords(void* data, int argc, char** argv, char** 
 	{
 		if (std::string(azColName[i]) == "UserName")
 		{
-			(std::string)(argv[i]) == "" ? SqliteDataBase::isUserExisting = false : SqliteDataBase::isPasswordMatching = true;
+			(std::string)(argv[i]) == "" ? SqliteDataBase::isUserExisting = false : SqliteDataBase::isPasswordMatching = true; // checks to see if there any user that matches the password
 		}
 	}
 	return 0;
@@ -39,20 +39,29 @@ SqliteDataBase::~SqliteDataBase()
 {
 }
 
+/* checks if user exist in database
+   input: string / username
+   output: bool / if users exists in database */
 bool SqliteDataBase::doesUserExist(std::string username)
 {
 	std::string sql_statement = "SELECT * FROM users WHERE UserName = '" + username + "';";
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackUser, nullptr, nullptr);
 	return SqliteDataBase::isUserExisting;
-}\
+}
 
+/* checks if password matches the password of the username in database
+   input: string / username, string / password
+   output: if the matches the username */
 bool SqliteDataBase::doesPasswordMatch(std::string username, std::string password)
 {
 	std::string sql_statement = "SELECT * FROM users WHERE UserName = '" + username + "' and Password = '" + password + "';";
-	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackPasswords, nullptr, nullptr);
+	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackPasswords, nullptr, nullptr); // callback checks 
 	return SqliteDataBase::isPasswordMatching;
 }
 
+/* adding new user to dataBase
+   input: string / username, string / password, string / email
+   output: None */
 void SqliteDataBase::addNewUser(std::string username, std::string password, std::string mail)
 {
 	std::string sql_statement = "INSERT INTO users(UserName, Password, mail) VALUES('" + username + "', '" + password + "', '" + mail + "');";
