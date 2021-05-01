@@ -17,3 +17,11 @@ public:
 	RequestResult handleRequest(RequestInfo& info);
 };
 
+class RequestHandlerFactory
+{
+private:
+public:
+
+};
+
+
