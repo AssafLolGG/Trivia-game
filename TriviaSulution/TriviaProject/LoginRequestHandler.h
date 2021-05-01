@@ -2,7 +2,6 @@
 
 #include "IRequestHandler.h"
 #include "LoginManager.h"
-#include "RequestHandlerFactory.h"
 #include "MenuRequestHandler.h"
 class LoginRequestHandler : public IRequestHandler 
 {
@@ -20,8 +19,11 @@ public:
 class RequestHandlerFactory
 {
 private:
+	LoginManager m_loginManager;
+	IDatabase* m_database;
 public:
-
+	LoginRequestHandler* createLoginRequestHandler();
+	LoginManager& getLoginManager();
 };
 
 

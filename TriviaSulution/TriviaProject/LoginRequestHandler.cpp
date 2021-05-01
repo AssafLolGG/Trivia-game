@@ -20,7 +20,7 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     }
     else
     {
-        result.newHandler = new LoginRequestHandler(this->m_handlerFactory);
+        result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
     }
     return result;
 }
@@ -42,7 +42,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
     // checks if the the user managed to signup succeessfully.
     if (signupResponse.status == 1)
     {
-        result.newHandler = new LoginRequestHandler(this->m_handlerFactory);
+        result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
     }
     else
     {
@@ -52,7 +52,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
 }
 
 
-LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory) : m_handlerFactory(handlerFactory)
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory) : m_handlerFactory(handlerFactory), m_loginManager(handlerFactory.getLoginManager())
 {
 }
 
@@ -76,4 +76,14 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
     result.newHandler = nullptr;
 
     return result;
+}
+
+LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
+{
+    return new LoginRequestHandler(*this);
+}
+
+LoginManager& RequestHandlerFactory::getLoginManager()
+{
+    return this->m_loginManager;
 }
