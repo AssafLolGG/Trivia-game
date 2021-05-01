@@ -52,8 +52,9 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
 }
 
 
-LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory) : m_handlerFactory(handlerFactory), m_loginManager(handlerFactory.getLoginManager())
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager) : m_handlerFactory(handlerFactory), m_loginManager(loginManager)
 {
+
 }
 
 
@@ -69,18 +70,26 @@ bool LoginRequestHandler::isRequestRelevant(RequestInfo& info)
 
 RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
 {
-    LoginResponse login;
-    login.status = STATUS_OK;
     RequestResult result;
-    result.respone = JsonResponsePacketSerializer::serializeResponse(login);
-    result.newHandler = nullptr;
-
+    if (this->isRequestRelevant(info))
+    {
+        result = this->login(info);
+    }
+    else
+    {
+        result = this->signup(info); 
+    }
     return result;
+}
+
+RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_loginManager(LoginManager(db))
+{
+    this->m_database = db;
 }
 
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
-    return new LoginRequestHandler(*this);
+    return new LoginRequestHandler(*this, this->m_loginManager);
 }
 
 LoginManager& RequestHandlerFactory::getLoginManager()

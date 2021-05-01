@@ -3,6 +3,9 @@
 #include "IRequestHandler.h"
 #include "LoginManager.h"
 #include "MenuRequestHandler.h"
+
+class RequestHandlerFactory;
+
 class LoginRequestHandler : public IRequestHandler 
 {
 private:
@@ -11,9 +14,9 @@ private:
 	RequestResult login(RequestInfo& info);
 	RequestResult signup(RequestInfo& info);
 public:
-	LoginRequestHandler(RequestHandlerFactory& handlerFactory);
-	bool isRequestRelevant(RequestInfo& info);
-	RequestResult handleRequest(RequestInfo& info);
+	LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager);
+	bool isRequestRelevant(RequestInfo& info) override;
+	RequestResult handleRequest(RequestInfo& info) override;
 };
 
 class RequestHandlerFactory
@@ -22,6 +25,7 @@ private:
 	LoginManager m_loginManager;
 	IDatabase* m_database;
 public:
+	RequestHandlerFactory(IDatabase* db);
 	LoginRequestHandler* createLoginRequestHandler();
 	LoginManager& getLoginManager();
 };
