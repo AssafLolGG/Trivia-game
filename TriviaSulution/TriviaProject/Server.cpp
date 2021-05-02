@@ -4,6 +4,11 @@ Server::Server() : m_database(new SqliteDataBase()), m_handlerFactory(RequestHan
 {
 }
 
+/*
+function that the server.
+input: None.
+output: Nani.
+*/
 void Server::run()
 {
 	this->m_communicator.startHandleRequests();

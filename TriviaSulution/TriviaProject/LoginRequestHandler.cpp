@@ -51,7 +51,11 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
     return result;
 }
 
-
+/*
+constractor function for LoginRequestHandler.
+input: the handlerFactory, login manager.
+output: An object of LoginRequestHandler.
+*/
 LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager) : m_handlerFactory(handlerFactory), m_loginManager(loginManager)
 {
 
@@ -68,9 +72,15 @@ bool LoginRequestHandler::isRequestRelevant(RequestInfo& info)
     return (info.id = LOGIN_CODE);
 }
 
+/*
+function that handles request from a user.
+input: the client's request information.
+output: the response to the request.
+*/
 RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
 {
     RequestResult result;
+	// checks if the request is relevant.
     if (this->isRequestRelevant(info))
     {
         result = this->login(info);
@@ -82,16 +92,32 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
     return result;
 }
 
+/*
+constractor function that gets the database of the system 
+and initaliize his attribiuts.
+input: a database.
+output: an object of RequestHandlerFactory.
+*/
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_loginManager(LoginManager(db))
 {
     this->m_database = db;
 }
 
+/*
+function that creates loginRequestHandler.
+input: None.
+output: a LoginRequestHandler.
+*/ 
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
     return new LoginRequestHandler(*this, this->m_loginManager);
 }
 
+/*
+function returns the login manager of the request handler factory.
+input: None.
+output: the login Manager of the RequestHandlerFactory.
+*/
 LoginManager& RequestHandlerFactory::getLoginManager()
 {
     return this->m_loginManager;

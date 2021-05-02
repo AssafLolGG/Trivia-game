@@ -17,5 +17,5 @@ int main()
 	}
 	std::cout << "Goodbye :>" << std::endl;
 
-	return 69;
+	return 0;
 }

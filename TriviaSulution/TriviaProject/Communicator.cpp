@@ -80,7 +80,7 @@ Communicator::Communicator(RequestHandlerFactory& handlerFactory): m_handlerFact
 	this->m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	struct sockaddr_in sa = { 0 };
 
-	sa.sin_port = htons(6969); // port that server will listen for
+	sa.sin_port = htons(PORT_NUM); // port that server will listen for
 	sa.sin_family = AF_INET;   // must be AF_INET
 	sa.sin_addr.s_addr = INADDR_ANY;    // when there are few ip's for the machine. We will use always "INADDR_ANY"
 
