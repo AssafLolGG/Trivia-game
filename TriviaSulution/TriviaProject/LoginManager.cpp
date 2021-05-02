@@ -1,4 +1,5 @@
 #include "LoginManager.h"
+#include "LoginManager.h"
 
 /*constructor function that initialize the value to an empty string
   input: none 
@@ -27,6 +28,10 @@ std::string LoggedUser::getUserName() const
 /*getting username
   input: string username, string password, string email
   output: none */
+LoginManager::LoginManager(IDatabase* db)
+{
+    this->_db_access = db;
+}
 void LoginManager::signup(std::string username, std::string password, std::string email)
 {
     this->_db_access->addNewUser(username, password, email);

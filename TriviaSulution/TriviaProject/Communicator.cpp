@@ -26,11 +26,11 @@ void Communicator::bindAndListen()
 
 void Communicator::handleNewClient(SOCKET client_socket)
 {
-	LoginRequestHandler * client_handler = new LoginRequestHandler;
 	std::string server_message = STARTER_SERVER_MESSAGE;
 	char* message_buffer = new char[BUFFER_CAPACITY];
 	std::vector<uint8_t> buffer_vector;
-	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, client_handler));
+	IRequestHandler* requestHandler = this->m_handlerFactory.createLoginRequestHandler();
+	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, requestHandler));
 	try
 	{
 		// sending starter message to client
@@ -43,30 +43,28 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector);
 			// checks the wanted request from user, to send a proper response.
 			std::cout << buffer_vector[0] << std::endl;
-			if (buffer_vector[0] == LOGIN_CODE)
-			{
-				LoginRequest loginRequestFromClient = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer_vector);
-				std::cout << loginRequestFromClient.username;
-				LoginResponse theLoginResponse{ STATUS_OK }; // CHECKS if the login request from the client is valid.
-				// Serializing the response.
-				std::vector<uint8_t> serializedResponse = JsonResponsePacketSerializer::serializeResponse(theLoginResponse);
-				char serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
-				vectorToCharArray(serializedResponseInCharArray, serializedResponse);
-				// sends the serialized response from the server to the client, after analyizing his response.
-				send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
-			}
-			else if (buffer_vector[0] == SIGNUP_CODE)
-			{
-				SignupRequest loginRequestFromClient = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer_vector);
-				SignupResponse theLoginResponse{ STATUS_OK }; // CHECKS if the login request from the client is valid.
-				// Serializing the response.
-				std::vector<uint8_t> serializedResponse = JsonResponsePacketSerializer::serializeResponse(theLoginResponse);
-				char serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
-				vectorToCharArray(serializedResponseInCharArray, serializedResponse);
-				// sends the serialized response from the server to the client, after analyizing his response.
-				send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
-			}
+			RequestInfo request;
+			RequestResult result = requestHandler->handleRequest(request); // CHECKS if the login or signup request from the client is valid.
+			request.buffer = buffer_vector;
+			request.id = buffer_vector[0];
+			auto nowTime = std::chrono::system_clock::now();
+			std::time_t nowTime_t = std::chrono::system_clock::to_time_t(nowTime);
+			request.recivalTime = nowTime_t;
 
+			// Serializing the response.
+			std::vector<uint8_t> serializedResponse = result.respone;
+			requestHandler = result.newHandler;
+			for (auto it = this->m_clients.begin(); it != this->m_clients.end(); it++)
+			{
+				if (it->first == client_socket)
+				{
+					it->second = result.newHandler;
+				}
+			}
+			char serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
+			vectorToCharArray(serializedResponseInCharArray, serializedResponse);
+			// sends the serialized response from the server to the client, after analyizing his response.
+			send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
 		}
 		
 	}
@@ -77,12 +75,12 @@ void Communicator::handleNewClient(SOCKET client_socket)
 
 }
 
-Communicator::Communicator()
+Communicator::Communicator(RequestHandlerFactory& handlerFactory): m_handlerFactory(handlerFactory)
 {
 	this->m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	struct sockaddr_in sa = { 0 };
 
-	sa.sin_port = htons(6969); // port that server will listen for
+	sa.sin_port = htons(PORT_NUM); // port that server will listen for
 	sa.sin_family = AF_INET;   // must be AF_INET
 	sa.sin_addr.s_addr = INADDR_ANY;    // when there are few ip's for the machine. We will use always "INADDR_ANY"
 

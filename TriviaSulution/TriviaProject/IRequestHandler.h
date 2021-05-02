@@ -7,7 +7,7 @@
 #include "..//../single_include///nlohmann/json.hpp"
 #include "Converter.h"
 #include "JsonResponsePacketSerializer.h"
-
+#include "JsonRequestPacketDeserializer.h"
 #define STATUS_FAIL 0
 #define STATUS_OK 1
 
@@ -16,6 +16,8 @@ using json = nlohmann::json;
 class IRequestHandler;
 struct RequestInfo;
 struct RequestResult;
+struct LoginRequest;
+struct signupRequest;
 
 struct RequestInfo
 {
