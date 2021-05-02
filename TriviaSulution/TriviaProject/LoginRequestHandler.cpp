@@ -61,7 +61,6 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, 
 
 }
 
-
 /*
     checks to see if the message code belongs to:
     "login" or "signup"
@@ -69,7 +68,7 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, 
 */
 bool LoginRequestHandler::isRequestRelevant(RequestInfo& info)
 {
-    return (info.id = LOGIN_CODE);
+    return (info.id == LOGIN_CODE);
 }
 
 /*
@@ -87,7 +86,7 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
     }
     else
     {
-        result = this->signup(info); 
+        result = this->signup(info);
     }
     return result;
 }

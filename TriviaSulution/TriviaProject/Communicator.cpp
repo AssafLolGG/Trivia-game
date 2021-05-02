@@ -44,13 +44,13 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			// checks the wanted request from user, to send a proper response.
 			std::cout << buffer_vector[0] << std::endl;
 			RequestInfo request;
-			RequestResult result = requestHandler->handleRequest(request); // CHECKS if the login or signup request from the client is valid.
 			request.buffer = buffer_vector;
 			request.id = buffer_vector[0];
 			auto nowTime = std::chrono::system_clock::now();
 			std::time_t nowTime_t = std::chrono::system_clock::to_time_t(nowTime);
 			request.recivalTime = nowTime_t;
-
+			
+			RequestResult result = requestHandler->handleRequest(request); // CHECKS if the login or signup request from the client is valid.
 			// Serializing the response.
 			std::vector<uint8_t> serializedResponse = result.respone;
 			requestHandler = result.newHandler;
