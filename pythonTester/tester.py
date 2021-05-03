@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 SERVER_PORT = 9999
 
@@ -23,18 +24,22 @@ def makeRequest(auto=0):
     message = ""
     message_code = ""
     if auto == 0:
-        print("1 - logIn\n2 - signUp")
-        if input() == "1":
+        print("1 - logIn\n2 - signUp\n3 - exit")
+        choice = input()
+        if choice == "1":
             message_code = "\2"
             message = logIn(getString("userName"), getString("password"))
-        else:
+        elif choice == "2":
             message_code = "\3"
             message = signUp(getString("userName"), getString("password"), getString("email"))
+        else:
+            print("exiting the program")
+            exit(0)
     else:
         if auto == 1:
             message = logIn("userName", "Password")
             message_code = "\2"
-        else:
+        elif auto == 2:
             message = signUp("userName", "Password", "email")
             message_code = "\3"
 
@@ -54,14 +59,14 @@ def connect():
 
 
 def connectAndMessage():
+    client_message = "hello"
     client_socket = connect()
     try:
-        server_message = client_socket.recv(1024)  # getting initial message from server
-        client_socket.send(server_message)  # sending server message back to the server
-        client_message = makeRequest()  # make client message
-        client_socket.send(client_message.encode())  # send message to server
-        server_message = client_socket.recv(1024)  # receive response from server
-        print(server_message)
+        while True:
+            client_socket.send(client_message.encode())  # send message to server
+            server_message = client_socket.recv(1024)  # receive response from server
+            print(server_message.decode())
+            client_message = makeRequest()  # make client message
     except Exception:
         print(f"connection broke")
 

@@ -36,10 +36,12 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		// sending starter message to client
 		send(client_socket, server_message.c_str(), server_message.size(), 0);
 		recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0);
-		std::cout << message_buffer << std::endl;
 		while (true)
 		{
-			recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0);
+			if (recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0) == SOCKET_ERROR)
+			{
+				throw(std::exception());
+			}
 			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector);
 			// checks the wanted request from user, to send a proper response.
 			std::cout << buffer_vector[0] << std::endl;
@@ -68,8 +70,18 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		}
 		
 	}
-	catch (const std::exception& e)
+	catch (...)
 	{
+		std::cout << "connection stopped" << std::endl;
+
+		for (auto it = this->m_clients.begin(); it != this->m_clients.end(); it++)
+		{
+			if (it->first == client_socket)
+			{
+				this->m_clients.erase(it);
+			}
+		}
+
 		closesocket(client_socket); // closing the client socket
 	}
 
