@@ -1,10 +1,6 @@
 import socket
-import threading
-import time
 
 SERVER_PORT = 9999
-
-mutex = threading.Lock()
 
 
 def getString(string_name):
@@ -72,6 +68,8 @@ def connectAndMessage():
 
 
 def main():
+    print(makeRequest())
+    print(makeRequest())
     connectAndMessage()
 
 

@@ -56,7 +56,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			// Serializing the response.
 			std::vector<uint8_t> serializedResponse = result.respone;
 			requestHandler = result.newHandler;
-			for (auto it = this->m_clients.begin(); it != this->m_clients.end(); it++)
+			for (auto it = this->m_clients.begin(); it != this->m_clients.end(); ++it)
 			{
 				if (it->first == client_socket)
 				{
@@ -74,17 +74,17 @@ void Communicator::handleNewClient(SOCKET client_socket)
 	{
 		std::cout << "connection stopped" << std::endl;
 
-		for (auto it = this->m_clients.begin(); it != this->m_clients.end(); it++)
+		for (auto it = this->m_clients.begin(); it != this->m_clients.end(); ++it) // python tester.py
 		{
 			if (it->first == client_socket)
 			{
 				this->m_clients.erase(it);
+				closesocket(client_socket); // closing the client socket
+
+				return;
 			}
 		}
-
-		closesocket(client_socket); // closing the client socket
 	}
-
 }
 
 Communicator::Communicator(RequestHandlerFactory& handlerFactory): m_handlerFactory(handlerFactory)
