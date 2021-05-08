@@ -1,5 +1,11 @@
 #include "Room.h"
 
+Room::Room(RoomData roomdata)
+{
+    this->m_metadata = roomdata;
+    this->m_users = std::vector<LoggedUser>();
+}
+
 void Room::addUser(LoggedUser userToAdd)
 {
     this->m_users.push_back(userToAdd);
