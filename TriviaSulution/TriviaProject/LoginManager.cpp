@@ -1,5 +1,4 @@
 #include "LoginManager.h"
-#include "LoginManager.h"
 
 /*constructor function that initialize the value to an empty string
   input: none 
