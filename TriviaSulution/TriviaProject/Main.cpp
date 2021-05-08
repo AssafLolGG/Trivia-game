@@ -7,13 +7,15 @@ int main()
 {
 	WSAInitializer wsa;
 	Server ser;
+
 	ser.run();
 	std::string userInput = "";
 	while (userInput != "EXIT")
 	{
 		std::cin >> userInput;
+		
 	}
 	std::cout << "Goodbye :>" << std::endl;
 
-	return 69;
+	return 0;
 }
