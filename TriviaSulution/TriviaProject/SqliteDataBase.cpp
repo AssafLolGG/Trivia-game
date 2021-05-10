@@ -13,31 +13,52 @@ int SqliteDataBase::callbackUser(void* data, int argc, char** argv, char** azCol
 		{
 			global_stats.player_id = std::stoi(argv[i]);
 		}
+
 		else if (std::string(azColName[i]) == "games_played")
 		{
-			global_stats.player_id = std::stoi(argv[i]);
-		}
-		else if (std::string(azColName[i]) == "right_answers")
-		{
-			global_stats.player_id = std::stoi(argv[i]);
-		}
-		else if (std::string(azColName[i]) == "likeability")
-		{
-			global_stats.player_id = std::stoi(argv[i]);
-		}
-		else if (std::string(azColName[i]) == "potential")
-		{
-			global_stats.player_id = std::stoi(argv[i]);
-		}
-		else if (std::string(azColName[i]) == "player_id")
-		{
-			global_stats.player_id = std::stoi(argv[i]);
-		}
-		else if (std::string(azColName[i]) == "player_id")
-		{
-			global_stats.player_id = std::stoi(argv[i]);
+			global_stats.games_played = std::stoi(argv[i]);
 		}
 
+		else if (std::string(azColName[i]) == "right_answers")
+		{
+			global_stats.right_answers = std::stoi(argv[i]);
+		}
+
+		else if (std::string(azColName[i]) == "likeability")
+		{
+			global_stats.likeability = std::stoi(argv[i]);
+		}
+
+		else if (std::string(azColName[i]) == "potential")
+		{
+			global_stats.potnetial = std::stoi(argv[i]);
+		}
+
+		else if (std::string(azColName[i]) == "highest_score")
+		{
+			global_stats.highest_score = std::stoi(argv[i]);
+		}
+
+		else if (std::string(azColName[i]) == "time_played")
+		{
+			global_stats.time_played = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "time_played_last_game")
+		{
+			global_stats.time_played_last_game = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "score_last_game")
+		{
+			global_stats.score_last_game = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "number_of_future_partners")
+		{
+			global_stats.number_of_future_partners = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "questions_last_game")
+		{
+			global_stats.questions_last_game = std::stoi(argv[i]);
+		}
 	}
 	return 0;
 }
