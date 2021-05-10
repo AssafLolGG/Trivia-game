@@ -2,16 +2,42 @@
 bool SqliteDataBase::isPasswordMatching = false;
 bool SqliteDataBase::isUserExisting = false;
 
+statisticsDB global_stats;
+
 int SqliteDataBase::callbackUser(void* data, int argc, char** argv, char** azColName)
 {
 	isUserExisting = false;
 	for (int i = 0; i < argc; i++) 
 	{
-		if (std::string(azColName[i]) == "UserName") 
+		if (std::string(azColName[i]) == "player_id") 
 		{
-			//checks if user exists in the db
-			(std::string)(argv[i]) == "" ? SqliteDataBase::isUserExisting = false : SqliteDataBase::isUserExisting = true;
+			global_stats.player_id = std::stoi(argv[i]);
 		}
+		else if (std::string(azColName[i]) == "games_played")
+		{
+			global_stats.player_id = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "right_answers")
+		{
+			global_stats.player_id = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "likeability")
+		{
+			global_stats.player_id = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "potential")
+		{
+			global_stats.player_id = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "player_id")
+		{
+			global_stats.player_id = std::stoi(argv[i]);
+		}
+		else if (std::string(azColName[i]) == "player_id")
+		{
+			global_stats.player_id = std::stoi(argv[i]);
+		}
+
 	}
 	return 0;
 }
@@ -27,6 +53,17 @@ int SqliteDataBase::callbackPasswords(void* data, int argc, char** argv, char** 
 		}
 	}
 	return 0;
+}
+
+int SqliteDataBase::callbackStatistics(void* data, int argc, char** argv, char** azColName)
+{
+	for (int i = 0; i < argc; i++)
+	{
+		if (std::string(azColName[i]) == "player_id")
+		{
+			
+		}
+	}
 }
 
 SqliteDataBase::SqliteDataBase()
@@ -66,4 +103,10 @@ void SqliteDataBase::addNewUser(std::string username, std::string password, std:
 {
 	std::string sql_statement = "INSERT INTO users(UserName, Password, mail) VALUES('" + username + "', '" + password + "', '" + mail + "');";
 	int res = sqlite3_exec(_db, sql_statement.c_str(), nullptr, nullptr, nullptr);
+}
+
+int SqliteDataBase::getPlayerAVerageAnswerTime(int user_id)
+{
+	std::string sql_statement = "SELECT  ";
+	return 0;
 }
