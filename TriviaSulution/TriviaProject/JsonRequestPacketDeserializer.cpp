@@ -1,5 +1,6 @@
 #include "JsonRequestPacketDeserializer.h"
 
+/* extracting json from buffer */
 json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
 {
     int size = buffer[MESSAGE_SIZE_PLACE];
