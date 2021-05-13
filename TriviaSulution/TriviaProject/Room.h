@@ -3,6 +3,7 @@
 #include <vector>
 #include "LoginManager.h"
 #include <map>
+
 struct RoomData
 {
 	unsigned int id;
