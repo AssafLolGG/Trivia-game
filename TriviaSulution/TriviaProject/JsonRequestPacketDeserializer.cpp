@@ -1,5 +1,6 @@
 #include "JsonRequestPacketDeserializer.h"
 
+/* extracting json from buffer */
 json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
 {
     int size = buffer[MESSAGE_SIZE_PLACE];
@@ -15,6 +16,7 @@ json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
     return json::parse(content.begin(), content.end());
 }
 
+/* Deserialize login request */
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<uint8_t> buffer)
 {
     json result;
@@ -28,6 +30,7 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<
     return login;
 }
 
+/* Deserialize signup request */
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vector<uint8_t> buffer)
 {
     json result;
@@ -40,4 +43,46 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vecto
     sign.email = result.value(EMAIL, "");
 
     return sign;
+}
+
+/* Deserialize players in room request */
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(std::vector<uint8_t> buffer)
+{
+    json result;
+    GetPlayersInRoomRequest players_in_room;
+
+    result = JsonRequestPacketDeserializer::getJson(buffer);
+    
+    players_in_room.room_id = std::stoi(result.value(ROOM_ID, ""));
+
+    return players_in_room;
+}
+
+/* Deserialize join room request */
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(std::vector<uint8_t> buffer)
+{
+    json result;
+    JoinRoomRequest join_room;
+
+    result = JsonRequestPacketDeserializer::getJson(buffer);
+
+    join_room.room_id = std::stoi(result.value(ROOM_ID, ""));
+
+    return join_room;
+}
+
+/* Deserialize players create room request */
+CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(std::vector<uint8_t> buffer)
+{
+    json result;
+    CreateRoomRequest create_room;
+
+    result = JsonRequestPacketDeserializer::getJson(buffer);
+
+    create_room.room_name = result.value(ROOM_NAME, "");
+    create_room.max_users = std::stoi(result.value(MAX_USERS_IN_ROOM, ""));
+    create_room.question_count = std::stoi(result.value(QUESTION_COUNT, ""));
+    create_room.answer_time_out = std::stoi(result.value(TIME_TO_ANSWER, ""));
+
+    return create_room;
 }
