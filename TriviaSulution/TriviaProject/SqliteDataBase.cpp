@@ -4,6 +4,10 @@ bool SqliteDataBase::isUserExisting = false;
 
 statisticsDB global_stats;
 Question q;
+
+/*
+callback function that gets users statistics to a vector.
+*/
 int SqliteDataBase::callbackStatistics(void* data, int argc, char** argv, char** azColName)
 {
 	isUserExisting = true;
@@ -134,6 +138,10 @@ int SqliteDataBase::callbackPasswords(void* data, int argc, char** argv, char** 
 	return 0;
 }
 
+/*
+callback function that gets the questions and answers to a 
+vector passed as parameter.
+*/
 int SqliteDataBase::callbackQuestionsAndAnswers(void* data, int argc, char** argv, char** azColName)
 {
 	std::vector<Question>* dataQuestions = (std::vector<Question>*) data;
@@ -267,6 +275,11 @@ int SqliteDataBase::getNumOfTotalAnswers(int user_id)
 	return usersVector[0].total_answers;
 }
 
+/*
+function that get the number of games a user played in.
+input: The user id of the player.
+output: number of games the user played
+*/
 int SqliteDataBase::getNumOfPlayerGames(int user_id)
 {
 	std::string sql_statement = "SELECT * FROM Statistics WHERE player_id = " + std::to_string(user_id) + ";";
@@ -275,6 +288,11 @@ int SqliteDataBase::getNumOfPlayerGames(int user_id)
 	return usersVector[0].games_played;
 }
 
+/*
+function that converts username to its id and returns it.
+input: the username.
+output: the id of the username.
+*/
 int SqliteDataBase::usernameToID(std::string username)
 {
 	std::string sql_statement = "SELECT * FROM users WHERE UserName = " + username + ";";
@@ -283,6 +301,11 @@ int SqliteDataBase::usernameToID(std::string username)
 	return usersVector[0].id;
 }
 
+/*
+function that gets the questions from the database to a vector.
+input: None.
+output: the vector of the questions(also containing their answers).
+*/
 std::vector<Question> SqliteDataBase::getQuestions()
 {
 	std::string sql_statement = "SELECT * FROM Answers inner join Questions ON Answers.question_id = Questions.question_id;";
@@ -292,7 +315,11 @@ std::vector<Question> SqliteDataBase::getQuestions()
 	return questionsVector;
 }
 
-
+/*
+the function returns the top 5 players with the higest score.
+input: None.
+output: a vector of the top 5 players's(by score) statistics.
+*/
 std::vector<statisticsDB> SqliteDataBase::getTop5Players()
 {
 	std::string sql_statement = "SELECT * FROM Statistics ORDER BY highest_score DESC LIMIT 5;";

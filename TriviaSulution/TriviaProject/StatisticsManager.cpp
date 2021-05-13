@@ -1,9 +1,16 @@
 #include "StatisticsManager.h"
 
+/*
+function that returns a vector containing the highest score among the players.
+input: None.
+output: a vector contains the 5 highest score.
+*/
 std::vector<std::string> StatisticsManager::getHighScore()
 {
 	std::vector<std::string> highScoresVector;
+	// gets the top 5 players by score in database.
 	std::vector<statisticsDB> topStatistics = this->m_database->getTop5Players();
+	// pushing to the vector the highest scores.
 	try
 	{
 		highScoresVector.push_back("1st place: " + std::to_string(topStatistics[0].highest_score));
@@ -18,6 +25,17 @@ std::vector<std::string> StatisticsManager::getHighScore()
 	return highScoresVector;
 }
 
+/*
+function that gets certain user's statistics
+and pushing some of its qualities to a vector
+then returning it.
+input: the username.
+output: some qualities in username pushed inside a vector.
+Average time of the user.
+Correct answers the user answered.
+Total answers the user answered.
+the total games the user played.
+*/
 std::vector<std::string> StatisticsManager::getUserStatistics(std::string username)
 {
 	std::vector<std::string> statisticsVector;
