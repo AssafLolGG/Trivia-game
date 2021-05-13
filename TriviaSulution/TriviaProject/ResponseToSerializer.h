@@ -57,17 +57,3 @@ struct CreateRoomResponse
 {
 	unsigned int status;
 };
-
-//std::vector<question>
-//
-//struct question
-//{
-//	int id;
-//	std::vector<answer> answers
-//};
-//
-//struct answer
-//{
-//	string answer;
-//	bool is_corret;
-//};

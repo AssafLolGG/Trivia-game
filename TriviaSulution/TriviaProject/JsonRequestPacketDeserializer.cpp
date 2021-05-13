@@ -16,6 +16,7 @@ json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
     return json::parse(content.begin(), content.end());
 }
 
+/* Deserialize login request */
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<uint8_t> buffer)
 {
     json result;
@@ -29,6 +30,7 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(std::vector<
     return login;
 }
 
+/* Deserialize signup request */
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vector<uint8_t> buffer)
 {
     json result;
@@ -43,6 +45,7 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vecto
     return sign;
 }
 
+/* Deserialize players in room request */
 GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(std::vector<uint8_t> buffer)
 {
     json result;
@@ -55,6 +58,7 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRo
     return players_in_room;
 }
 
+/* Deserialize join room request */
 JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(std::vector<uint8_t> buffer)
 {
     json result;
@@ -67,6 +71,7 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(std::v
     return join_room;
 }
 
+/* Deserialize players create room request */
 CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(std::vector<uint8_t> buffer)
 {
     json result;
