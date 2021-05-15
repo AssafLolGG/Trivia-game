@@ -46,7 +46,13 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo& info)
 
 RequestResult MenuRequestHandler::signout(RequestInfo info)
 {
-	return RequestResult();
+	LogoutResponse logout;
+	RequestResult result;
+
+	logout.status = STATUS_OK; // double check that one.
+	result.respone = JsonResponsePacketSerializer::serializeResponse(logout);
+
+	return result;
 }
 
 RequestResult MenuRequestHandler::getRooms(RequestInfo info)
