@@ -9,11 +9,14 @@
 #include "JsonResponsePacketSerializer.h"
 #include <ctime>
 #include <chrono>
+#include "RequestHandlerFactory.h"
 
 #define	STARTER_SERVER_MESSAGE "hello"
 #define BUFFER_CAPACITY 1024
 #define PORT_NUM 9999
 using std::map;
+
+class RequestHandlerFactory;
 
 class Communicator
 {
