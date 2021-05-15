@@ -24,3 +24,21 @@ LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
     return new LoginRequestHandler(*this, this->m_login_manager);
 }
+
+/* returns a pointer to MenuRequestHandler class*/
+MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler()
+{
+    return new MenuRequestHandler();
+}
+
+/* getter to static manager */
+StatisticsManager& RequestHandlerFactory::getStatisticsManager()
+{
+    return this->m_statistics_manager;
+}
+
+/* getter to static manager */
+RoomManager& RequestHandlerFactory::getRoomManager()
+{
+    return this->m_room_manager;
+}
