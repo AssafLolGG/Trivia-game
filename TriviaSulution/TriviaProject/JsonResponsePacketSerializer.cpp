@@ -64,7 +64,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPl
 
 	std::string jsonSerialized = responseJson.dump();
 
-	return getCompleteMessage(GET_PLAYERS_CODE, jsonSerialized);
+	return getCompleteMessage(GET_PLAYERS_IN_ROOM_CODE, jsonSerialized);
 }
 
 /* serialize response for "jroom" request */

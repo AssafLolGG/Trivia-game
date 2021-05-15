@@ -122,5 +122,8 @@
     <ClInclude Include="RequestHandlerFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="codes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

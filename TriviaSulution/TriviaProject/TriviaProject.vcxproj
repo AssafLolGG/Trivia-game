@@ -142,6 +142,7 @@
     <ClCompile Include="WSAInitializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="codes.h" />
     <ClInclude Include="Communicator.h" />
     <ClInclude Include="Converter.h" />
     <ClInclude Include="IDatabase.h" />
