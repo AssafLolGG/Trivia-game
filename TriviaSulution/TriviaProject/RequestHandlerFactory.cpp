@@ -28,7 +28,7 @@ LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 /* returns a pointer to MenuRequestHandler class*/
 MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler()
 {
-    return new MenuRequestHandler();
+    return new MenuRequestHandler(this->m_room_manager, this->m_statistics_manager, *this);
 }
 
 /* getter to static manager */

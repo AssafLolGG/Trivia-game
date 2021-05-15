@@ -16,7 +16,7 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     // checks if the the user managed to login succeessfully.
     if (loginResponse.status == 1)
     {
-        result.newHandler = new MenuRequestHandler;
+        result.newHandler = new MenuRequestHandler(this->m_request_handler_factory.getRoomManager(), this->m_request_handler_factory.getStatisticsManager(), this->m_request_handler_factory);
     }
     else
     {
