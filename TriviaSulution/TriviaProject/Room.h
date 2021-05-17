@@ -4,8 +4,6 @@
 #include "LoginManager.h"
 #include <map>
 
-#define MAX_PLAYERS 10;
-
 struct RoomData
 {
 	unsigned int id;

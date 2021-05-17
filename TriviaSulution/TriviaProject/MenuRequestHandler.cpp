@@ -119,14 +119,14 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
 /* joining room */
 RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 {
-	JoinRoomResponse jroom;
+	JoinRoomResponse join_room;
 	RequestResult result;
 
 	this->m_room_manager.getRoom(info.id).addUser(this->m_user);
-	jroom.status = STATUS_OK;
+	join_room.status = STATUS_OK;
 
 	result.newHandler = new MenuRequestHandler(*this);
-	result.respone = JsonResponsePacketSerializer::serializeResponse(jroom);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(join_room);
 
 	return result;
 }
@@ -134,26 +134,27 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 /* creating room */
 RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 {
-	CreateRoomResponse croom_response;
+	CreateRoomResponse create_room_response; // making a response object
 	RequestResult result;
-	RoomData room_data;
-	CreateRoomRequest croom_request;
+	RoomData room_data; // making room data object, to fill in the data in create room function
+	CreateRoomRequest create_room_request; // making create room request object, to get the info from the deserializer
 
-	croom_request = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(info.buffer);
+	create_room_request = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(info.buffer); // getting info to CreateRoomRequest object
 
+	// filling in the data for RoomData object
 	room_data.id = info.id;
 	room_data.isActive = true;
-	room_data.maxPlayers = croom_request.max_users;
-	room_data.name = croom_request.room_name;
-	room_data.timePerQuestion = croom_request.answer_time_out;
-	room_data.numOfQuestionsInGame = croom_request.question_count;
+	room_data.maxPlayers = create_room_request.max_users;
+	room_data.name = create_room_request.room_name;
+	room_data.timePerQuestion = create_room_request.answer_time_out;
+	room_data.numOfQuestionsInGame = create_room_request.question_count;
 
-	this->m_room_manager.createRoom(this->m_user, room_data);
+	this->m_room_manager.createRoom(this->m_user, room_data); // creating new room
 
-	croom_response.status = STATUS_OK;
+	create_room_response.status = STATUS_OK;
 
 	result.newHandler = new MenuRequestHandler(*this);
-	result.respone = JsonResponsePacketSerializer::serializeResponse(croom_response);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response
 
 	return result;
 }

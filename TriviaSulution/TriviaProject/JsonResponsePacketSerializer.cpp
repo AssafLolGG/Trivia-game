@@ -87,6 +87,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Creat
 	return getCompleteMessage(GET_CREATE_ROOMS_CODE, jsonSerialized);
 }
 
+/* serialize response for statstics request*/
 std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse stats)
 {
 	json responseJson;
