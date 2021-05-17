@@ -4,6 +4,8 @@
 #include "LoginManager.h"
 #include <map>
 
+#define MAX_PLAYERS 10;
+
 struct RoomData
 {
 	unsigned int id;
@@ -38,4 +40,5 @@ public:
 	void deleteRoom(unsigned int ID);
 	unsigned int getRoomState(unsigned int ID);
 	std::vector<RoomData> getRooms();
+	Room getRoom(unsigned int id);
 };

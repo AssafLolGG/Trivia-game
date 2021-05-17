@@ -28,6 +28,6 @@ public:
 	static std::vector<unsigned char> serializeResponse(GetPlayersInRoomResponse);
 	static std::vector<unsigned char> serializeResponse(JoinRoomResponse);
 	static std::vector<unsigned char> serializeResponse(CreateRoomResponse);
-	//static std::vector<unsigned char> serializeResponse(GetStatistics)
+	static std::vector<unsigned char> serializeResponse(GetPersonalStatsResponse);
 };
 
