@@ -10,11 +10,9 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
 {
     LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
     LoginResponse loginResponse;
-<<<<<<< HEAD
-    loginResponse.status = this->m_loginManager.login(loginRequest.username, loginRequest.password) == true ? TRUE : FALSE;
-=======
-    loginResponse.status = this->m_login_manager.login(loginRequest.username, loginRequest.password) == true ? 1 : 0;
->>>>>>> 18f90f815aad71a643041d19ea17646e229e7f75
+
+    loginResponse.status = this->m_login_manager.login(loginRequest.username, loginRequest.password) == true ? TRUE : FALSE;
+
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(loginResponse);
     // checks if the the user managed to login succeessfully.
@@ -39,7 +37,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
 {
     SignupRequest _signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
 	SignupResponse signupResponse;
-	signupResponse.status = this->m_loginManager.signup(_signupRequest.username, _signupRequest.password, _signupRequest.email, _signupRequest.address, _signupRequest.phone, _signupRequest.birthdate) == true ? TRUE : FALSE;
+	signupResponse.status = this->m_login_manager.signup(_signupRequest.username, _signupRequest.password, _signupRequest.email, _signupRequest.address, _signupRequest.phone, _signupRequest.birthdate) == true ? TRUE : FALSE;
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(signupResponse);
     // checks if the the user managed to signup succeessfully.

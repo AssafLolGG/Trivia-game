@@ -98,7 +98,7 @@ int SqliteDataBase::callbackUser(void* data, int argc, char** argv, char** azCol
 
 		else if (std::string(azColName[i]) == "Password")
 		{
-			user.password = std::stoi(argv[i]);
+			user.password = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "Mail")
@@ -202,7 +202,8 @@ SqliteDataBase::~SqliteDataBase()
 bool SqliteDataBase::doesUserExist(std::string username)
 {
 	std::string sql_statement = "SELECT * FROM users WHERE UserName = '" + username + "';";
-	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackUser, nullptr, nullptr);
+	std::vector<User> users_vector;
+	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackUser, &users_vector, nullptr);
 	if (SqliteDataBase::isUserExisting)
 	{
 		SqliteDataBase::isUserExisting = false;

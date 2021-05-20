@@ -51,6 +51,7 @@ def connect():
     except Exception:
         print("connection to server failed")
         exit(1)
+    print("connection established")
     return client_socket
 
 
@@ -68,8 +69,8 @@ def connectAndMessage():
 
 
 def main():
-    print(makeRequest())
-    print(makeRequest())
+    #print(makeRequest())
+    #print(makeRequest())
     connectAndMessage()
 
 
