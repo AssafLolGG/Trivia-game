@@ -135,3 +135,9 @@ std::vector<RoomData> RoomManager::getRooms()
     }
     return activeRooms;
 }
+
+/* get a specific room based on id */
+Room RoomManager::getRoom(unsigned int id)
+{
+    return this->m_rooms.find(id)->second;
+}

@@ -64,7 +64,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPl
 
 	std::string jsonSerialized = responseJson.dump();
 
-	return getCompleteMessage(GET_PLAYERS_CODE, jsonSerialized);
+	return getCompleteMessage(GET_PLAYERS_IN_ROOM_CODE, jsonSerialized);
 }
 
 /* serialize response for "jroom" request */
@@ -85,6 +85,16 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Creat
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(GET_CREATE_ROOMS_CODE, jsonSerialized);
+}
+
+/* serialize response for statstics request*/
+std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse stats)
+{
+	json responseJson;
+	responseJson["user_statistics"] = stats.statistics;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(GET_STATISTICS_CODE, jsonSerialized);
 }
 
 /*	function that adds into one byte array the response code, the size of the response and the responce json itself.

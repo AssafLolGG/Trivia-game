@@ -1,24 +1,16 @@
 #pragma once
+
 #include <iostream>
 #include "..//../single_include///nlohmann/json.hpp"
 #include "Converter.h"
 #include "ResponseToSerializer.h"
+#include "codes.h"
 
 #define MAX_BITS_SIZE_OF_RESPONSE_CONTENT 32
-
-#define ERROR_CODE 1
-#define LOGIN_CODE 2
-#define SIGNUP_CODE 3
-#define LOGOUT_CODE 4
-#define GET_ROOMS_CODE 5
-#define GET_PLAYERS_CODE 6
-#define GET_JOIN_ROOMS_CODE 7
-#define GET_CREATE_ROOMS_CODE 8
 
 #define BINARY_BASE 2
 
 using json = nlohmann::json;
-
 
 std::vector<unsigned char> getCompleteMessage(unsigned char ResponseCode, std::string jsonResponse);
 string roomDataToString(std::vector<RoomData> rooms);
@@ -36,6 +28,6 @@ public:
 	static std::vector<unsigned char> serializeResponse(GetPlayersInRoomResponse);
 	static std::vector<unsigned char> serializeResponse(JoinRoomResponse);
 	static std::vector<unsigned char> serializeResponse(CreateRoomResponse);
-	//static std::vector<unsigned char> serializeResponse(GetStatistics)
+	static std::vector<unsigned char> serializeResponse(GetPersonalStatsResponse);
 };
 
