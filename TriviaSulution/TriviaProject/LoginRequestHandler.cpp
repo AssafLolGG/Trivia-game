@@ -10,17 +10,21 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
 {
     LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
     LoginResponse loginResponse;
+<<<<<<< HEAD
     loginResponse.status = this->m_loginManager.login(loginRequest.username, loginRequest.password) == true ? TRUE : FALSE;
+=======
+    loginResponse.status = this->m_login_manager.login(loginRequest.username, loginRequest.password) == true ? 1 : 0;
+>>>>>>> 18f90f815aad71a643041d19ea17646e229e7f75
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(loginResponse);
     // checks if the the user managed to login succeessfully.
     if (loginResponse.status == TRUE)
     {
-        result.newHandler = new MenuRequestHandler;
+        result.newHandler = new MenuRequestHandler(this->m_request_handler_factory.getRoomManager(), this->m_request_handler_factory.getStatisticsManager(), this->m_request_handler_factory);
     }
     else
     {
-        result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
+        result.newHandler = this->m_request_handler_factory.createLoginRequestHandler();
     }
     return result;
 }
@@ -41,7 +45,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
     // checks if the the user managed to signup succeessfully.
     if (signupResponse.status == TRUE)
     {
-        result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
+        result.newHandler = this->m_request_handler_factory.createLoginRequestHandler();
     }
     else
     {
@@ -55,7 +59,7 @@ constractor function for LoginRequestHandler.
 input: the handlerFactory, login manager.
 output: An object of LoginRequestHandler.
 */
-LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager) : m_handlerFactory(handlerFactory), m_loginManager(loginManager)
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager) : m_request_handler_factory(handlerFactory), m_login_manager(loginManager)
 {
 
 }
@@ -88,35 +92,4 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
         result = this->signup(info);
     }
     return result;
-}
-
-/*
-constractor function that gets the database of the system 
-and initaliize his attribiuts.
-input: a database.
-output: an object of RequestHandlerFactory.
-*/
-RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_loginManager(LoginManager(db))
-{
-    this->m_database = db;
-}
-
-/*
-function that creates loginRequestHandler.
-input: None.
-output: a LoginRequestHandler.
-*/ 
-LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
-{
-    return new LoginRequestHandler(*this, this->m_loginManager);
-}
-
-/*
-function returns the login manager of the request handler factory.
-input: None.
-output: the login Manager of the RequestHandlerFactory.
-*/
-LoginManager& RequestHandlerFactory::getLoginManager()
-{
-    return this->m_loginManager;
 }
