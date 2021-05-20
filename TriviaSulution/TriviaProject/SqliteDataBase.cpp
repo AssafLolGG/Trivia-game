@@ -229,9 +229,9 @@ bool SqliteDataBase::doesPasswordMatch(std::string username, std::string passwor
 /* adding new user to dataBase
    input: string / username, string / password, string / email
    output: None */
-void SqliteDataBase::addNewUser(std::string username, std::string password, std::string mail)
+void SqliteDataBase::addNewUser(std::string username, std::string password, std::string mail, std::string address, std::string phone, std::string birthdate)
 {
-	std::string sql_statement = "INSERT INTO users(UserName, Password, mail) VALUES('" + username + "', '" + password + "', '" + mail + "');";
+	std::string sql_statement = "INSERT INTO users(UserName, Password, mail, address, phoneNumber, birthdate) VALUES('" + username + "', '" + password + "', '" + mail + "', '" + address + "', '" + phone + "', '" + birthdate + "');";
 	int res = sqlite3_exec(_db, sql_statement.c_str(), nullptr, nullptr, nullptr);
 }
 

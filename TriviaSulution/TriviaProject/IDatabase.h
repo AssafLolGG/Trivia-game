@@ -41,7 +41,7 @@ class IDatabase
 public:
 	virtual bool doesUserExist(std::string username) = 0;
 	virtual bool doesPasswordMatch(std::string username, std::string password) = 0;
-	virtual void addNewUser(std::string username, std::string password, std::string mail) = 0;
+	virtual void addNewUser(std::string username, std::string password, std::string mail, std::string address, std::string phone, std::string birthdate) = 0;
 	virtual int getPlayerAverageAnswerTime(int user_id) = 0;
 	virtual int getNumOfCorrectAnswers(int user_id) = 0;
 	virtual int getNumOfTotalAnswers(int user_id) = 0;

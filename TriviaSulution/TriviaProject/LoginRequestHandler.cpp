@@ -33,10 +33,9 @@ can mean- succefull or failed signup.
 */
 RequestResult LoginRequestHandler::signup(RequestInfo& info)
 {
-    SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
-    SignupResponse signupResponse;
-    this->m_loginManager.signup(signupRequest.username, signupRequest.password, signupRequest.email);
-    signupResponse.status = 1;
+    SignupRequest _signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
+	SignupResponse signupResponse;
+	signupResponse.status = this->m_loginManager.signup(_signupRequest.username, _signupRequest.password, _signupRequest.email, _signupRequest.address, _signupRequest.phone, _signupRequest.birthdate) == true ? 1 : 0;
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(signupResponse);
     // checks if the the user managed to signup succeessfully.

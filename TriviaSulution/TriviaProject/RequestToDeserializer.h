@@ -15,6 +15,9 @@ struct SignupRequest
 	string username;
 	string password;
 	string email;
+	string address;
+	string phone;
+	string birthdate;
 };
 
 struct GetPlayersInRoomRequest

@@ -41,7 +41,9 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(std::vecto
     sign.username = result.value(USERNAME, "");
     sign.password = result.value(PASSWORD, "");
     sign.email = result.value(EMAIL, "");
-
+	sign.address = result.value(ADDRESS, "");
+	sign.phone = result.value(PHONE, "");
+	sign.birthdate = result.value(BIRTHDATE, "");
     return sign;
 }
 
