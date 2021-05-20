@@ -31,10 +31,49 @@ LoginManager::LoginManager(IDatabase* db)
 {
     this->_db_access = db;
 }
-void LoginManager::signup(std::string username, std::string password, std::string email)
+bool LoginManager::signup(std::string username, std::string password, std::string email, std::string address, std::string phone, std::string birthday)
 {
-    this->_db_access->addNewUser(username, password, email);
+	// gets the street, appartment, city separated by ',' in address.
+	std::regex r("\\,");
+	std::vector<std::string> addressSeperated(
+		std::sregex_token_iterator(address.begin(), address.end(), r, -1)
+		,std::sregex_token_iterator());
+	std::string street = addressSeperated[STREET_INDEX], apt = addressSeperated[APT_INDEX], city = addressSeperated[CITY_INDEX];
+	
+	// checks if the sign up info is valid or no.
+	if (!(std::regex_match(password, std::regex(PASSWORD_REGEX))))
+	{
+		return false;
+	}
+	if (!(std::regex_match(email, std::regex(EMAIL_REGEX))))
+	{
+		return false;
+	}
+	if (!(std::regex_match(street, std::regex(STREET_REGEX))))
+	{
+		return false;
+	}
+	if (!(std::regex_match(apt, std::regex(APT_REGEX))))
+	{
+		return false;
+	}
+	if (!(std::regex_match(city, std::regex(CITY_REGEX))))
+	{
+		return false;
+	}
+	if (!(std::regex_match(phone, std::regex(PHONE_REGEX))))
+	{
+		return false;
+	}
+	if (!(std::regex_match(birthday, std::regex(BIRTHDATE_REGEX))))
+	{
+		return false;
+	}
+
+	// adds the user , after the function checked his ditails's validility.
+    this->_db_access->addNewUser(username, password, email, address, phone, birthday);
     this->_loggedUsers.push_back(LoggedUser(username));
+	return true;
 }
 
 /*logging username to system

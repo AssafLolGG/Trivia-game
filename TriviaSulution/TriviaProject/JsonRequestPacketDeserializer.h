@@ -12,6 +12,9 @@ using json = nlohmann::json;
 #define PASSWORD "password"
 #define USERNAME "username"
 #define EMAIL "email"
+#define ADDRESS "address"
+#define PHONE "phone"
+#define BIRTHDATE "birthdate"
 
 #define ROOM_ID "roomID"
 #define ROOM_NAME "roomName"

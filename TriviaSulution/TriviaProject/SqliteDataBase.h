@@ -20,7 +20,7 @@ public:
 	~SqliteDataBase();
 	bool doesUserExist(std::string username);
 	bool doesPasswordMatch(std::string username, std::string password);
-	void addNewUser(std::string username, std::string password, std::string mail);
+	void addNewUser(std::string username, std::string password, std::string mail, std::string address, std::string phone, std::string birthdate);
 
 	int getPlayerAverageAnswerTime(int user_id);
 	int getNumOfCorrectAnswers(int user_id);
