@@ -1,7 +1,10 @@
 #pragma once
+
 #include "Communicator.h"
 #include "LoginRequestHandler.h"
 #include "SqliteDataBase.h"
+#include "RequestHandlerFactory.h"
+
 class Server
 {
 private:
