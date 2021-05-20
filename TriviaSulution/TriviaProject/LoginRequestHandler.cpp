@@ -10,11 +10,11 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
 {
     LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
     LoginResponse loginResponse;
-    loginResponse.status = this->m_loginManager.login(loginRequest.username, loginRequest.password) == true ? 1 : 0;
+    loginResponse.status = this->m_loginManager.login(loginRequest.username, loginRequest.password) == true ? TRUE : FALSE;
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(loginResponse);
     // checks if the the user managed to login succeessfully.
-    if (loginResponse.status == 1)
+    if (loginResponse.status == TRUE)
     {
         result.newHandler = new MenuRequestHandler;
     }
@@ -35,11 +35,11 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
 {
     SignupRequest _signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
 	SignupResponse signupResponse;
-	signupResponse.status = this->m_loginManager.signup(_signupRequest.username, _signupRequest.password, _signupRequest.email, _signupRequest.address, _signupRequest.phone, _signupRequest.birthdate) == true ? 1 : 0;
+	signupResponse.status = this->m_loginManager.signup(_signupRequest.username, _signupRequest.password, _signupRequest.email, _signupRequest.address, _signupRequest.phone, _signupRequest.birthdate) == true ? TRUE : FALSE;
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(signupResponse);
     // checks if the the user managed to signup succeessfully.
-    if (signupResponse.status == 1)
+    if (signupResponse.status == TRUE)
     {
         result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
     }

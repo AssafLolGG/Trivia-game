@@ -35,36 +35,37 @@ bool LoginManager::signup(std::string username, std::string password, std::strin
 {
 	// gets the street, appartment, city separated by ',' in address.
 	std::regex r("\\,");
-	std::vector<std::string> out(
+	std::vector<std::string> addressSeperated(
 		std::sregex_token_iterator(address.begin(), address.end(), r, -1)
 		,std::sregex_token_iterator());
+	std::string street = addressSeperated[STREET_INDEX], apt = addressSeperated[APT_INDEX], city = addressSeperated[CITY_INDEX];
 	
 	// checks if the sign up info is valid or no.
-	if (!(std::regex_match(password, std::regex("[a-zA-Z0-9!@#$%^&*]{8,}"))))
+	if (!(std::regex_match(password, std::regex(PASSWORD_REGEX))))
 	{
 		return false;
 	}
-	if (!(std::regex_match(email, std::regex("[a-zA-Z0-9]{1,}@[a-zA-Z0-9]{1,}(.com$|.co.il$|.cyber.org.il$)"))))
+	if (!(std::regex_match(email, std::regex(EMAIL_REGEX))))
 	{
 		return false;
 	}
-	if (!(std::regex_match(out[0], std::regex("^[a-zA-Z ]{0,}[a-zA-Z]{1,}$"))))
+	if (!(std::regex_match(street, std::regex(STREET_REGEX))))
 	{
 		return false;
 	}
-	if (!(std::regex_match(out[1], std::regex("^[\d]{1,}$"))))
+	if (!(std::regex_match(apt, std::regex(APT_REGEX))))
 	{
 		return false;
 	}
-	if (!(std::regex_match(out[2], std::regex("^[a-zA-Z ]{0,}[a-zA-Z]{1,}$"))))
+	if (!(std::regex_match(city, std::regex(CITY_REGEX))))
 	{
 		return false;
 	}
-	if (!(std::regex_match(phone, std::regex("^0(2|3|4|5[2345])-[\d]{6,7}$"))))
+	if (!(std::regex_match(phone, std::regex(PHONE_REGEX))))
 	{
 		return false;
 	}
-	if (!(std::regex_match(birthday, std::regex("^([\d]{2}.[\d]{2}.[\d]{4})|([\d]{2}/[\d]{2}/[\d]{4})$"))))
+	if (!(std::regex_match(birthday, std::regex(BIRTHDATE_REGEX))))
 	{
 		return false;
 	}
