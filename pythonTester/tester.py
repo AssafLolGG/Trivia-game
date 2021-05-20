@@ -12,8 +12,9 @@ def logIn(userName, password):
     return f'{{"username": "{userName}", "password": "{password}"}}'.replace(" ", "")
 
 
-def signUp(userName, password, email):
-    return f'{{"username": "{userName}", "password": "{password}", "email": "{email}"}}'.replace(" ", "")
+def signUp(userName, password, email, address, phone, birthdate):
+    return f'{{"username": "{userName}", "password": "{password}", "email": "{email}", "address": "{address}' \
+           f'", "phone": "{phone}", "birthdate": "{birthdate}"}}'.replace(" ", "")
 
 
 def makeRequest(auto=0):
@@ -27,7 +28,9 @@ def makeRequest(auto=0):
             message = logIn(getString("userName"), getString("password"))
         elif choice == "2":
             message_code = "\3"
-            message = signUp(getString("userName"), getString("password"), getString("email"))
+            message = signUp("user", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
+            #message = signUp(getString("userName"), getString("password"), getString("email"), getString("address"),
+                        #     getString("phone"), getString("birthdate"))
         else:
             print("exiting the program")
             exit(0)
@@ -36,12 +39,11 @@ def makeRequest(auto=0):
             message = logIn("userName", "Password")
             message_code = "\2"
         elif auto == 2:
-            message = signUp("userName", "Password", "email")
+            message = signUp("user", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
             message_code = "\3"
 
-    return (message_code + str(len(message).to_bytes(4, "big")) + message).replace('b', '', 1).replace("'", "",
-                                                                                                       2).replace(
-        "\\x00", "\0")
+    return (message_code + str(len(message).to_bytes(4, "big")) + message).replace('b', '', 1)\
+        .replace("'", "", 2).replace("\\x", "")
 
 
 def connect():
@@ -69,8 +71,9 @@ def connectAndMessage():
 
 
 def main():
-    #print(makeRequest())
-    #print(makeRequest())
+    print(makeRequest(2))
+    # print(makeRequest())
+    # print(makeRequest())
     connectAndMessage()
 
 
