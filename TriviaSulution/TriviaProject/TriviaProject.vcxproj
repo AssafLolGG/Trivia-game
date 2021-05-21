@@ -136,6 +136,7 @@
     <ClCompile Include="RequestHandlerFactory.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerUtilities.cpp" />
     <ClCompile Include="sqlite3.c" />
     <ClCompile Include="SqliteDataBase.cpp" />
     <ClCompile Include="StatisticsManager.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="ResponseToSerializer.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="ServerUtilities.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDataBase.h" />
     <ClInclude Include="StatisticsManager.h" />

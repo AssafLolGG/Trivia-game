@@ -7,10 +7,10 @@
 #define PASSWORD_REGEX "[a-zA-Z0-9!@#$%^&*]{8,}"
 #define EMAIL_REGEX "[a-zA-Z0-9]{1,}@[a-zA-Z0-9]{1,}(.com$|.co.il$|.cyber.org.il$)"
 #define STREET_REGEX "^[a-zA-Z ]{0,}[a-zA-Z]{1,}$"
-#define APT_REGEX "^[\d]{1,}$"
+#define APT_REGEX "^[0-9]{1,}"
 #define CITY_REGEX "^[a-zA-Z ]{0,}[a-zA-Z]{1,}$"
-#define PHONE_REGEX "^0(2|3|4|5[2345])-[\d]{6,7}$"
-#define BIRTHDATE_REGEX "^([\d]{2}.[\d]{2}.[\d]{4})|([\d]{2}/[\d]{2}/[\d]{4})$"
+#define PHONE_REGEX "^0(2|3|4|5[2345])-[0-9]{6,7}$"
+#define BIRTHDATE_REGEX "^([0-9]{2}.[0-9]{2}.[0-9]{4})|([0-9]{2}/[0-9]{2}/[0-9]{4})$"
 
 #define STREET_INDEX 0
 #define APT_INDEX 1

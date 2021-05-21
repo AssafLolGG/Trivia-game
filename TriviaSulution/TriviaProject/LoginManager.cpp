@@ -40,6 +40,12 @@ bool LoginManager::signup(std::string username, std::string password, std::strin
 		,std::sregex_token_iterator());
 	std::string street = addressSeperated[STREET_INDEX], apt = addressSeperated[APT_INDEX], city = addressSeperated[CITY_INDEX];
 	
+	//checks if user exists
+	if (this->_db_access->doesUserExist(username))
+	{
+		return false;
+	}
+
 	// checks if the sign up info is valid or no.
 	if (!(std::regex_match(password, std::regex(PASSWORD_REGEX))))
 	{

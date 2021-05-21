@@ -4,6 +4,7 @@
 json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
 {
     int size = buffer[MESSAGE_SIZE_PLACE];
+    std::vector<uint8_t> content;
 
     // getting message size
     for (int i = MESSAGE_SIZE_PLACE + 1; i < MESSAGE_SIZE + MESSAGE_SIZE_PLACE; i++)
@@ -11,7 +12,7 @@ json JsonRequestPacketDeserializer::getJson(std::vector<uint8_t> buffer)
         size = stringNumbers(size, buffer[i]);
     }
 
-    std::vector<uint8_t> content = { buffer.begin() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE, buffer.begin() + size + MESSAGE_SIZE + MESSAGE_SIZE_PLACE }; // getting message content
+    content = { buffer.begin() + MESSAGE_SIZE + MESSAGE_SIZE_PLACE, buffer.begin() + size + MESSAGE_SIZE + MESSAGE_SIZE_PLACE }; // getting message content
 
     return json::parse(content.begin(), content.end());
 }

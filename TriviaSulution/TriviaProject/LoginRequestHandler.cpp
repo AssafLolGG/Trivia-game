@@ -22,7 +22,7 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     }
     else
     {
-        result.newHandler = this->m_request_handler_factory.createLoginRequestHandler();
+        result.newHandler = nullptr;
     }
     return result;
 }

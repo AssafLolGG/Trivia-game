@@ -28,9 +28,9 @@ def makeRequest(auto=0):
             message = logIn(getString("userName"), getString("password"))
         elif choice == "2":
             message_code = "\3"
-            message = signUp("user", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
-            #message = signUp(getString("userName"), getString("password"), getString("email"), getString("address"),
-                        #     getString("phone"), getString("birthdate"))
+            message = signUp("user1", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
+            # message = signUp(getString("userName"), getString("password"), getString("email"), getString("address"),
+            #     getString("phone"), getString("birthdate"))
         else:
             print("exiting the program")
             exit(0)
@@ -39,11 +39,26 @@ def makeRequest(auto=0):
             message = logIn("userName", "Password")
             message_code = "\2"
         elif auto == 2:
-            message = signUp("user", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
+            message = signUp("user1", "Aa123456", "street,1,city", "", "", "00.00.0000")
             message_code = "\3"
+    lenOfMsg = len(message)
+    print(lenOfMsg)
+    nums = [0, 0, 0, 0]
+    nums[3] = lenOfMsg % 256
+    lenOfMsg = lenOfMsg // 256
+    nums[2] = lenOfMsg % 256
+    lenOfMsg = lenOfMsg // 256
+    nums[1] = lenOfMsg % 256
+    lenOfMsg = lenOfMsg // 256
+    nums[0] = lenOfMsg % 256
 
-    return (message_code + str(len(message).to_bytes(4, "big")) + message).replace('b', '', 1)\
-        .replace("'", "", 2).replace("\\x", "")
+    completeMsg = message_code.encode()
+    completeMsg += nums[0].to_bytes(1, "big")
+    completeMsg += nums[1].to_bytes(1, "big")
+    completeMsg += nums[2].to_bytes(1, "big")
+    completeMsg += nums[3].to_bytes(1, "big")
+    completeMsg += message.encode()
+    return completeMsg
 
 
 def connect():
@@ -58,20 +73,20 @@ def connect():
 
 
 def connectAndMessage():
-    client_message = "hello"
+    client_message = b"hello"
     client_socket = connect()
-    try:
-        while True:
-            client_socket.send(client_message.encode())  # send message to server
-            server_message = client_socket.recv(1024)  # receive response from server
-            print(server_message.decode())
-            client_message = makeRequest()  # make client message
-    except Exception:
-        print(f"connection broke")
+    #try:
+    while True:
+        client_socket.send(client_message)
+        print(f"client message: {client_message}")
+        server_message = client_socket.recv(1024)  # receive response from server
+        print(f"server response: {server_message.decode()}")
+        client_message = makeRequest()  # make client message
+    #except Exception:
+        #print(f"connection broke")
 
 
 def main():
-    print(makeRequest(2))
     # print(makeRequest())
     # print(makeRequest())
     connectAndMessage()
