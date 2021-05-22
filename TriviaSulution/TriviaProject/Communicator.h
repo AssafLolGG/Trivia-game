@@ -8,7 +8,6 @@
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
 #include "RequestHandlerFactory.h"
-#include "../../single_include/utf-8/utf8_v2_3_4/source/utf8.h"
 #include "ServerUtilities.h"
 
 #define	STARTER_SERVER_MESSAGE "hello"
@@ -25,6 +24,7 @@ private:
 	RequestHandlerFactory& m_handlerFactory;
 	void bindAndListen();
 	void handleNewClient(SOCKET client_soc);
+	bool connectUser(SOCKET& client_socket);
 public:
 	Communicator(RequestHandlerFactory& handlerFactory);
 	void startHandleRequests();

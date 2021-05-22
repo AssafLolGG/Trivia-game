@@ -3,7 +3,7 @@
 /*	function that serialize Error response.
 	input: the Error response struct.
 	output: the serialized error response. */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(ErrorResponse response)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(ErrorResponse response)
 {
 	int jsonSize = 0;
 	json responseJson;
@@ -15,7 +15,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Error
 /*	function that serialize Login response.
 	input: the Login response struct.
 	output: the serialized error response. */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(LoginResponse response)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LoginResponse response)
 {
 	json responseJson;
 	responseJson["status"] = response.status;
@@ -25,7 +25,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Login
 /*	function that serialize Sign up response.
 	input: the Sign up response struct.
 	output: the serialized error response. */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(SignupResponse response)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(SignupResponse response)
 {
 	json responseJson;
 	responseJson["status"] = response.status;
@@ -36,7 +36,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Signu
 /*	function that serialize Logout response.
 	input: the Logout up response struct.
 	output: the serialized error response. */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(LogoutResponse response)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LogoutResponse response)
 {
 	json responseJson;
 	responseJson["status"] = response.status;
@@ -45,7 +45,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Logou
 }
 
 /* serialize response for "GetRoomsResponse" request */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse rooms)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse rooms)
 {
 	json responseJson;
 	responseJson["status"] = rooms.status;
@@ -57,7 +57,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetRo
 }
 
 /* serialize response for "GetPlayersInRoomResponse" request */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPlayersInRoomResponse players)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetPlayersInRoomResponse players)
 {
 	json responseJson;
 	responseJson["players"] = stringVectorToString(players.players);
@@ -68,7 +68,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPl
 }
 
 /* serialize response for "jroom" request */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(JoinRoomResponse jroom)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(JoinRoomResponse jroom)
 {
 	json responseJson;
 	responseJson["status"] = jroom.status;
@@ -78,7 +78,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(JoinR
 }
 
 /* serialize response for "croom" request */
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(CreateRoomResponse croom)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(CreateRoomResponse croom)
 {
 	json responseJson;
 	responseJson["status"] = croom.status;
@@ -88,7 +88,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(Creat
 }
 
 /* serialize response for statstics request*/
-std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse stats)
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse stats)
 {
 	json responseJson;
 	responseJson["user_statistics"] = stats.statistics;
@@ -100,7 +100,7 @@ std::vector<unsigned char> JsonResponsePacketSerializer::serializeResponse(GetPe
 /*	function that adds into one byte array the response code, the size of the response and the responce json itself.
 	input: the response code, and the json of the response.
 	output: the completed message. */
-std::vector<unsigned char> getCompleteMessage(unsigned char ResponseCode, std::string jsonResponse)
+std::vector<uint8_t> getCompleteMessage(unsigned char ResponseCode, std::string jsonResponse)
 {
 	int jsonSize = jsonResponse.size();
 	uint8_t jsonSizeInBinary[MAX_BITS_SIZE_OF_RESPONSE_CONTENT] = {};

@@ -25,39 +25,50 @@ void Communicator::handleNewClient(SOCKET client_socket)
 {
 	RequestInfo request;
 	RequestResult result;
-	bool logged_in = false;
+	ErrorResponse error;
 	std::string server_message = STARTER_SERVER_MESSAGE;
 	char* message_buffer = new char[BUFFER_CAPACITY], serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
-	std::vector<uint8_t> buffer_vector, serializedResponse;
-	IRequestHandler* requestHandler = this->m_handlerFactory.createLoginRequestHandler();
+	std::vector<uint8_t> buffer_vector;
+	IRequestHandler* request_handler = this->m_handlerFactory.createLoginRequestHandler();
 
-	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, requestHandler));
+	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, request_handler));
 
 	try
 	{
 		// sending starter message to client
 		send(client_socket, server_message.c_str(), server_message.size(), 0);
 		recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, 0);
-		
-		while (!logged_in)
+
+		while (true)
 		{
 			receiveMassageFromClient(client_socket, message_buffer);
 
 			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector); // converting char array to vector
-			
+
 			request = createRequestInfo(buffer_vector);
 
-			result = requestHandler->handleRequest(request); // CHECKS if the login or signup request from the client is valid.
+			if (request_handler->isRequestRelevant(request))
+			{
+				result = request_handler->handleRequest(request);
+				if (result.newHandler == nullptr)
+				{
+					result.newHandler = request_handler;
+				}
+				else
+				{
+					delete request_handler;
+					request_handler = result.newHandler;
+				}
 
-			logged_in = isLoggedIn(result.newHandler, this->m_handlerFactory); // checking if the login / signup attempt was successful
+				insertHandlerToClient(result.newHandler, this->m_clients, client_socket);
+			}
+			else
+			{
+				error.message = "failed";
+				result.respone = JsonResponsePacketSerializer::serializeResponse(error);
+			}
 
-			// Serializing the response.
-			serializedResponse = result.respone;
-			requestHandler = result.newHandler;
-
-			insertHandlerToClient(result.newHandler, this->m_clients, client_socket);
-
-			vectorToCharArray(serializedResponseInCharArray, serializedResponse);
+			vectorToCharArray(serializedResponseInCharArray, result.respone);
 
 			// sends the serialized response from the server to the client, after analyizing his response.
 			send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
@@ -66,63 +77,6 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			memset(serializedResponseInCharArray, 0, BUFFER_CAPACITY);
 
 			// clearing vectors for future usage
-			buffer_vector.clear();
-			serializedResponse.clear();
-		}
-		std::cout << "nailed it." << std::endl;
-		while (true)
-		{
-			int received = recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, NULL);
-
-			if (received == SOCKET_ERROR)
-			{
-				std::cout << "Error: " << WSAGetLastError();
-			}
-			if (received == 0)
-			{
-				throw(std::exception());
-			}
-
-			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector);
-			// checks the wanted request from user, to send a proper response.
-			std::cout << buffer_vector[0] << std::endl;
-			request;
-			request.buffer = buffer_vector;
-			request.id = buffer_vector[0];
-			auto nowTime = std::chrono::system_clock::now();
-			std::time_t nowTime_t = std::chrono::system_clock::to_time_t(nowTime);
-			request.recivalTime = nowTime_t;
-			
-			RequestResult result;
-			std::vector<uint8_t> serializedResponse;
-
-			if (requestHandler->isRequestRelevant(request))
-			{
-				result = requestHandler->handleRequest(request); // CHECKS if the login or signup request from the client is valid.
-			// Serializing the response.
-				serializedResponse = result.respone;
-				requestHandler = result.newHandler;
-			}
-			else
-			{
-				ErrorResponse error_response;
-				error_response.message = "failed";
-				result.respone = JsonResponsePacketSerializer::serializeResponse(error_response);
-			}
-			
-			for (auto it = this->m_clients.begin(); it != this->m_clients.end(); ++it)
-			{
-				if (it->first == client_socket)
-				{
-					it->second = result.newHandler;
-				}
-			}
-			char serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
-			vectorToCharArray(serializedResponseInCharArray, serializedResponse);
-			// sends the serialized response from the server to the client, after analyizing his response.
-			send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
-			delete[] message_buffer;
-			message_buffer = new char[BUFFER_CAPACITY];
 			buffer_vector.clear();
 		}
 	}

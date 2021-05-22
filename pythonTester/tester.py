@@ -75,15 +75,15 @@ def connect():
 def connectAndMessage():
     client_message = b"hello"
     client_socket = connect()
-    #try:
+    # try:
     while True:
         client_socket.send(client_message)
         print(f"client message: {client_message}")
         server_message = client_socket.recv(1024)  # receive response from server
         print(f"server response: {server_message.decode()}")
         client_message = makeRequest()  # make client message
-    #except Exception:
-        #print(f"connection broke")
+    # except Exception:
+    # print(f"connection broke")
 
 
 def main():
