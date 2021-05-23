@@ -67,7 +67,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 				error.message = "failed";
 				result.respone = JsonResponsePacketSerializer::serializeResponse(error);
 			}
-
+			
 			vectorToCharArray(serializedResponseInCharArray, result.respone);
 
 			// sends the serialized response from the server to the client, after analyizing his response.

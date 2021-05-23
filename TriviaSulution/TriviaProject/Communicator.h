@@ -24,7 +24,6 @@ private:
 	RequestHandlerFactory& m_handlerFactory;
 	void bindAndListen();
 	void handleNewClient(SOCKET client_soc);
-	bool connectUser(SOCKET& client_socket);
 public:
 	Communicator(RequestHandlerFactory& handlerFactory);
 	void startHandleRequests();

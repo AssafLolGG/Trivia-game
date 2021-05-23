@@ -17,23 +17,68 @@ def signUp(userName, password, email, address, phone, birthdate):
            f'", "phone": "{phone}", "birthdate": "{birthdate}"}}'.replace(" ", "")
 
 
+def getPlayersInRoom(room_id):
+    return f'{{"roomID": "{room_id}"}}'.replace(" ", "")
+
+
+def joinRoom(room_id):
+    return f'{{"roomID": "{room_id}"}}'.replace(" ", "")
+
+
+# define ROOM_ID "roomID"
+# define ROOM_NAME "roomName"
+# define MAX_USERS_IN_ROOM "maximumUsers"
+# define QUESTION_COUNT "questionCount"
+# define TIME_TO_ANSWER "timeToAnswer"
+def createRoom(room_name, maximumUsers, questionCount, timeToAnswer):
+    return f'{{"roomName": "{room_name}", "maximumUsers": "{maximumUsers}",' \
+           f' "questionCount": "{questionCount}", "timeToAnswer": "{timeToAnswer}"}}'.replace(" ", "")
+
+
 def makeRequest(auto=0):
     message = ""
     message_code = ""
     if auto == 0:
-        print("1 - logIn\n2 - signUp\n3 - exit")
+        # define ERROR_CODE 0
+        # define LOGIN_CODE 1
+        # define SIGNUP_CODE 2
+        # define LOGOUT_CODE 3
+        # define GET_ROOMS_CODE 4
+        # define GET_PLAYERS_IN_ROOM_CODE 5
+        # define GET_JOIN_ROOMS_CODE 6
+        # define GET_CREATE_ROOMS_CODE 7
+        # define GET_STATISTICS_CODE 8
+        print("1 - logIn\n2 - signUp\n3 - logOut\n4 - get rooms\n5 - get players in room\n6 - join room"
+              "\n7 - create room\n8 - get statistics")
         choice = input()
         if choice == "1":
-            message_code = "\2"
+            message_code = "\1"
             message = logIn(getString("userName"), getString("password"))
         elif choice == "2":
+            message_code = "\2"
+            # message = signUp("user1", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
+            message = signUp(getString("userName"), getString("password"), getString("email"), getString("address"),
+                             getString("phone"), getString("birthdate"))
+        elif choice == "3":  # logout
             message_code = "\3"
-            message = signUp("user1", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
-            # message = signUp(getString("userName"), getString("password"), getString("email"), getString("address"),
-            #     getString("phone"), getString("birthdate"))
+        elif choice == "4":  # get rooms
+            message_code = "\4"
+        elif choice == "5":  # get players in room
+            message_code = "\5"
+            message = getPlayersInRoom(getString("room id"))
+        elif choice == "6":  # join room
+            message_code = "\6"
+            message = joinRoom(getString("room id"))
+        elif choice == "7":  # create room
+            message_code = "\7"
+            createRoom(getString("room name"), getString("max users"), getString("question count"),
+                       getString("time to answer"))
+        elif choice == "8":  # get statistics
+            message_code = "\8"
         else:
             print("exiting the program")
             exit(0)
+
     else:
         if auto == 1:
             message = logIn("userName", "Password")

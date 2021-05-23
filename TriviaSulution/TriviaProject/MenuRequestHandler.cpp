@@ -76,9 +76,12 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 {
 	GetPlayersInRoomResponse players_response;
+	GetPlayersInRoomRequest players_request;
 	RequestResult result;
 
-	players_response.players = this->m_room_manager.getRoom(info.id).getAllUsers();
+	players_request = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(info.buffer);
+
+	players_response.players = this->m_room_manager.getRoom(players_request.room_id).getAllUsers();
 
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(players_response);
@@ -121,8 +124,11 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 {
 	JoinRoomResponse join_room;
 	RequestResult result;
+	JoinRoomRequest join_room_request;
 
-	this->m_room_manager.getRoom(info.id).addUser(this->m_user);
+	join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
+
+	this->m_room_manager.getRoom(join_room_request.room_id).addUser(this->m_user); // adding user to room
 	join_room.status = STATUS_OK;
 
 	result.newHandler = new MenuRequestHandler(*this);
