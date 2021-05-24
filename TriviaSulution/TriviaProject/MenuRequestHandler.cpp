@@ -64,6 +64,7 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 	GetRoomsResponse get_rooms;
 	RequestResult result;
 	
+	get_rooms.status = STATUS_OK;
 	get_rooms.rooms = m_room_manager.getRooms();
 
 	result.newHandler = new MenuRequestHandler(*this);
