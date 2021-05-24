@@ -57,7 +57,7 @@ getter function that gets the data of the room.
 input: None.
 output: the data of the room.
 */
-RoomData Room::GetRoomdata()
+RoomData& Room::GetRoomdata()
 {
     return this->m_metadata;
 }
@@ -137,7 +137,12 @@ std::vector<RoomData> RoomManager::getRooms()
 }
 
 /* get a specific room based on id */
-Room RoomManager::getRoom(unsigned int id)
+Room& RoomManager::getRoom(unsigned int id)
 {
     return this->m_rooms.find(id)->second;
+}
+
+int RoomManager::getRoomCount() const
+{
+    return this->m_rooms.size();
 }

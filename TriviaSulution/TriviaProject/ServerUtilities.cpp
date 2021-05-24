@@ -7,6 +7,7 @@ bool receiveMassageFromClient(SOCKET& client_socket, char* message_buffer)
 	if (received == SOCKET_ERROR)
 	{
 		std::cout << "Error: " << WSAGetLastError();
+		throw(std::exception());
 		return false;
 	}
 

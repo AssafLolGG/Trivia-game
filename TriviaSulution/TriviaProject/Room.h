@@ -4,6 +4,8 @@
 #include "LoginManager.h"
 #include <map>
 
+using std::string;
+
 struct RoomData
 {
 	unsigned int id;
@@ -25,7 +27,7 @@ public:
 	Room(RoomData roomdata);
 	void addUser(LoggedUser userToAdd);
 	void removeUSer(LoggedUser userToRemove);
-	RoomData GetRoomdata();
+	RoomData& GetRoomdata();
 	std::vector<std::string> getAllUsers();
 };
 
@@ -38,5 +40,6 @@ public:
 	void deleteRoom(unsigned int ID);
 	unsigned int getRoomState(unsigned int ID);
 	std::vector<RoomData> getRooms();
-	Room getRoom(unsigned int id);
+	Room& getRoom(unsigned int id);
+	int getRoomCount() const;
 };

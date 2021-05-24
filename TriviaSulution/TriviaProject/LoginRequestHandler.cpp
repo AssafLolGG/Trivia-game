@@ -6,17 +6,18 @@
     can mean- succefull or failed login. */
 RequestResult LoginRequestHandler::login(RequestInfo& info)
 {
-    LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
-    LoginResponse loginResponse;
+    LoginRequest login_request = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
+    LoginResponse login_response;
 
-    loginResponse.status = this->m_login_manager.login(loginRequest.username, loginRequest.password) == true ? TRUE : FALSE;
+    login_response.status = this->m_login_manager.login(login_request.username, login_request.password) == true ? TRUE : FALSE;
 
     RequestResult result;
-    result.respone = JsonResponsePacketSerializer::serializeResponse(loginResponse);
+    result.respone = JsonResponsePacketSerializer::serializeResponse(login_response);
     // checks if the the user managed to login succeessfully.
-    if (loginResponse.status == TRUE)
+    if (login_response.status == TRUE)
     {
-        result.newHandler = new MenuRequestHandler(this->m_request_handler_factory.getRoomManager(), this->m_request_handler_factory.getStatisticsManager(), this->m_request_handler_factory);
+        LoggedUser user(login_request.username);
+        result.newHandler = result.newHandler = result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(login_request.username));
     }
     else
     {
@@ -32,15 +33,15 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     can mean- succefull or failed signup. */
 RequestResult LoginRequestHandler::signup(RequestInfo& info)
 {
-    SignupRequest _signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
-	SignupResponse signupResponse;
-	signupResponse.status = this->m_login_manager.signup(_signupRequest.username, _signupRequest.password, _signupRequest.email, _signupRequest.address, _signupRequest.phone, _signupRequest.birthdate) == true ? TRUE : FALSE;
+    SignupRequest signup_request = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
+	SignupResponse signup_response;
+	signup_response.status = this->m_login_manager.signup(signup_request.username, signup_request.password, signup_request.email, signup_request.address, signup_request.phone, signup_request.birthdate) == true ? TRUE : FALSE;
     RequestResult result;
-    result.respone = JsonResponsePacketSerializer::serializeResponse(signupResponse);
+    result.respone = JsonResponsePacketSerializer::serializeResponse(signup_response);
     // checks if the the user managed to signup succeessfully.
-    if (signupResponse.status == TRUE)
+    if (signup_response.status == TRUE)
     {
-        result.newHandler = new MenuRequestHandler(this->m_request_handler_factory.getRoomManager(), this->m_request_handler_factory.getStatisticsManager(), this->m_request_handler_factory);
+        result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(signup_request.username));
     }
     else
     {

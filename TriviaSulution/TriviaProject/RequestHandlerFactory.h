@@ -20,7 +20,7 @@ public:
 	RequestHandlerFactory(IDatabase* db);
 	LoginManager& getLoginManager();
 	LoginRequestHandler* createLoginRequestHandler();
-	MenuRequestHandler* createMenuRequestHandler();
+	MenuRequestHandler* createMenuRequestHandler(LoggedUser user);
 	StatisticsManager& getStatisticsManager();
 	RoomManager& getRoomManager();
 };

@@ -124,12 +124,21 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 {
 	JoinRoomResponse join_room;
 	RequestResult result;
-	JoinRoomRequest join_room_request;
+	JoinRoomRequest join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
+	Room& room = this->m_room_manager.getRoom(join_room_request.room_id);
+	std::vector<string> all_users_in_room = room.getAllUsers();
 
-	join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
 
-	this->m_room_manager.getRoom(join_room_request.room_id).addUser(this->m_user); // adding user to room
-	join_room.status = STATUS_OK;
+	if (all_users_in_room.size() < room.GetRoomdata().maxPlayers && 
+		(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found - assaf had pron
+	{
+		room.addUser(this->m_user); // adding user to room
+		join_room.status = STATUS_OK;
+	}
+	else
+	{
+		join_room.status = STATUS_FAIL;
+	}
 
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(join_room);
@@ -148,7 +157,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 	create_room_request = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(info.buffer); // getting info to CreateRoomRequest object
 
 	// filling in the data for RoomData object
-	room_data.id = info.id;
+	room_data.id = this->m_room_manager.getRoomCount() + 1;
 	room_data.isActive = true;
 	room_data.maxPlayers = create_room_request.max_users;
 	room_data.name = create_room_request.room_name;

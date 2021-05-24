@@ -31,8 +31,8 @@ def joinRoom(room_id):
 # define QUESTION_COUNT "questionCount"
 # define TIME_TO_ANSWER "timeToAnswer"
 def createRoom(room_name, maximumUsers, questionCount, timeToAnswer):
-    return f'{{"roomName": "{room_name}", "maximumUsers": "{maximumUsers}",' \
-           f' "questionCount": "{questionCount}", "timeToAnswer": "{timeToAnswer}"}}'.replace(" ", "")
+    return f'{{"roomName": "{room_name}", "maximumUsers": "{maximumUsers}", "questionCount": "{questionCount}"' \
+           f', "timeToAnswer": "{timeToAnswer}"}}'.replace(" ", "")
 
 
 def makeRequest(auto=0):
@@ -59,7 +59,7 @@ def makeRequest(auto=0):
             # message = signUp("user1", "Aa123456", "email@gmail.com", "street,2,city", "054-123456", "00.00.0000")
             message = signUp(getString("userName"), getString("password"), getString("email"), getString("address"),
                              getString("phone"), getString("birthdate"))
-        elif choice == "3":  # logout
+        elif choice == "3":  # logout1
             message_code = "\3"
         elif choice == "4":  # get rooms
             message_code = "\4"
@@ -71,10 +71,10 @@ def makeRequest(auto=0):
             message = joinRoom(getString("room id"))
         elif choice == "7":  # create room
             message_code = "\7"
-            createRoom(getString("room name"), getString("max users"), getString("question count"),
-                       getString("time to answer"))
+            message = createRoom(getString("room name"), getString("max users"),
+                                 getString("question count"), getString("time to answer"))
         elif choice == "8":  # get statistics
-            message_code = "\8"
+            message_code = chr(8)
         else:
             print("exiting the program")
             exit(0)
@@ -86,6 +86,7 @@ def makeRequest(auto=0):
         elif auto == 2:
             message = signUp("user1", "Aa123456", "street,1,city", "", "", "00.00.0000")
             message_code = "\3"
+    print(message)
     lenOfMsg = len(message)
     print(lenOfMsg)
     nums = [0, 0, 0, 0]
@@ -103,6 +104,7 @@ def makeRequest(auto=0):
     completeMsg += nums[2].to_bytes(1, "big")
     completeMsg += nums[3].to_bytes(1, "big")
     completeMsg += message.encode()
+    print(completeMsg)
     return completeMsg
 
 
