@@ -150,7 +150,9 @@ string stringVectorToString(std::vector<string> strings)
 		str += strings[i] + ", ";
 	}
 
-	str.erase(str.size() - 2);
-
+	if (str != "")
+	{
+		str.erase(str.size() - 2);
+	}
 	return str;
 }

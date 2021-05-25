@@ -49,11 +49,17 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 {
 	LogoutResponse logout;
 	RequestResult result;
-
+	Room* room = new Room;
 	logout.status = STATUS_OK; // double check that one.
 
 	result.newHandler = this->m_handler_factory.createLoginRequestHandler(); // return login request after signing out
 	result.respone = JsonResponsePacketSerializer::serializeResponse(logout);
+	for (auto it = this->m_room_manager.getAllRooms().begin(); it != this->m_room_manager.getAllRooms().end(); it++)
+	{
+		it->second.removeUSer(this->m_user);
+	}
+	this->m_handler_factory.getLoginManager().logout(this->m_user.getUserName());
+	
 
 	return result;
 }
@@ -79,11 +85,16 @@ RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 	GetPlayersInRoomResponse players_response;
 	GetPlayersInRoomRequest players_request;
 	RequestResult result;
-
+	Room* room = new Room;
 	players_request = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(info.buffer);
-
-	players_response.players = this->m_room_manager.getRoom(players_request.room_id).getAllUsers();
-
+	if (this->m_room_manager.getRoom(players_request.room_id, room))
+	{
+		players_response.players = (room)->getAllUsers();
+	}
+	else
+	{
+		players_response.players = std::vector<string>();
+	}
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(players_response);
 
@@ -126,21 +137,27 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	JoinRoomResponse join_room;
 	RequestResult result;
 	JoinRoomRequest join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
-	Room& room = this->m_room_manager.getRoom(join_room_request.room_id);
-	std::vector<string> all_users_in_room = room.getAllUsers();
-
-
-	if (all_users_in_room.size() < room.GetRoomdata().maxPlayers && 
-		(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found - assaf had pron
+	Room* room = nullptr;
+	if (this->m_room_manager.getRoom(join_room_request.room_id, room))
 	{
-		room.addUser(this->m_user); // adding user to room
-		join_room.status = STATUS_OK;
+		std::vector<string> all_users_in_room = (room)->getAllUsers();
+
+
+		if (all_users_in_room.size() < (room)->GetRoomdata().maxPlayers &&
+			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found - assaf had pron
+		{
+			(room)->addUser(this->m_user); // adding user to room
+			join_room.status = STATUS_OK;
+		}
+		else
+		{
+			join_room.status = STATUS_FAIL;
+		}
 	}
 	else
 	{
 		join_room.status = STATUS_FAIL;
 	}
-
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(join_room);
 

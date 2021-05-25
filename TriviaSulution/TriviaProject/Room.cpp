@@ -137,9 +137,23 @@ std::vector<RoomData> RoomManager::getRooms()
 }
 
 /* get a specific room based on id */
-Room& RoomManager::getRoom(unsigned int id)
+bool RoomManager::getRoom(unsigned int id, Room* room)
 {
-    return this->m_rooms.find(id)->second;
+	try
+	{
+		*room = this->m_rooms.find(id)->second;
+		return true;
+	}
+	catch (...)
+	{
+		room = nullptr;
+		return false;
+	}
+}
+
+std::map<unsigned int, Room>& RoomManager::getAllRooms()
+{
+	return this->m_rooms;
 }
 
 int RoomManager::getRoomCount() const
