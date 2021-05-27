@@ -8,8 +8,34 @@
       Title="Signup screen" Height="1000" Width="800"
         Background="BurlyWood">
     <Grid RenderTransformOrigin="0.574,0.323">
+        
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="190"></ColumnDefinition>
+            <ColumnDefinition Width="400"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <Label HorizontalAlignment="Center" Content="UserName:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="Password:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="Email:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="City:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="Street:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="Apartment number:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="Phone number:" Height="40" FontSize="20"/>
+            <TextBox Height="40"/>
+            <Label HorizontalAlignment="Center" Content="BirthDate:" Height="40" FontSize="20"/>
+            <DatePicker Height="40"></DatePicker>
+            <Border BorderBrush="Black" Height="30"/>
+            <Button Height="50" Width="90" Content="Signup"/>
+            <Border BorderBrush="Black" Height="30"/>
+            <Button Height="50" Width="90" Content="Signup" Margin="156,0,155,0" RenderTransformOrigin="1.022,0.694"/>
+        </StackPanel>
+        <ScrollBar Grid.Column="0" Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left"/>
     </Grid>
+    
 </Window>
