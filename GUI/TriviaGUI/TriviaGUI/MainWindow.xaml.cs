@@ -154,9 +154,12 @@ namespace TriviaGUI
 
         private void signup_button_Click(object sender, RoutedEventArgs e)
         {
-            SignupScreen signup_window = new SignupScreen();
-            signup_window.Show();
-            Application.Current.MainWindow.Hide();
+            if (App.Current.Properties["server"] != null)
+            {
+                SignupScreen signup_window = new SignupScreen();
+                signup_window.Show();
+                Application.Current.MainWindow.Hide();
+            }
         }
     }
 }

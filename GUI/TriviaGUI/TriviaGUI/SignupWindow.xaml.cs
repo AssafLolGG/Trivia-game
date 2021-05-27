@@ -32,7 +32,9 @@ namespace TriviaGUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (App.Current.Properties["server"] != null)
+            {
 
-        }
+            }
     }
 }
