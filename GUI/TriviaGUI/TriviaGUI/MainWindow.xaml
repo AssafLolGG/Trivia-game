@@ -27,7 +27,7 @@
         <TextBox x:Name="user_name_text_box" Margin="270,98,290,826" FontSize="20"/>
         <Label Content="Password:" FontSize="20" FontFamily="david" Margin="145,189,522,736"/>
         <Label Content="UserName:" HorizontalAlignment="Left" FontSize="20" FontFamily="david" Margin="145,98,0,826" Width="125"/>
-        <Label Content="" FontSize="20" FontFamily="david" Margin="247,310,220,615" RenderTransformOrigin="0.5,0.5" x:Name="Error_label" Foreground="DarkRed">
+        <Label Content="" FontSize="20" FontFamily="david" Margin="191,310,183,590" RenderTransformOrigin="0.5,0.5" x:Name="Error_label" Foreground="DarkRed">
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

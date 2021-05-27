@@ -35,7 +35,7 @@
                 <Border BorderBrush="Black" Height="30"/>
                 <Button x:Name="login_button" Height="50" Width="90" Content="Login" Margin="156,0,155,0" RenderTransformOrigin="1.022,0.694" Click="back_to_login_Button_Click"/>
                 <Border BorderBrush="Black" Height="30"/>
-                <Label Name="infoBox" HorizontalAlignment="Center" Content="" Width="180" Height="40" FontSize="20" Margin="128,0,129,0"/>
+                <Label Name="infoBox" Content=""  Height="60" FontSize="15"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>

@@ -119,7 +119,7 @@ namespace TriviaGUI
                     }
                     else
                     {
-                        infoBox.Content = "error! username or password are incorrect";
+                        infoBox.Content = "error! check the validty of the fields(username, email, etc..)";
                     }
                 }
                 catch (Exception ex)
