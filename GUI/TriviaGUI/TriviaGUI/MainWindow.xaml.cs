@@ -33,12 +33,11 @@ namespace TriviaGUI
             password_text_box.Password = string.Empty;
         }
 
-        private void enter_button_Click(object sender, RoutedEventArgs e)
+        private void login_button_Click(object sender, RoutedEventArgs e)
         {
             if (user_name_text_box.Text == username && password_text_box.Password == password)
             {
-               // Window1 win1 = new Window1();
-               // win1.Show();
+                
                 Error_label.Content = string.Empty;
                 Application.Current.MainWindow.Close();
             }
@@ -46,6 +45,13 @@ namespace TriviaGUI
             {
                 Error_label.Content = "error! username or password are incorrect";
             }
+        }
+
+        private void signup_button_Click(object sender, RoutedEventArgs e)
+        {
+            SignupScreen signup_window = new SignupScreen();
+            signup_window.Show();
+            Application.Current.MainWindow.Hide();
         }
     }
 }

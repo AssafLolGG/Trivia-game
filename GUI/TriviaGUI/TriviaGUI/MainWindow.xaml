@@ -11,8 +11,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="cancel_button" Content="signup" Margin="409,243,290,671" FontSize="20" Click="cancel_button_Click"/>
-        <Button x:Name="enter_button" Content="login" Margin="270,243,430,671" FontSize="20" Click="enter_button_Click"/>
+        <Button x:Name="signup_button" Content="signup" Margin="409,243,290,671" FontSize="20" Click="signup_button_Click"/>
+        <Button x:Name="login_button" Content="login" Margin="270,243,430,671" FontSize="20" Click="login_button_Click"/>
         <Label Content="Log In  Screen" FontSize="20" FontFamily="david" Margin="287,48,280,876" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>

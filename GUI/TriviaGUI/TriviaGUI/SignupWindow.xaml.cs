@@ -23,5 +23,11 @@ namespace TriviaGUI
         {
             InitializeComponent();
         }
+
+        private void back_to_login_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Show();
+            this.Hide();
+        }
     }
 }
