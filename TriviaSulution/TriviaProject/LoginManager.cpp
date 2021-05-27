@@ -38,8 +38,15 @@ bool LoginManager::signup(std::string username, std::string password, std::strin
 	std::vector<std::string> addressSeperated(
 		std::sregex_token_iterator(address.begin(), address.end(), r, -1)
 		,std::sregex_token_iterator());
-	std::string street = addressSeperated[STREET_INDEX], apt = addressSeperated[APT_INDEX], city = addressSeperated[CITY_INDEX];
-	
+	std::string street, apt, city;
+	if(addressSeperated.size() == 3)
+	{
+		street = addressSeperated[STREET_INDEX], apt = addressSeperated[APT_INDEX], city = addressSeperated[CITY_INDEX];
+	}
+	else
+	{
+		return false;
+	}
 	//checks if user exists
 	if (this->_db_access->doesUserExist(username))
 	{

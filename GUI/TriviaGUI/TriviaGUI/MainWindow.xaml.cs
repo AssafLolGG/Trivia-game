@@ -28,9 +28,6 @@ namespace TriviaGUI
     ///
     public partial class MainWindow : Window
     {
-        string username = "user";
-        string password = "password";
-        //int bytes_written = 0;
 
         private byte[] getCompleteMsg(byte msgCode, byte[] jsonBytes)
         {
