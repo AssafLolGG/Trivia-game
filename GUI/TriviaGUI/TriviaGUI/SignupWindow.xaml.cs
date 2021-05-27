@@ -29,5 +29,10 @@ namespace TriviaGUI
             Application.Current.MainWindow.Show();
             this.Hide();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
