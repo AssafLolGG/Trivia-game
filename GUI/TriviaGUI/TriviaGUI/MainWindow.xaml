@@ -5,34 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-       Title="LogIn screen" Height="450" Width="800" MaxHeight="450" MaxWidth="800"
+       Title="LogIn screen" Height="1000" Width="800" MaxHeight="1000" MaxWidth="800"
         Background="BurlyWood">
     <Grid RenderTransformOrigin="0.574,0.323">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="cancel_button" Content="signup" Height="50" Width="100" Margin="485,263,207,106" FontSize="20" Click="cancel_button_Click"/>
-        <Button x:Name="enter_button" Content="login" Height="50" Width="100" Margin="335,263,357,106" FontSize="20" Click="enter_button_Click"/>
-        <Label Content="Log In  Screen" FontSize="20" FontFamily="david" Margin="335,88,214,291" RenderTransformOrigin="0.5,0.5">
+        <Button x:Name="cancel_button" Content="signup" Margin="409,243,290,671" FontSize="20" Click="cancel_button_Click"/>
+        <Button x:Name="enter_button" Content="login" Margin="270,243,430,671" FontSize="20" Click="enter_button_Click"/>
+        <Label Content="Log In  Screen" FontSize="20" FontFamily="david" Margin="287,48,280,876" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.078"/>
+                    <SkewTransform AngleY="0.028"/>
+                    <RotateTransform Angle="0.065"/>
                     <TranslateTransform/>
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <PasswordBox Name="password_text_box" Height="40" Width="250" Margin="335,205,207,174" FontSize="20"/>
-        <TextBox Name="user_name_text_box" Height="40" Width="250" Margin="335,133,207,246" FontSize="20"/>
-        <Label Content="Password:" FontSize="20" FontFamily="david" Margin="198,205,498,174"/>
-        <Label Content="UserName:" HorizontalAlignment="Left" FontSize="20" FontFamily="david" Margin="198,133,0,246"/>
-        <Label Content="" FontSize="20" FontFamily="david" Margin="293,323,149,56" RenderTransformOrigin="0.5,0.5" Name="Error_label" Foreground="DarkRed">
+        <PasswordBox x:Name="password_text_box" Margin="270,178,290,746" FontSize="20"/>
+        <TextBox x:Name="user_name_text_box" Margin="270,98,290,826" FontSize="205"/>
+        <Label Content="Password:" FontSize="20" FontFamily="david" Margin="145,189,522,736"/>
+        <Label Content="UserName:" HorizontalAlignment="Left" FontSize="20" FontFamily="david" Margin="145,98,0,826" Width="125"/>
+        <Label Content="" FontSize="20" FontFamily="david" Margin="247,310,220,615" RenderTransformOrigin="0.5,0.5" x:Name="Error_label" Foreground="DarkRed">
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.078"/>
+                    <SkewTransform AngleY="0.028"/>
+                    <RotateTransform Angle="0.065"/>
                     <TranslateTransform/>
                 </TransformGroup>
             </Label.RenderTransform>
