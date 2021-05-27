@@ -5,8 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+       Title="LogIn screen" Height="450" Width="800" MaxHeight="450" MaxWidth="800"
+        Background="BurlyWood">
+    <Grid RenderTransformOrigin="0.574,0.323">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="cancel_button" Content="signup" Height="50" Width="100" Margin="485,263,207,106" FontSize="20" Click="cancel_button_Click"/>
+        <Button x:Name="enter_button" Content="login" Height="50" Width="100" Margin="335,263,357,106" FontSize="20" Click="enter_button_Click"/>
+        <Label Content="Log In  Screen" FontSize="20" FontFamily="david" Margin="335,88,214,291" RenderTransformOrigin="0.5,0.5">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.078"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <PasswordBox Name="password_text_box" Height="40" Width="250" Margin="335,205,207,174" FontSize="20"/>
+        <TextBox Name="user_name_text_box" Height="40" Width="250" Margin="335,133,207,246" FontSize="20"/>
+        <Label Content="Password:" FontSize="20" FontFamily="david" Margin="198,205,498,174"/>
+        <Label Content="UserName:" HorizontalAlignment="Left" FontSize="20" FontFamily="david" Margin="198,133,0,246"/>
+        <Label Content="" FontSize="20" FontFamily="david" Margin="293,323,149,56" RenderTransformOrigin="0.5,0.5" Name="Error_label" Foreground="DarkRed">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.078"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
     </Grid>
 </Window>
