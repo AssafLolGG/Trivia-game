@@ -62,9 +62,7 @@ namespace TriviaGUI
                 serverConnection.GetStream().Write(data_encoded, 0, 1000);
                 System.Threading.Thread.Sleep(100);
 
-                byte[] serverOutput = new byte[1024];
-
-                serverConnection.GetStream().Read(serverOutput, 0, serverOutput.Length);
+                byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
                 Newtonsoft.Json.Linq.JObject dis = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
                 try
                 {

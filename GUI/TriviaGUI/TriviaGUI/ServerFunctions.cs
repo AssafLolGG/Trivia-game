@@ -88,5 +88,11 @@ namespace ServerFunctions
                 }
             }
         }
+        public static byte[] ReadServerMessage(TcpClient serverConnection)
+        {
+            byte[] serverOutput = new byte[1024];
+            serverConnection.GetStream().Read(serverOutput, 0, serverOutput.Length);
+            return serverOutput;
+        }
     }
 }
