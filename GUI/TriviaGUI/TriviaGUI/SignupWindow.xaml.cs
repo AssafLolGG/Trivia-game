@@ -59,7 +59,7 @@ namespace TriviaGUI
                 byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
                 byte[] data_encoded =  ServerFunctions.ServerFunctions.getCompleteMsg(2, json_byted);
 
-                serverConnection.GetStream().Write(data_encoded, 0, data_encoded.Length);
+                serverConnection.GetStream().Write(data_encoded, 0, 1000);
                 System.Threading.Thread.Sleep(100);
 
                 byte[] serverOutput = new byte[1024];
