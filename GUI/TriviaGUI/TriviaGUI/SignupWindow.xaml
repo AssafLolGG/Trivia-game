@@ -15,19 +15,19 @@
         </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Grid.Column="1">
                 <Label HorizontalAlignment="Center" Content="UserName:" Height="40" FontSize="20"/>
-                <TextBox x:Name="username_control" Height="40"/>
+                <TextBox x:Name="username_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="Password:" Height="40" FontSize="20"/>
-                <PasswordBox x:Name="password_control" Height="40"/>
+                <PasswordBox x:Name="password_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="Email:" Height="40" FontSize="20"/>
-                <TextBox x:Name="email_control" Height="40"/>
+                <TextBox x:Name="email_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="City:" Height="40" FontSize="20"/>
-                <TextBox x:Name="city_control" Height="40"/>
+                <TextBox x:Name="city_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="Street:" Height="40" FontSize="20"/>
-                <TextBox x:Name="street_control" Height="40"/>
+                <TextBox x:Name="street_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="Apartment number:" Height="40" FontSize="20"/>
-                <TextBox x:Name="apt_control" Height="40"/>
+                <TextBox x:Name="apt_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="Phone number:" Height="40" FontSize="20"/>
-                <TextBox x:Name="phone_number_control" Height="40"/>
+                <TextBox x:Name="phone_number_control" Height="40" FontSize="30"/>
                 <Label HorizontalAlignment="Center" Content="BirthDate:" Height="40" FontSize="20"/>
                 <DatePicker Name="birthdateControl" Height="40"></DatePicker>
                 <Border BorderBrush="Black" Height="30"/>
