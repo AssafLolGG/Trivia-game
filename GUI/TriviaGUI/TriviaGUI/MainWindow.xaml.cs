@@ -55,22 +55,29 @@ namespace TriviaGUI
 
                 string json_parsed = JsonConvert.SerializeObject(loginDitails);
                 byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
-                byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(1, json_byted);
+                byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(2, json_byted);
 
-                serverConnection.GetStream().Write(data_encoded, 0, data_encoded.Length);
+                serverConnection.GetStream().Write(data_encoded, 0, 1000);
                 System.Threading.Thread.Sleep(100);
 
                 byte[] serverOutput = new byte[1024];
-                serverConnection.GetStream().Read(serverOutput, 0, 1000);
-                Newtonsoft.Json.Linq.JObject dis = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
 
-                if (dis.First.First.ToString() == "1")
+                serverConnection.GetStream().Read(serverOutput, 0, serverOutput.Length);
+                Newtonsoft.Json.Linq.JObject dis = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
+                try
                 {
-                    Error_label.Content = "You logged in successfully!";
+                    if (dis.First.First.ToString() == "1")
+                    {
+                        Error_label.Content = "You logged in successfully!";
+                    }
+                    else
+                    {
+                        Error_label.Content = "error! username or password are incorrect";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Error_label.Content = "error! username or password are incorrect";
+
                 }
             }
             else
