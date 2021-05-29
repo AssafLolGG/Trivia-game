@@ -66,7 +66,10 @@ namespace TriviaGUI
                 {
                     if (dis.First.First.ToString() == "1")
                     {
-                        Error_label.Content = "You logged in successfully!";
+                        MainMenu menu = new MainMenu();
+                        menu.Show();
+
+                        this.Close();
                     }
                     else
                     {

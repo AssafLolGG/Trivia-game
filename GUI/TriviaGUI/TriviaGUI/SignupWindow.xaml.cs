@@ -68,7 +68,10 @@ namespace TriviaGUI
                 {
                     if (dis.First.First.ToString() == "1")
                     {
-                        infoBox.Content = "You logged in successfully!";
+                        MainMenu menu = new MainMenu();
+                        menu.Show();
+
+                        this.Close();
                     }
                     else
                     {
