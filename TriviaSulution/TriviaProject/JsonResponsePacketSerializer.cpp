@@ -134,8 +134,10 @@ string roomDataToString(std::vector<RoomData> rooms)
 	{
 		rooms_string += it->name + ", ";
 	}
-	rooms_string.erase(rooms_string.size() - 2);
-	
+	if (rooms_string != "")
+	{
+		rooms_string.erase(rooms_string.size() - 2);
+	}
 	return rooms_string;
 }
 
