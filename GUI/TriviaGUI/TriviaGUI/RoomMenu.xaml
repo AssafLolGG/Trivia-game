@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <Label Grid.Column="1" Grid.Row="0" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15"  Content="ID                NAME                     Number Of Questions                     Time Per Question"></Label>
         <ScrollViewer Grid.Column="1" Grid.Row="1">
-            <ListBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Width="600" HorizontalAlignment="Right">
+            <ListBox x:Name="rooms_list" FontSize="15" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
             </ListBox>
         </ScrollViewer>
         <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#ff0000" FontSize="30"></Label>

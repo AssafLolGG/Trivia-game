@@ -11,6 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Net.Sockets;
+using System.Threading;
+using ServerFunctions;
 
 namespace TriviaGUI
 {
@@ -40,7 +43,15 @@ namespace TriviaGUI
 
         private void log_out_button_Click(object sender, RoutedEventArgs e)
         {
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            byte[] data_encoded = { 3 };
+            serverConnection.GetStream().Write(data_encoded, 0, 1);
+            System.Threading.Thread.Sleep(100);
 
+            ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+            MainWindow login_screen = new MainWindow();
+            login_screen.Show();
+            this.Close();
         }
     }
 }
