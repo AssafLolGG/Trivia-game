@@ -77,6 +77,11 @@ std::vector<std::string> Room::getAllUsers()
     return usersNames;
 }
 
+bool Room::isUserInRoom(LoggedUser userToFind)
+{
+	return std::find(this->m_users.begin(), this->m_users.end(), userToFind) != this->m_users.end();
+}
+
 /*
 function that creates room.
 input: the room logged usera and the room data.
@@ -87,6 +92,18 @@ void RoomManager::createRoom(LoggedUser loggedUserToRoom, RoomData currentRoomda
     Room room(currentRoomdata);
     room.addUser(loggedUserToRoom);
     this->m_rooms.insert(std::pair<unsigned int, Room>(currentRoomdata.id, room));
+}
+
+int RoomManager::getRoomID(LoggedUser loggedUserToRoom)
+{
+	for (std::pair<unsigned int, Room> pair : this->m_rooms)
+	{
+		if (pair.second.isUserInRoom(loggedUserToRoom))
+		{
+			return pair.first;
+		}
+	}
+	return -1;
 }
 
 /*

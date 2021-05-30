@@ -29,6 +29,7 @@ public:
 	void removeUSer(LoggedUser userToRemove);
 	RoomData& GetRoomdata();
 	std::vector<std::string> getAllUsers();
+	bool isUserInRoom(LoggedUser);
 };
 
 class RoomManager
@@ -37,6 +38,7 @@ private:
 	std::map<unsigned int, Room> m_rooms;
 public:
 	void createRoom(LoggedUser loggedUserToRoom, RoomData currentRoomdata);
+	int getRoomID(LoggedUser loggedUserToRoom);
 	void deleteRoom(unsigned int ID);
 	unsigned int getRoomState(unsigned int ID);
 	std::vector<RoomData> getRooms();
