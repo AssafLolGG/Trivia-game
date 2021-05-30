@@ -42,7 +42,7 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo& info)
 	}
 	else if (info.id == GET_ROOMDATA_CODE)
 	{
-		
+		result = this->getRoomData(info);
 	}
 
 	return result;
@@ -210,6 +210,7 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 	{
 		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
 		roomDataResponse.status = STATUS_OK;
+		roomDataResponse.id = theRoomId;
 		roomDataResponse.isActive = roomdataOfTheRoom.isActive;
 		roomDataResponse.maxPlayers = roomdataOfTheRoom.maxPlayers;
 		roomDataResponse.name = roomdataOfTheRoom.name;

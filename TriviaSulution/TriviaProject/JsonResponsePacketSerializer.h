@@ -15,6 +15,7 @@ using json = nlohmann::json;
 std::vector<uint8_t> getCompleteMessage(unsigned char ResponseCode, std::string jsonResponse);
 string roomDataToString(std::vector<RoomData> rooms);
 string stringVectorToString(std::vector<string> strings);
+string roomDataVectorToRoomIdString(std::vector<RoomData> rooms);
 
 class JsonResponsePacketSerializer
 {

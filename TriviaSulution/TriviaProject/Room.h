@@ -47,4 +47,5 @@ public:
 	bool getRoom(unsigned int id, Room* room);
 	std::map<unsigned int, Room>& getAllRooms();
 	int getRoomCount() const;
+	
 };

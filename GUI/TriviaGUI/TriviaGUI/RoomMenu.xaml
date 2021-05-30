@@ -15,7 +15,7 @@
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Label Grid.Column="1" Grid.Row="0" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15"  Content="ID                NAME                     Number Of Questions                     Time Per Question"></Label>
+        <Label Grid.Column="1" Grid.Row="0" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="13"  Content="ID        NAME       Players In Room/Max Players         Number Of Questions           Time Per Question"></Label>
         <ScrollViewer Grid.Column="1" Grid.Row="1">
             <ListBox x:Name="rooms_list" FontSize="15" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
             </ListBox>

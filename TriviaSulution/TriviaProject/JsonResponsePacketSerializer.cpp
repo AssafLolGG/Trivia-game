@@ -50,6 +50,7 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomsRes
 	json responseJson;
 	responseJson["status"] = rooms.status;
 	responseJson["rooms"] = roomDataToString(rooms.rooms);
+	responseJson["rooms_id"] = roomDataVectorToRoomIdString(rooms.rooms);
 
 	std::string jsonSerialized = responseJson.dump();
 	
@@ -173,4 +174,14 @@ string stringVectorToString(std::vector<string> strings)
 		str.erase(str.size() - 2);
 	}
 	return str;
+}
+
+string roomDataVectorToRoomIdString(std::vector<RoomData> rooms)
+{
+	std::vector<string> rooms_id_vector;
+	for (auto iter = rooms.begin(); iter != rooms.end(); iter++)
+	{
+		rooms_id_vector.push_back(std::to_string(iter->id));
+	}
+	return stringVectorToString(rooms_id_vector);
 }
