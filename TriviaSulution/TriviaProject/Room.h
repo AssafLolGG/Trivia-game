@@ -4,6 +4,8 @@
 #include "LoginManager.h"
 #include <map>
 
+#define INVALID_INDEX -1
+
 using std::string;
 
 struct RoomData

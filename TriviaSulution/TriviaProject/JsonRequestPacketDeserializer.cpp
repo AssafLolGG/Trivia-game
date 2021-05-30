@@ -96,7 +96,7 @@ GetRoomDataRequest JsonRequestPacketDeserializer::deserializeRoomDataRequest(std
 	GetRoomDataRequest roomDataReq;
 	result = JsonRequestPacketDeserializer::getJson(buffer);
 
-	roomDataReq.room_id = std::stoi(result.value(ROOM_ID, ""));
+	roomDataReq.room_name = result.value(ROOM_NAME, "");
 
 	return roomDataReq;
 }

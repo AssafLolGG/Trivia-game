@@ -39,5 +39,5 @@ struct CreateRoomRequest
 };
 struct GetRoomDataRequest
 {
-	int room_id;
+	string room_name;
 };

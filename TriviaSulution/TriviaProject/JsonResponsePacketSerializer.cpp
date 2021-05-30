@@ -101,6 +101,7 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomData
 {
 	json responseJson;
 	responseJson["status"] = roomData.status;
+	responseJson["id"] = roomData.id;
 	responseJson["name"] = roomData.name;
 	responseJson["questionsNumber"] = roomData.numOfQuestionsInGame;
 	responseJson["maxPlayers"] = roomData.maxPlayers;

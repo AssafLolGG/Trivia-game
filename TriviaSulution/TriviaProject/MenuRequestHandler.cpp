@@ -201,11 +201,12 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 	GetRoomDataRequest roomDataRequest;
 	GetRoomDataResponse roomDataResponse;
 	RequestResult result;
-	Room* theRoom;
+	Room* theRoom = new Room();
 	
 
 	roomDataRequest = JsonRequestPacketDeserializer::deserializeRoomDataRequest(info.buffer);
-	if (this->m_room_manager.getRoom(roomDataRequest.room_id, theRoom))
+	int theRoomId = this->m_room_manager.getRoomID(this->m_user);
+	if (theRoomId != INVALID_INDEX && this->m_room_manager.getRoom(theRoomId, theRoom))
 	{
 		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
 		roomDataResponse.status = STATUS_OK;

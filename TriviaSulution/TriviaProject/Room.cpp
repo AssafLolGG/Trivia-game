@@ -110,7 +110,7 @@ int RoomManager::getRoomID(LoggedUser loggedUserToRoom)
 			return pair.first;
 		}
 	}
-	return -1;
+	return INVALID_INDEX;
 }
 
 /*

@@ -61,6 +61,7 @@ struct CreateRoomResponse
 struct GetRoomDataResponse
 {
 	unsigned int status;
+	unsigned int id;
 	std::string name;
 	unsigned int maxPlayers;
 	unsigned int numOfQuestionsInGame;
