@@ -79,7 +79,14 @@ std::vector<std::string> Room::getAllUsers()
 
 bool Room::isUserInRoom(LoggedUser userToFind)
 {
-	return std::find(this->m_users.begin(), this->m_users.end(), userToFind) != this->m_users.end();
+	for (LoggedUser user : this->m_users)
+	{
+		if (user.getUserName() == userToFind.getUserName())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 /*

@@ -29,5 +29,6 @@ public:
 	static std::vector<uint8_t> serializeResponse(JoinRoomResponse);
 	static std::vector<uint8_t> serializeResponse(CreateRoomResponse);
 	static std::vector<uint8_t> serializeResponse(GetPersonalStatsResponse);
+	static std::vector<uint8_t> serializeResponse(GetRoomDataResponse);
 };
 

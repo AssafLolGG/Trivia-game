@@ -57,3 +57,13 @@ struct CreateRoomResponse
 {
 	unsigned int status;
 };
+
+struct GetRoomDataResponse
+{
+	unsigned int status;
+	std::string name;
+	unsigned int maxPlayers;
+	unsigned int numOfQuestionsInGame;
+	unsigned int timePerQuestion;
+	unsigned int isActive;
+};

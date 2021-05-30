@@ -97,6 +97,21 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetPersonal
 	return getCompleteMessage(GET_STATISTICS_CODE, jsonSerialized);
 }
 
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomDataResponse roomData)
+{
+	json responseJson;
+	responseJson["status"] = roomData.status;
+	responseJson["name"] = roomData.name;
+	responseJson["questionsNumber"] = roomData.numOfQuestionsInGame;
+	responseJson["maxPlayers"] = roomData.maxPlayers;
+	responseJson["timePerQuestion"] = roomData.timePerQuestion;
+	responseJson["isActive"] = roomData.isActive;
+
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(GET_ROOMDATA_CODE, jsonSerialized);
+}
+
 /*	function that adds into one byte array the response code, the size of the response and the responce json itself.
 	input: the response code, and the json of the response.
 	output: the completed message. */
