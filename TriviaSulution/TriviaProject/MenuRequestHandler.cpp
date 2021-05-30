@@ -76,6 +76,7 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 	
 	get_rooms.status = STATUS_OK;
 	get_rooms.rooms = m_room_manager.getRooms();
+	
 
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(get_rooms);
@@ -205,7 +206,7 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 	
 
 	roomDataRequest = JsonRequestPacketDeserializer::deserializeRoomDataRequest(info.buffer);
-	int theRoomId = this->m_room_manager.getRoomID(this->m_user);
+	int theRoomId = roomDataRequest.room_id;
 	if (theRoomId != INVALID_INDEX && this->m_room_manager.getRoom(theRoomId, theRoom))
 	{
 		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();

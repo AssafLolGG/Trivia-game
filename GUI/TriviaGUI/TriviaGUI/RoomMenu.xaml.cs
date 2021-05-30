@@ -25,16 +25,17 @@ namespace TriviaGUI
     {
         private bool GetCurrentPlayersInRoom(TcpClient serverConnection, int roomId, out string[] completedData)
         {
-            completedData = new string[1];
+            completedData = new string[1000];
             Dictionary<string, object> RoomDitalis = new Dictionary<string, object>();
-            RoomDitalis.Add("roomID", roomId);
+            RoomDitalis.Add("roomID", roomId.ToString());
             string json_parsed = JsonConvert.SerializeObject(RoomDitalis);
             byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
             byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(5, json_byted);
 
-            serverConnection.GetStream().Write(data_encoded, 0, data_encoded.Length);
-            System.Threading.Thread.Sleep(100);
+            serverConnection.GetStream().Write(data_encoded, 0, 1000);
 
+            while (serverConnection.Available == 0) ;
+            System.Threading.Thread.Sleep(100);
             byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
             Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
             try
@@ -51,18 +52,18 @@ namespace TriviaGUI
             { }
             return false;
         }
-        private bool GetRoomDataString(TcpClient serverConnection, string roomName, out string completedData)
+        private bool GetRoomDataString(TcpClient serverConnection, string roomName, int room_id, out string completedData)
         {
             completedData = "";
             Dictionary<string, object> RoomDitalis = new Dictionary<string, object>();
-            RoomDitalis.Add("roomName", roomName);
+            RoomDitalis.Add("roomID", room_id.ToString());
             string json_parsed = JsonConvert.SerializeObject(RoomDitalis);
             byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
             byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(9, json_byted);
 
             serverConnection.GetStream().Write(data_encoded, 0, 1000);
-            System.Threading.Thread.Sleep(100);
 
+            while (serverConnection.Available == 0) ;
             byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
             Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
             try
@@ -70,8 +71,8 @@ namespace TriviaGUI
                 string[] players;
                 if (jsonReturned["status"].ToString() == "1" && jsonReturned["isActive"].ToString() == "1")
                 {
-                    completedData += jsonReturned["id"].ToString() + "        ";
-                    if (this.GetCurrentPlayersInRoom(serverConnection, int.Parse(jsonReturned["id"].ToString()), out players) == true)
+                    completedData += room_id.ToString() + "        ";
+                    if (this.GetCurrentPlayersInRoom(serverConnection, room_id, out players) == true)
                     {
                         completedData += roomName + "         ";
                         completedData += players.Length.ToString() + " / " + jsonReturned["maxPlayers"].ToString() + "                                        ";
@@ -99,26 +100,27 @@ namespace TriviaGUI
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] data_encoded = { 4 };
             serverConnection.GetStream().Write(data_encoded, 0, 1);
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(1000);
 
             byte[] rooms_names = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
             Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(rooms_names);
 
-            
-            string rooms_names_string = jsonReturned.First.First.ToString();
+
+            string rooms_names_string = jsonReturned["rooms"].ToString();
             string[] seperators = { ", " };
             string[] rooms = rooms_names_string.Split(seperators, System.StringSplitOptions.RemoveEmptyEntries);
-            foreach (string room in rooms)
+            string rooms_id_string = jsonReturned["rooms_id"].ToString();
+            string[] rooms_id = rooms_id_string.Split(seperators, System.StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < rooms.Length; i++)
             {
                 ListBoxItem item = new ListBoxItem();
                 string contentOfItem = "";
-                if (GetRoomDataString(serverConnection, room, out contentOfItem) == true)
+                if (GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
                 {
                     item.Content = contentOfItem;
                     this.rooms_list.Items.Add(item);
                 }
             }
-
             
         }
         public RoomMenu()

@@ -48,7 +48,7 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LogoutRespo
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse rooms)
 {
 	json responseJson;
-	responseJson["status"] = rooms.status;
+	responseJson["status"] = std::to_string(rooms.status);
 	responseJson["rooms"] = roomDataToString(rooms.rooms);
 	responseJson["rooms_id"] = roomDataVectorToRoomIdString(rooms.rooms);
 
