@@ -39,19 +39,20 @@
                 <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
             </Border>
             <Border BorderBrush="{x:Null}" Grid.Row="2" Grid.Column="1">
-                <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox x:Name="MaximumUsers_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
             </Border>
             <Border BorderBrush="{x:Null}" Grid.Row="3" Grid.Column="1">
-                <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox x:Name="AnswerTimeOut_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
             </Border>
             <Border BorderBrush="{x:Null}" Grid.Row="4" Grid.Column="1">
-                <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox x:Name="QuestionCount_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
             </Border>
             <Border BorderBrush="{x:Null}" Grid.Row="1" Grid.Column="1">
-                <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
+                <TextBox x:Name="roomName_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
             </Border>
+            <TextBlock x:Name="IsCreated_TB" FontSize="40" Grid.Row="8" Grid.ColumnSpan="2"></TextBlock>
         </Grid>
-        <Button FontSize="30" Grid.Row="1">Create Room</Button>
+        <Button FontSize="30" Grid.Row="1" Click="Button_Click_1">Create Room</Button>
         <Button FontSize="30" Grid.Row="1" Grid.Column="2" Click="Button_Click">Back To Menu</Button>
     </Grid>
 </Window>
