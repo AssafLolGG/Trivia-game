@@ -6,7 +6,7 @@
 bool MenuRequestHandler::isRequestRelevant(RequestInfo& info)
 {
 	return info.id == LOGOUT_CODE || info.id == GET_STATISTICS_CODE || info.id == GET_JOIN_ROOMS_CODE
-		|| info.id == GET_PLAYERS_IN_ROOM_CODE || info.id == GET_ROOMS_CODE || info.id == GET_CREATE_ROOMS_CODE;
+		|| info.id == GET_PLAYERS_IN_ROOM_CODE || info.id == GET_ROOMS_CODE || info.id == GET_CREATE_ROOMS_CODE || info.id == GET_ROOMDATA_CODE;
 }
 
 /*	function that handles client request
@@ -39,6 +39,10 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo& info)
 	else if (info.id == GET_CREATE_ROOMS_CODE)
 	{
 		result = this->createRoom(info);
+	}
+	else if (info.id == GET_ROOMDATA_CODE)
+	{
+		
 	}
 
 	return result;
@@ -188,6 +192,36 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response
+
+	return result;
+}
+
+RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
+{
+	GetRoomDataRequest roomDataRequest;
+	GetRoomDataResponse roomDataResponse;
+	RequestResult result;
+	Room* theRoom;
+	
+
+	roomDataRequest = JsonRequestPacketDeserializer::deserializeRoomDataRequest(info.buffer);
+	if (this->m_room_manager.getRoom(roomDataRequest.room_id, theRoom))
+	{
+		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
+		roomDataResponse.status = STATUS_OK;
+		roomDataResponse.isActive = roomdataOfTheRoom.isActive;
+		roomDataResponse.maxPlayers = roomdataOfTheRoom.maxPlayers;
+		roomDataResponse.name = roomdataOfTheRoom.name;
+		roomDataResponse.numOfQuestionsInGame = roomdataOfTheRoom.numOfQuestionsInGame;
+		roomDataResponse.timePerQuestion = roomdataOfTheRoom.timePerQuestion;
+	}
+	else
+	{
+		roomDataResponse.status = STATUS_FAIL;
+	}
+
+	result.newHandler = new MenuRequestHandler(*this);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(roomDataResponse);
 
 	return result;
 }
