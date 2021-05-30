@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="RoomMenu" Height="1000" Width="800">
+        Title="RoomMenu" Height="800" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"></ColumnDefinition>
@@ -22,10 +22,10 @@
         </ScrollViewer>
         <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#ff0000" FontSize="30"></Label>
         <StackPanel Orientation="Vertical" Grid.Row="1">
-            <Button x:Name="joine_room_button" Height="200" Click="joine_room_button_Click">Join Room</Button>
-            <Border Height="50"></Border>
+            <Button x:Name="join_room_button" Height="200" Click="join_room_button_Click">Join Room</Button>
+            <Border Height="20"></Border>
             <Button x:Name="create_room_button" Height="200" Click="create_room_button_Click">Create Room</Button>
-            <Border Height="50"></Border>
+            <Border Height="20"></Border>
             <Button x:Name="back_to_menu_button" Height="200" Click="back_to_menu_button_Click">Back To Menu</Button>
         </StackPanel>
     </Grid>
