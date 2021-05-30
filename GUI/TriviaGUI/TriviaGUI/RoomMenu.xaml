@@ -1,58 +1,32 @@
-﻿<Window x:Class="TriviaGUI.CreateMenu"
+﻿<Window x:Class="TriviaGUI.RoomMenu"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="CreateMenu" Height="1000" Width="800">
+        Title="RoomMenu" Height="800" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="150"></RowDefinition>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Room Name:</TextBlock>
-            <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Maximum Users:</TextBlock>
-            <TextBlock Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Answer Time Out:</TextBlock>
-            <TextBlock Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Question Count:</TextBlock>
-            <Border BorderBrush="{x:Null}" Grid.Row="1" Grid.Column="1">
-                <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="2" Grid.Column="1">
-                <TextBox x:Name="MaximumUsers_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="3" Grid.Column="1">
-                <TextBox x:Name="AnswerTimeOut_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="4" Grid.Column="1">
-                <TextBox x:Name="QuestionCount_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="1" Grid.Column="1">
-                <TextBox x:Name="roomName_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
-            </Border>
-            <TextBlock x:Name="IsCreated_TB" FontSize="40" Grid.Row="8" Grid.ColumnSpan="2"></TextBlock>
-        </Grid>
-        <Button FontSize="30" Grid.Row="1" Click="Button_Click_1">Create Room</Button>
-        <Button FontSize="30" Grid.Row="1" Grid.Column="2" Click="Button_Click">Back To Menu</Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="1" Grid.Row="0" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="13"  Content="ID        NAME       Players In Room/Max Players         Number Of Questions           Time Per Question"></Label>
+        <ScrollViewer Grid.Column="1" Grid.Row="1">
+            <ListBox x:Name="rooms_list" FontSize="15" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            </ListBox>
+        </ScrollViewer>
+        <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#ff0000" FontSize="30"></Label>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <Button x:Name="join_room_button" Height="200" Click="join_room_button_Click">Join Room</Button>
+            <Border Height="20"></Border>
+            <Button x:Name="create_room_button" Height="200" Click="create_room_button_Click">Create Room</Button>
+            <Border Height="20"></Border>
+            <Button x:Name="back_to_menu_button" Height="200" Click="back_to_menu_button_Click">Back To Menu</Button>
+        </StackPanel>
     </Grid>
 </Window>

@@ -11,8 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Net.Sockets;
-using Newtonsoft.Json;
 
 namespace TriviaGUI
 {
@@ -21,13 +19,6 @@ namespace TriviaGUI
     /// </summary>
     public partial class Statistics : Window
     {
-        private void getPersonalStatistics()
-        {
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            byte[] data_encoded = { 4 }; // preparing a message with get rooms code (4) as the code
-            serverConnection.GetStream().Write(data_encoded, 0, 1);
-            System.Threading.Thread.Sleep(1000);
-        }
         public Statistics()
         {
             InitializeComponent();
