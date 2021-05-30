@@ -159,5 +159,10 @@ namespace TriviaGUI
 
             this.Close();
         }
+
+        private void refresh_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.refreshRoomList();
+        }
     }
 }
