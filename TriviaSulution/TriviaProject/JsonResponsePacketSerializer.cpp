@@ -114,6 +114,16 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomData
 	return getCompleteMessage(GET_ROOMDATA_CODE, jsonSerialized);
 }
 
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(TopFivePlayers top_five)
+{
+	json responseJson;
+	responseJson["players"] = stringVectorToString(top_five.top_players);
+	responseJson["score"] = stringVectorToString(top_five.top_score);
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(GET_TOP_FIVE_CODE, jsonSerialized);
+}
+
 /*	function that adds into one byte array the response code, the size of the response and the responce json itself.
 	input: the response code, and the json of the response.
 	output: the completed message. */

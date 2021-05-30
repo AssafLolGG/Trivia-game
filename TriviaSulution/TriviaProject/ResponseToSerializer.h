@@ -68,3 +68,9 @@ struct GetRoomDataResponse
 	unsigned int timePerQuestion;
 	unsigned int isActive;
 };
+
+struct TopFivePlayers
+{
+	std::vector<std::string> top_players;
+	std::vector<std::string> top_score;
+};

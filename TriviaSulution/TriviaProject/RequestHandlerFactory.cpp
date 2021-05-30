@@ -7,6 +7,7 @@
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_login_manager(LoginManager(db))
 {
     this->m_database = db;
+    this->m_statistics_manager = StatisticsManager(this->m_database);
 }
 
 /*  function returns the login manager of the request handler factory.

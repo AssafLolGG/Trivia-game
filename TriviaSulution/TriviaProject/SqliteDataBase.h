@@ -2,6 +2,7 @@
 #include "IDatabase.h"
 #include "..//..//sqlite-amalgamation-3350500/sqlite3.h"
 #include <vector>
+#include <iostream>
 
 
 class SqliteDataBase : public IDatabase
@@ -13,6 +14,8 @@ private:
 	static int callbackUser(void* data, int argc, char** argv, char** azColName);
 	static int callbackPasswords(void* data, int argc, char** argv, char** azColName);
 	static int callbackQuestionsAndAnswers(void* data, int argc, char** argv, char** azColName);
+
+	void clearStatisticsDB(statisticsDB stats);
 public:
 	static bool isUserExisting;
 	static bool isPasswordMatching;
@@ -29,6 +32,8 @@ public:
 	
 	int usernameToID(std::string username);
 	std::vector<Question> getQuestions();
-	std::vector<statisticsDB> getTop5Players();
+	std::vector<User> getTop5Players();
+	std::vector<statisticsDB> getTopFiveScore();
+	statisticsDB getStatistics(int user_id);
 };
 

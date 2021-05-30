@@ -21,6 +21,7 @@ class MenuRequestHandler : public IRequestHandler
 	RequestResult joinRoom(RequestInfo info);
 	RequestResult createRoom(RequestInfo info);
 	RequestResult getRoomData(RequestInfo info);
+	RequestResult topFivePlayer(RequestInfo info);
 public:
 	MenuRequestHandler(RoomManager& room_manager, StatisticsManager& statistics_manager, RequestHandlerFactory& handler_factory, LoggedUser m_user_) : m_room_manager(room_manager),
 		m_statistics_manager(statistics_manager), m_handler_factory(handler_factory), IRequestHandler()

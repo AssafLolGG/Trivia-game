@@ -11,70 +11,71 @@ callback function that gets users statistics to a vector.
 int SqliteDataBase::callbackStatistics(void* data, int argc, char** argv, char** azColName)
 {
 	isUserExisting = true;
-	std::vector<statisticsDB>* dataVector = (std::vector<statisticsDB>*) data;
+
+	std::vector<statisticsDB>* stats_vector = (std::vector<statisticsDB>*)data;
+	statisticsDB stats;
 
 	// getting the user's qualities from db to an user object.
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::string(azColName[i]) == "player_id")
 		{
-			global_stats.player_id = std::stoi(argv[i]);
+			stats.player_id = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "games_played")
 		{
-			global_stats.games_played = std::stoi(argv[i]);
+			stats.games_played = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "right_answers")
 		{
-			global_stats.right_answers = std::stoi(argv[i]);
+			stats.right_answers = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "total_answers")
 		{
-			global_stats.total_answers = std::stoi(argv[i]);
+			stats.total_answers = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "likeability")
 		{
-			global_stats.likeability = std::stoi(argv[i]);
+			stats.likeability = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "potential")
 		{
-			global_stats.potnetial = std::stoi(argv[i]);
+			stats.potnetial = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "highest_score")
 		{
-			global_stats.highest_score = std::stoi(argv[i]);
+			stats.highest_score = argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "time_played")
 		{
-			global_stats.time_played = std::stoi(argv[i]);
+			stats.time_played = argv[i];
 		}
 		else if (std::string(azColName[i]) == "time_played_last_game")
 		{
-			global_stats.time_played_last_game = std::stoi(argv[i]);
+			stats.time_played_last_game =argv[i];
 		}
 		else if (std::string(azColName[i]) == "score_last_game")
 		{
-			global_stats.score_last_game = std::stoi(argv[i]);
+			stats.score_last_game = argv[i];
 		}
 		else if (std::string(azColName[i]) == "number_of_future_partners")
 		{
-			global_stats.number_of_future_partners = std::stoi(argv[i]);
+			stats.number_of_future_partners = argv[i];
 		}
 		else if (std::string(azColName[i]) == "questions_last_game")
 		{
-			global_stats.questions_last_game = std::stoi(argv[i]);
+			stats.questions_last_game = argv[i];
 		}
 	}
+	stats_vector->push_back(stats);
 
-	// pushes the user's record to the vector.
-	dataVector->push_back(global_stats);
 	return 0;
 }
 /*
@@ -110,8 +111,6 @@ int SqliteDataBase::callbackUser(void* data, int argc, char** argv, char** azCol
 		{
 			user.id = std::stoi(argv[i]);
 		}
-
-		
 	}
 
 	// pushes the user's record to the vector.
@@ -180,6 +179,22 @@ int SqliteDataBase::callbackQuestionsAndAnswers(void* data, int argc, char** arg
 	return 0;
 }
 
+void SqliteDataBase::clearStatisticsDB(statisticsDB stats)
+{
+	stats.games_played = "";
+	stats.highest_score = "";
+	stats.likeability = "";
+	stats.number_of_future_partners = "";
+	stats.player_id = "";
+	stats.potnetial = "";
+	stats.questions_last_game = "";
+	stats.right_answers = "";
+	stats.score_last_game = "";
+	stats.time_played = "";
+	stats.time_played_last_game = "";
+	stats.total_answers = "";
+}
+
 /*
 constractor function that opens the db file and initialize the db
 storing variable.
@@ -246,7 +261,7 @@ int SqliteDataBase::getPlayerAverageAnswerTime(int user_id)
 	std::string sql_statement = "SELECT * FROM Statistics WHERE player_id = " + std::to_string(user_id) + ";";
 	std::vector<statisticsDB> usersVector = std::vector<statisticsDB>();
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackStatistics , &usersVector, nullptr);
-	return usersVector[0].time_played_last_game / usersVector[0].questions_last_game;
+	return std::stoi(usersVector[0].time_played_last_game) / std::stoi(usersVector[0].questions_last_game);
 }
 
 /*
@@ -260,7 +275,7 @@ int SqliteDataBase::getNumOfCorrectAnswers(int user_id)
 	std::string sql_statement = "SELECT * FROM Statistics WHERE player_id = " + std::to_string(user_id) + ";";
 	std::vector<statisticsDB> usersVector = std::vector<statisticsDB>();
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackStatistics, &usersVector, nullptr);
-	return usersVector[0].right_answers;
+	return std::stoi(usersVector[0].right_answers);
 }
 
 /*
@@ -273,7 +288,7 @@ int SqliteDataBase::getNumOfTotalAnswers(int user_id)
 	std::string sql_statement = "SELECT * FROM Statistics WHERE player_id = " + std::to_string(user_id) + ";";
 	std::vector<statisticsDB> usersVector = std::vector<statisticsDB>();
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackStatistics, &usersVector, nullptr);
-	return usersVector[0].total_answers;
+	return std::stoi(usersVector[0].total_answers);
 }
 
 /*
@@ -286,7 +301,7 @@ int SqliteDataBase::getNumOfPlayerGames(int user_id)
 	std::string sql_statement = "SELECT * FROM Statistics WHERE player_id = " + std::to_string(user_id) + ";";
 	std::vector<statisticsDB> usersVector = std::vector<statisticsDB>();
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackStatistics, &usersVector, nullptr);
-	return usersVector[0].games_played;
+	return std::stoi(usersVector[0].games_played);
 }
 
 /*
@@ -296,7 +311,7 @@ output: the id of the username.
 */
 int SqliteDataBase::usernameToID(std::string username)
 {
-	std::string sql_statement = "SELECT * FROM users WHERE UserName = " + username + ";";
+	std::string sql_statement = "SELECT * FROM users WHERE UserName = \"" + username + "\";";
 	std::vector<User> usersVector = std::vector<User>();
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackUser, &usersVector, nullptr);
 	return usersVector[0].id;
@@ -321,10 +336,29 @@ the function returns the top 5 players with the higest score.
 input: None.
 output: a vector of the top 5 players's(by score) statistics.
 */
-std::vector<statisticsDB> SqliteDataBase::getTop5Players()
+std::vector<User> SqliteDataBase::getTop5Players()
+{
+	std::string sql_statement = "SELECT * FROM users INNER JOIN Statistics WHERE users.Id = Statistics.player_id ORDER BY highest_score DESC LIMIT 5;"; 
+	std::vector<User> usersVector = std::vector<User>();
+	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackUser, &usersVector, nullptr);
+
+	return usersVector;
+}
+
+std::vector<statisticsDB> SqliteDataBase::getTopFiveScore()
 {
 	std::string sql_statement = "SELECT * FROM Statistics ORDER BY highest_score DESC LIMIT 5;";
-	std::vector<statisticsDB> usersVector = std::vector<statisticsDB>();
-	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackUser, &usersVector, nullptr);
-	return usersVector;
+	std::vector<statisticsDB> stats_vector = std::vector<statisticsDB>();
+	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackStatistics, &stats_vector, nullptr);
+
+	return stats_vector;
+}
+
+statisticsDB SqliteDataBase::getStatistics(int user_id)
+{
+	std::string sql_statement = "SELECT * FROM Statistics WHERE player_id = " + std::to_string(user_id) + ";";
+	std::vector<statisticsDB> sb = std::vector<statisticsDB>();
+	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackStatistics, &sb, nullptr);
+
+	return sb[0];
 }

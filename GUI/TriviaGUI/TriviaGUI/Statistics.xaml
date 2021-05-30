@@ -10,19 +10,19 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="150"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel>
             <Border Height="50"></Border>
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30">High Score:</TextBlock>
-            <Border Height="50"></Border>
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30">**the high score**</TextBlock>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30">Top 5 Score</TextBlock>
+            <TextBlock x:Name="top_score_text" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"></TextBlock>
+            <TextBlock x:Name="player_score_text" Width="800" Height="100" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30"></TextBlock>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -37,28 +37,28 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Player Id:</TextBlock>
-                <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Games Played:</TextBlock>
-                <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Right Answers:</TextBlock>
-                <TextBlock Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Total Answers:</TextBlock>
-                <TextBlock Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Likeability:</TextBlock>
-                <TextBlock Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Potential:</TextBlock>
-                <TextBlock Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Time Played:</TextBlock>
-                <TextBlock Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20">Time Played last game:</TextBlock>
-                <TextBlock Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25">Score Last Game:</TextBlock>
-                <TextBlock Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18">number of future partners:</TextBlock>
-                <TextBlock Grid.Row="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20">questions last game:</TextBlock>
-                <TextBlock x:Name="player_id_text" Grid.Row="0" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="games_played_text" Grid.Row="1" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="right_answers_text" Grid.Row="2" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="total_answers_text" Grid.Row="3" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="likeability_text" Grid.Row="4" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="potential_text" Grid.Row="5" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="time_played_text" Grid.Row="6" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name="time_played_last_game_text" Grid.Row="7" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name= "score_last_game_text" Grid.Row="8" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name= "number_of_future_partners_text" Grid.Row="9" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                <TextBlock x:Name= "questions_last_game_text" Grid.Row="10" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Player Id:</TextBlock>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Games Played:</TextBlock>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Right Answers:</TextBlock>
+                <TextBlock Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Total Answers:</TextBlock>
+                <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Likeability:</TextBlock>
+                <TextBlock Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Potential:</TextBlock>
+                <TextBlock Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Time Played:</TextBlock>
+                <TextBlock Grid.Row="7" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="20">Time Played last game:</TextBlock>
+                <TextBlock Grid.Row="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25">Score Last Game:</TextBlock>
+                <TextBlock Grid.Row="9" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="18">number of future partners:</TextBlock>
+                <TextBlock Grid.Row="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="20">questions last game:</TextBlock>
+                <TextBlock x:Name="player_id_text" Grid.Row="0" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="games_played_text" Grid.Row="1" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="right_answers_text" Grid.Row="2" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="total_answers_text" Grid.Row="3" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="likeability_text" Grid.Row="4" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="potential_text" Grid.Row="5" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="time_played_text" Grid.Row="6" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name="time_played_last_game_text" Grid.Row="7" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name= "score_last_game_text" Grid.Row="8" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name= "number_of_future_partners_text" Grid.Row="9" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                <TextBlock x:Name= "questions_last_game_text" Grid.Row="10" Grid.Column="1" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
             </Grid>
         </ScrollViewer>
 

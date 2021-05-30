@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+using std::string;
+
 struct Answer
 {
 	bool isCorrect;
@@ -21,20 +23,21 @@ struct User
 	std::string mail;
 	int id;
 };
+
 struct statisticsDB
 {
-	int player_id;
-	int games_played;
-	int right_answers;
-	int total_answers;
-	int likeability;
-	int potnetial;
-	int highest_score;
-	int time_played;
-	int time_played_last_game;
-	int score_last_game;
-	int number_of_future_partners;
-	int questions_last_game;
+	string player_id;
+	string games_played;
+	string right_answers;
+	string total_answers;
+	string likeability;
+	string potnetial;
+	string highest_score;
+	string time_played;
+	string time_played_last_game;
+	string score_last_game;
+	string number_of_future_partners;
+	string questions_last_game;
 };
 class IDatabase
 {
@@ -47,8 +50,9 @@ public:
 	virtual int getNumOfTotalAnswers(int user_id) = 0;
 	virtual int getNumOfPlayerGames(int user_id) = 0;
 	virtual int usernameToID(std::string username) = 0;
+	virtual statisticsDB getStatistics(int user_id) = 0;
 	virtual std::vector<Question> getQuestions() = 0;
-	virtual std::vector<statisticsDB> getTop5Players() = 0;
-	
+	virtual std::vector<User> getTop5Players() = 0;
+	virtual std::vector<statisticsDB> getTopFiveScore() = 0;
 };
 

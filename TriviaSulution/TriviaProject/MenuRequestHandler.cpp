@@ -5,7 +5,7 @@
 	output: if the request is relevant or not. */
 bool MenuRequestHandler::isRequestRelevant(RequestInfo& info)
 {
-	return info.id == LOGOUT_CODE || info.id == GET_STATISTICS_CODE || info.id == GET_JOIN_ROOMS_CODE
+	return info.id == LOGOUT_CODE || info.id == GET_STATISTICS_CODE || info.id == GET_JOIN_ROOMS_CODE || info.id == GET_TOP_FIVE_CODE
 		|| info.id == GET_PLAYERS_IN_ROOM_CODE || info.id == GET_ROOMS_CODE || info.id == GET_CREATE_ROOMS_CODE || info.id == GET_ROOMDATA_CODE;
 }
 
@@ -43,6 +43,10 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo& info)
 	else if (info.id == GET_ROOMDATA_CODE)
 	{
 		result = this->getRoomData(info);
+	}
+	else if (info.id == GET_TOP_FIVE_CODE)
+	{
+		result = this->topFivePlayer(info);
 	}
 
 	return result;
@@ -121,20 +125,20 @@ RequestResult MenuRequestHandler::getPersonalStats(RequestInfo info)
 	return result;
 }
 
-/* getting user high score */
-RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
-{
-	GetPersonalStatsResponse stats;
-	RequestResult result;
-
-	stats.statistics = this->m_statistics_manager.getHighScore();
-	stats.status = STATUS_OK;
-
-	result.newHandler = new MenuRequestHandler(*this);
-	result.respone = JsonResponsePacketSerializer::serializeResponse(stats);
-
-	return result;
-}
+///* getting user high score */
+//RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
+//{
+//	GetPersonalStatsResponse stats;
+//	RequestResult result;
+//
+//	stats.statistics = this->m_statistics_manager.getHighScore();
+//	stats.status = STATUS_OK;
+//
+//	result.newHandler = new MenuRequestHandler(*this);
+//	result.respone = JsonResponsePacketSerializer::serializeResponse(stats);
+//
+//	return result;
+//}
 
 /* joining room */
 RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
@@ -225,6 +229,19 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 
 	result.newHandler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(roomDataResponse);
+
+	return result;
+}
+
+RequestResult MenuRequestHandler::topFivePlayer(RequestInfo info)
+{
+	TopFivePlayers top_five;
+	RequestResult result;
+
+	top_five = this->m_statistics_manager.getHighScore();
+
+	result.newHandler = new MenuRequestHandler(*this);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(top_five);
 
 	return result;
 }
