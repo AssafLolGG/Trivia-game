@@ -89,3 +89,14 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(st
 
     return create_room;
 }
+
+GetRoomDataRequest JsonRequestPacketDeserializer::deserializeRoomDataRequest(std::vector<uint8_t> buffer)
+{
+	json result;
+	GetRoomDataRequest roomDataReq;
+	result = JsonRequestPacketDeserializer::getJson(buffer);
+
+	roomDataReq.room_id = std::stoi(result.value(ROOM_ID, ""));
+
+	return roomDataReq;
+}

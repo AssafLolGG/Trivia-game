@@ -37,3 +37,7 @@ struct CreateRoomRequest
 	unsigned int question_count;
 	unsigned int answer_time_out;
 };
+struct GetRoomDataRequest
+{
+	int room_id;
+};
