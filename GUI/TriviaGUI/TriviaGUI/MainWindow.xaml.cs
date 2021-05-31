@@ -47,11 +47,8 @@ namespace TriviaGUI
             Thread connectThread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
             connectThread.Start();
 
-            //SoundPlayer player = new SoundPlayer(@"C:\Usersמשתמש\Documents\Magshimim\Second Year\Advanced programming\Semaster 2\lesson 2 -trivia\triviaprojectmagshimim\music\bMusic.wav");
-            //player.Load();
-            //player.Play();
-            Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
-            connectThreadTwo.Start();
+            /*Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
+            connectThreadTwo.Start();*/
         }
 
         private void cancel_button_Click(object sender, RoutedEventArgs e)
@@ -74,14 +71,14 @@ namespace TriviaGUI
                 disappointing_sentenses.Add("Beep Boop Bap, how tf do i say to\nbot fuck off??");
                 disappointing_sentenses.Add("Roses are red, violets are blue, and\nwell you are a bot :<.");
                 disappointing_sentenses.Add("Idk how to say it to you, but you are a\nbot.");
-                disappointing_sentenses.Add("Imagine being a bot.");
+                disappointing_sentenses.Add("Imagine being a bot.\n(get it? no? it's because you are a bot)");
                 disappointing_sentenses.Add("Tell me Robots joke since you are bot.");
 
                 MessageBox.Show("Calculating if you are a bot or not..");
-                if (rand.Next(1, 6) == 3)
+                if (rand.Next(1, 3) == 1)
                 {
                     Thread.Sleep(1000);
-                    MessageBox.Show("GG you aren't a bot! (at least not yet)");
+                    MessageBox.Show("congratulations! you are not a bot! (at least not yet)");
                     Dictionary<string, string> loginDitails = new Dictionary<string, string>();
                     loginDitails.Add("username", user_name_text_box.Text);
                     loginDitails.Add("password", password_text_box.Password);
@@ -148,7 +145,7 @@ namespace TriviaGUI
             {
                 SignupScreen signup_window = new SignupScreen();
                 signup_window.Show();
-                Application.Current.MainWindow.Hide();
+                this.Close();
             }
         }
     }

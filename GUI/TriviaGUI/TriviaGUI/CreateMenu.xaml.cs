@@ -36,7 +36,7 @@ namespace TriviaGUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MainMenu menu = new MainMenu();
+            RoomMenu menu = new RoomMenu();
             menu.Show();
             this.Close();
         }

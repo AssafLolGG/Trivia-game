@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="CreateMenu" Height="1000" Width="800">
+        Title="CreateMenu" Height="800" Width="800" Background="#C39BD3">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -17,42 +17,40 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="1.5*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Room Name:</TextBlock>
-            <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Maximum Users:</TextBlock>
-            <TextBlock Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Answer Time Out:</TextBlock>
-            <TextBlock Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Question Count:</TextBlock>
-            <Border BorderBrush="{x:Null}" Grid.Row="1" Grid.Column="1">
-                <TextBox TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="2" Grid.Column="1">
-                <TextBox x:Name="MaximumUsers_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="3" Grid.Column="1">
-                <TextBox x:Name="AnswerTimeOut_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="4" Grid.Column="1">
-                <TextBox x:Name="QuestionCount_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
-            </Border>
-            <Border BorderBrush="{x:Null}" Grid.Row="1" Grid.Column="1">
-                <TextBox x:Name="roomName_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
-            </Border>
-            <TextBlock x:Name="IsCreated_TB" FontSize="40" Grid.Row="8" Grid.ColumnSpan="2"></TextBlock>
+            <StackPanel>
+                <Border Height="50"></Border>
+                <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="25">Room Name:</TextBlock>
+                <Border Height="40"></Border>
+                <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="25">Maximum Users:</TextBlock>
+                <Border Height="40"></Border>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Answer Time Out:</TextBlock>
+                <Border Height="40"></Border>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Question Count:</TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Border Height="40"></Border>
+                <Border BorderBrush="{x:Null}" Grid.Row="1" Grid.Column="1">
+                    <TextBox x:Name="roomName_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
+                </Border>
+                <Border Height="40"></Border>
+                <Border BorderBrush="{x:Null}" Grid.Row="2" Grid.Column="1">
+                    <TextBox x:Name="MaximumUsers_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
+                </Border>
+                <Border Height="40"></Border>
+                <Border BorderBrush="{x:Null}" Grid.Row="3" Grid.Column="1">
+                    <TextBox x:Name="AnswerTimeOut_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
+                </Border>
+                <Border Height="40"></Border>
+                <Border BorderBrush="{x:Null}" Grid.Row="4" Grid.Column="1">
+                    <TextBox x:Name="QuestionCount_TB" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30" PreviewTextInput="NumberValidationTextBox"/>
+                </Border>
+            </StackPanel>
+            <TextBlock x:Name="IsCreated_TB" FontSize="40" Grid.Row="8" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"></TextBlock>
         </Grid>
-        <Button FontSize="30" Grid.Row="1" Click="Button_Click_1">Create Room</Button>
-        <Button FontSize="30" Grid.Row="1" Grid.Column="2" Click="Button_Click">Back To Menu</Button>
+        <Button FontSize="30" Grid.Row="1" Background="#5DADE2" Click="Button_Click_1">Create Room</Button>
+        <Button FontSize="30" Grid.Row="1" Grid.Column="2" Background="#1ABC9C" Click="Button_Click">Back To Menu</Button>
     </Grid>
 </Window>

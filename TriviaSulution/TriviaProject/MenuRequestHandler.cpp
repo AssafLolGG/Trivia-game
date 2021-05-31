@@ -68,7 +68,6 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 	}
 	this->m_handler_factory.getLoginManager().logout(this->m_user.getUserName());
 	
-
 	return result;
 }
 

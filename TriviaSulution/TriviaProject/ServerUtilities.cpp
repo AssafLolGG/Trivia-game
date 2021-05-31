@@ -24,7 +24,6 @@ RequestInfo createRequestInfo(std::vector<uint8_t>& buffer_vector)
 	// checks the wanted request from user, to send a proper response.
 	RequestInfo request;
 
-	std::cout << buffer_vector[0] << std::endl;
 	request.buffer = buffer_vector;
 	request.id = buffer_vector[0];
 	auto nowTime = std::chrono::system_clock::now();

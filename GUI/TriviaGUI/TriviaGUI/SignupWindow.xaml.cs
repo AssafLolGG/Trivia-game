@@ -31,8 +31,10 @@ namespace TriviaGUI
 
         private void back_to_login_Button_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.Show();
-            this.Hide();
+            MainWindow login = new MainWindow();
+            login.Show();
+
+            this.Close();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
