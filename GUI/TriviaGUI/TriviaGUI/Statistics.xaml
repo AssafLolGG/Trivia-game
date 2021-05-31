@@ -12,12 +12,27 @@
             <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <Border Height="50"></Border>
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30">Top 5 Score</TextBlock>
-            <TextBlock x:Name="top_text" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"></TextBlock>
-            <TextBlock x:Name="player_score_text" FontSize="25"></TextBlock>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="1.3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="30">Top 5 Score</TextBlock>
+            <StackPanel Grid.Column="1">
+                <Border Height="70"></Border>
+                <TextBlock x:Name="top_text" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="25"></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <Border Height="70"></Border>
+                <TextBlock FontSize="25" HorizontalAlignment="Right" Foreground="Gold" Text="#1  "></TextBlock>
+                <TextBlock FontSize="25" HorizontalAlignment="Right" Foreground="Silver" Text="#2  "></TextBlock>
+                <TextBlock FontSize="25" HorizontalAlignment="Right" Foreground="RosyBrown" Text="#3  "></TextBlock>
+                <TextBlock FontSize="25" HorizontalAlignment="Right" Text="#4  "></TextBlock>
+                <TextBlock FontSize="25" HorizontalAlignment="Right" Text="#5  "></TextBlock>
+            </StackPanel>
+            <TextBlock Grid.ColumnSpan="2" x:Name="player_score_text" FontSize="25" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="319,0,85,9" Width="388"></TextBlock>
+        </Grid>
+        
         <ScrollViewer Grid.Row="1">
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>

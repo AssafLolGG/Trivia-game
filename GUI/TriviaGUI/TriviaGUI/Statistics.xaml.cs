@@ -44,7 +44,7 @@ namespace TriviaGUI
             this.score_last_game_text.Text = personal_statistics[8];
             this.number_of_future_partners_text.Text = personal_statistics[9];
             this.questions_last_game_text.Text = personal_statistics[10];
-            this.player_score_text.Text = "Your Score: " + personal_statistics[11];
+            this.player_score_text.Text = " Your Score: " + personal_statistics[11].Replace("\r", "").Replace(" ", "");
         }
 
         private void getTopFive()
@@ -65,7 +65,7 @@ namespace TriviaGUI
 
             for(int i = 0; i < top_users.Length; i++)
             {
-                connected_top += top_users[i] + ": " + top_score[i] + "\n";
+                connected_top += top_users[i] + " - " + top_score[i] + "\n";
             }
             connected_top = connected_top.Substring(0, connected_top.Length - 1);
 
