@@ -1,0 +1,41 @@
+﻿<Window x:Class="TriviaGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TriviaGUI"
+        mc:Ignorable="d"
+       Title="LogIn screen" Height="1000" Width="800" MaxHeight="1000" MaxWidth="800"
+        Background="BurlyWood">
+    <Grid RenderTransformOrigin="0.574,0.323">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="signup_button" Content="signup" Margin="409,243,290,671" FontSize="20" Click="signup_button_Click"/>
+        <Button x:Name="login_button" Content="login" Margin="270,243,430,671" FontSize="20" Click="login_button_Click"/>
+        <Label Content="Log In  Screen" FontSize="20" FontFamily="david" Margin="287,48,280,876" RenderTransformOrigin="0.5,0.5">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="0.028"/>
+                    <RotateTransform Angle="0.065"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <PasswordBox x:Name="password_text_box" Margin="270,178,290,746" FontSize="20"/>
+        <TextBox x:Name="user_name_text_box" Margin="270,98,290,826" FontSize="20"/>
+        <Label Content="Password:" FontSize="20" FontFamily="david" Margin="145,189,522,736"/>
+        <Label Content="UserName:" HorizontalAlignment="Left" FontSize="20" FontFamily="david" Margin="145,98,0,826" Width="125"/>
+        <Label Content="" FontSize="20" FontFamily="david" Margin="191,310,183,558" RenderTransformOrigin="0.5,0.5" x:Name="Error_label" Foreground="DarkRed">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="0.028"/>
+                    <RotateTransform Angle="0.065"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+    </Grid>
+</Window>

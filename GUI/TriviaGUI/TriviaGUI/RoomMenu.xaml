@@ -1,0 +1,38 @@
+﻿<Window x:Class="TriviaGUI.RoomMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TriviaGUI"
+        mc:Ignorable="d"
+        Title="RoomMenu" Height="800" Width="800" Background="#C39BD3">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="1" Grid.Row="0" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="13"  Content="ID        NAME       Players In Room/Max Players         Number Of Questions           Time Per Question"></Label>
+        <ScrollViewer Grid.Column="1" Grid.Row="1">
+            <ListBox x:Name="rooms_list" FontSize="15" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            </ListBox>
+        </ScrollViewer>
+        <StackPanel Orientation="Vertical" Grid.RowSpan="2" VerticalAlignment="Bottom">
+            <Border Height="20"></Border>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center" Width="200">
+                <Button x:Name="join_room_button" Height="200" Background="#5DADE2" BorderThickness="0" Click="join_room_button_Click">Join Room</Button>
+            </Border>
+            <Border Height="20"></Border>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center" Width="200">
+                <Button x:Name="create_room_button" Height="200" Background="#5DADE2" BorderThickness="0" Click="create_room_button_Click">Create Room</Button>
+            </Border>
+            <Border Height="20"></Border>
+            <Border CornerRadius="6" BorderBrush="#1ABC9C" BorderThickness="6" HorizontalAlignment="Center" Width="200">
+                <Button x:Name="back_to_menu_button" Height="200" Background="#1ABC9C" BorderThickness="0" Click="back_to_menu_button_Click">Back To Menu</Button>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>

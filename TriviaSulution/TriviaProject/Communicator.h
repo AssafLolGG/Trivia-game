@@ -5,21 +5,27 @@
 #include <map>
 #include "LoginRequestHandler.h"
 #include <thread>
+#include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
+#include "RequestHandlerFactory.h"
+#include "ServerUtilities.h"
 
 #define	STARTER_SERVER_MESSAGE "hello"
-#define BUFFER_CAPACITY 1024
-
+#define PORT_NUM 9999
 using std::map;
+
+class RequestHandlerFactory;
 
 class Communicator
 {
 private:
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;
+	RequestHandlerFactory& m_handlerFactory;
 	void bindAndListen();
 	void handleNewClient(SOCKET client_soc);
 public:
-	Communicator();
+	Communicator(RequestHandlerFactory& handlerFactory);
 	void startHandleRequests();
 };
 

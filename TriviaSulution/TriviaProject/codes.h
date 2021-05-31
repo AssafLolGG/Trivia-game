@@ -1,0 +1,13 @@
+#pragma once
+
+#define ERROR_CODE 0
+#define LOGIN_CODE 1
+#define SIGNUP_CODE 2
+#define LOGOUT_CODE 3
+#define GET_ROOMS_CODE 4
+#define GET_PLAYERS_IN_ROOM_CODE 5
+#define GET_JOIN_ROOMS_CODE 6
+#define GET_CREATE_ROOMS_CODE 7
+#define GET_STATISTICS_CODE 8
+#define GET_ROOMDATA_CODE 9
+#define GET_TOP_FIVE_CODE 10
