@@ -17,6 +17,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Newtonsoft.Json;
 using ServerFunctions;
+using System.Media;
 
 namespace TriviaGUI
 {
@@ -35,8 +36,10 @@ namespace TriviaGUI
             InitializeComponent();
             Thread connectThread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
             connectThread.Start();
-            System.Media.SoundPlayer sp = new System.Media.SoundPlayer(@"../../../music/bMusic.wav");
-            sp.PlayLooping();
+
+            SoundPlayer player = new SoundPlayer("C:\\Users\\Leon\\triviaprojectmagshimim\\music\\bMusic.wav");
+            player.Load();
+            player.Play();
         }
 
         private void cancel_button_Click(object sender, RoutedEventArgs e)
