@@ -31,15 +31,27 @@ namespace TriviaGUI
     ///
     public partial class MainWindow : Window
     {
+        private void PlaySound()
+        {
+            var uri = new Uri(@"C:\Users\Leon\triviaprojectmagshimim\music\bMusic.wav", UriKind.RelativeOrAbsolute);
+            var player = new MediaPlayer();
+
+            player.Open(uri);
+            player.Play();
+            Thread.Sleep(1000000);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             Thread connectThread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
             connectThread.Start();
 
-            SoundPlayer player = new SoundPlayer("C:\\Users\\Leon\\triviaprojectmagshimim\\music\\bMusic.wav");
-            player.Load();
-            player.Play();
+            //SoundPlayer player = new SoundPlayer(@"C:\Usersמשתמש\Documents\Magshimim\Second Year\Advanced programming\Semaster 2\lesson 2 -trivia\triviaprojectmagshimim\music\bMusic.wav");
+            //player.Load();
+            //player.Play();
+            Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
+            connectThreadTwo.Start();
         }
 
         private void cancel_button_Click(object sender, RoutedEventArgs e)
