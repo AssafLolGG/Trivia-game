@@ -25,53 +25,53 @@ int SqliteDataBase::callbackStatistics(void* data, int argc, char** argv, char**
 
 		else if (std::string(azColName[i]) == "games_played")
 		{
-			stats.games_played = argv[i];
+			stats.games_played = argv[i] == nullptr ? "0" : argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "right_answers")
 		{
-			stats.right_answers = argv[i];
+			stats.right_answers = argv[i] == nullptr ? "0" : argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "total_answers")
 		{
-			stats.total_answers = argv[i];
+			stats.total_answers = argv[i] == nullptr ? "0" : argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "likeability")
 		{
-			stats.likeability = argv[i];
+			stats.likeability = argv[i] == nullptr ? "0" : argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "potential")
 		{
-			stats.potnetial = argv[i];
+			stats.potnetial = argv[i] == nullptr ? "0" : argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "highest_score")
 		{
-			stats.highest_score = argv[i];
+			stats.highest_score = argv[i] == nullptr ? "0" : argv[i];
 		}
 
 		else if (std::string(azColName[i]) == "time_played")
 		{
-			stats.time_played = argv[i];
+			stats.time_played = argv[i] == nullptr ? "0" : argv[i];
 		}
 		else if (std::string(azColName[i]) == "time_played_last_game")
 		{
-			stats.time_played_last_game =argv[i];
+			stats.time_played_last_game = argv[i] == nullptr ? "0" : argv[i];
 		}
 		else if (std::string(azColName[i]) == "score_last_game")
 		{
-			stats.score_last_game = argv[i];
+			stats.score_last_game = argv[i] == nullptr ? "0" : argv[i];
 		}
 		else if (std::string(azColName[i]) == "number_of_future_partners")
 		{
-			stats.number_of_future_partners = argv[i];
+			stats.number_of_future_partners = argv[i] == nullptr ? "0" : argv[i];
 		}
 		else if (std::string(azColName[i]) == "questions_last_game")
 		{
-			stats.questions_last_game = argv[i];
+			stats.questions_last_game = argv[i] == nullptr ? "0" : argv[i];
 		}
 	}
 	stats_vector->push_back(stats);

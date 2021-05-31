@@ -61,7 +61,15 @@ namespace TriviaGUI
             string[] top_users = server_json["players"].ToString().Replace(", ", ",").Split(',');
             string[] top_score = server_json["score"].ToString().Replace(", ", ",").Split(',');
 
-            this.top_score_text.Text = top_users[2];
+            string connected_top = "";
+
+            for(int i = 0; i < top_users.Length; i++)
+            {
+                connected_top += top_users[i] + ": " + top_score[i] + "\n";
+            }
+            connected_top = connected_top.Substring(0, connected_top.Length - 1);
+
+            this.top_text.Text = connected_top;
         }
 
         public Statistics()

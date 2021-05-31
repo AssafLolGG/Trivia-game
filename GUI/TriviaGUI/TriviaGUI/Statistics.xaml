@@ -15,8 +15,8 @@
         <StackPanel>
             <Border Height="50"></Border>
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30">Top 5 Score</TextBlock>
-            <TextBlock x:Name="top_score_text" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"></TextBlock>
-            <TextBlock x:Name="player_score_text" Width="800" Height="100" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30"></TextBlock>
+            <TextBlock x:Name="top_text" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"></TextBlock>
+            <TextBlock x:Name="player_score_text" FontSize="25"></TextBlock>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <Grid Grid.Row="1">
