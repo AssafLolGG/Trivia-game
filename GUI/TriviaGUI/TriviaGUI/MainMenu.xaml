@@ -5,15 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="MainMenu" Height="1000" Width="800" Background="#00b3b3">
+        Title="MainMenu" Height="1000" Width="800" Background="#C39BD3">
     <Grid>
         <StackPanel>
             <Border Height="100"></Border>
-            <Button x:Name="room_menu_button" HorizontalAlignment="Center" Height="100" Width="300" FontSize="30" Click="room_menu_button_Click">Room Menu</Button>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center">
+                <Button x:Name="room_menu_button" HorizontalAlignment="Center" Height="100" Width="300" FontSize="30" Click="room_menu_button_Click" Background="#5DADE2" BorderThickness="0">Room Menu</Button>
+            </Border>
             <Border Height="100"></Border>
-            <Button Name="statistics_buttons" HorizontalAlignment="Center" Height="100" Width="300" FontSize="30" Click="statistics_buttons_Click">Personal Statistics</Button>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center">
+                <Button Name="statistics_buttons" HorizontalAlignment="Center" Height="100" Width="300" FontSize="30" Click="statistics_buttons_Click" Background="#5DADE2" BorderThickness="0">Personal Statistics</Button>
+            </Border>
             <Border Height="100"></Border>
-            <Button x:Name="log_out_button" HorizontalAlignment="Center" Height="100" Width="300" FontSize="30" Click="log_out_button_Click">Log Out</Button>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center">
+                <Button x:Name="log_out_button" HorizontalAlignment="Center" Height="100" Width="300" FontSize="30" Click="log_out_button_Click" Background="#5DADE2" BorderThickness="0">Log Out</Button>
+            </Border>
         </StackPanel>
     </Grid>
 </Window>

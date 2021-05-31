@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="RoomMenu" Height="800" Width="800">
+        Title="RoomMenu" Height="800" Width="800" Background="#C39BD3">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"></ColumnDefinition>
@@ -20,13 +20,19 @@
             <ListBox x:Name="rooms_list" FontSize="15" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
             </ListBox>
         </ScrollViewer>
-        <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#ff0000" FontSize="30"></Label>
-        <StackPanel Orientation="Vertical" Grid.Row="1">
-            <Button x:Name="join_room_button" Height="200" Click="join_room_button_Click">Join Room</Button>
+        <StackPanel Orientation="Vertical" Grid.RowSpan="2" VerticalAlignment="Bottom">
             <Border Height="20"></Border>
-            <Button x:Name="create_room_button" Height="200" Click="create_room_button_Click">Create Room</Button>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center" Width="200">
+                <Button x:Name="join_room_button" Height="200" Background="#5DADE2" BorderThickness="0" Click="join_room_button_Click">Join Room</Button>
+            </Border>
             <Border Height="20"></Border>
-            <Button x:Name="back_to_menu_button" Height="200" Click="back_to_menu_button_Click">Back To Menu</Button>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center" Width="200">
+                <Button x:Name="create_room_button" Height="200" Background="#5DADE2" BorderThickness="0" Click="create_room_button_Click">Create Room</Button>
+            </Border>
+            <Border Height="20"></Border>
+            <Border CornerRadius="6" BorderBrush="#1ABC9C" BorderThickness="6" HorizontalAlignment="Center" Width="200">
+                <Button x:Name="back_to_menu_button" Height="200" Background="#1ABC9C" BorderThickness="0" Click="back_to_menu_button_Click">Back To Menu</Button>
+            </Border>
         </StackPanel>
     </Grid>
 </Window>
