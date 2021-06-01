@@ -146,6 +146,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	RequestResult result;
 	JoinRoomRequest join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
 	Room* room = nullptr;
+
 	if (this->m_room_manager.getRoom(join_room_request.room_id, room))
 	{
 		std::vector<string> all_users_in_room = (room)->getAllUsers();
@@ -166,7 +167,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	{
 		join_room.status = STATUS_FAIL;
 	}
-	result.new_handler = new MenuRequestHandler(*this);
+	result.new_handler = this->m_handler_factory.createRoomMemberRequestHandler(this->m_user, join_room_request.room_id, this->m_socket);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(join_room);
 
 	return result;
@@ -193,6 +194,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 	this->m_room_manager.createRoom(this->m_user, room_data, this->m_socket); // creating new room
 
 	create_room_response.status = STATUS_OK;
+	create_room_response.id = room_data.id;
 
 	result.new_handler = this->m_handler_factory.createRoomAdminRequestHandler(this->m_user, room_data.id, this->m_socket);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response

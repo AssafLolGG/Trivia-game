@@ -83,6 +83,7 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(CreateRoomR
 {
 	json responseJson;
 	responseJson["status"] = croom.status;
+	responseJson["id"] = croom.id;
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(GET_CREATE_ROOMS_CODE, jsonSerialized);

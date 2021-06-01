@@ -153,10 +153,6 @@ namespace ServerFunctions
                         // writing the room data to a string
                         completedData += "," + roomName + "," + players.Length.ToString() + "," + jsonReturned["maxPlayers"].ToString() + "," +
                           jsonReturned["questionsNumber"].ToString() + "," + jsonReturned["timePerQuestion"].ToString();
-                      /*  completedData += roomName + "         ";
-                        completedData += players.Length.ToString() + " / " + jsonReturned["maxPlayers"].ToString() + "                                        ";
-                        completedData += jsonReturned["questionsNumber"].ToString() + "                                    ";
-                        completedData += jsonReturned["timePerQuestion"].ToString();*/
                         return true;
                     }
                     else

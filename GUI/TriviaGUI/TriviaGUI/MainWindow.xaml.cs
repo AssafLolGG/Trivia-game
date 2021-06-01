@@ -75,7 +75,7 @@ namespace TriviaGUI
                 disappointing_sentenses.Add("Tell me Robots joke since you are bot.");
 
                 MessageBox.Show("Calculating if you are a bot or not..");
-                if (rand.Next(1, 3) == 1)
+                if (true) //(rand.Next(1, 3) == 1)
                 {
                     Thread.Sleep(1000);
                     MessageBox.Show("congratulations! you are not a bot! (at least not yet)");

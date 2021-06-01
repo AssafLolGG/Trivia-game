@@ -72,7 +72,7 @@ namespace TriviaGUI
 
         private void join_room_button_Click(object sender, RoutedEventArgs e)
         {
-
+            int room_id = this.rooms_list.SelectedItem.ToString()[0];
         }
 
         private void back_to_menu_button_Click(object sender, RoutedEventArgs e)

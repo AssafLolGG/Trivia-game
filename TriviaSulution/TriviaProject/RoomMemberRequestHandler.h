@@ -15,6 +15,7 @@ private:
 
 	RequestResult leaveGame(RequestInfo& info);
 	RequestResult getRoomState(RequestInfo& info);
+	RequestResult getPlayersInRoom(RequestInfo& info);
 
 public:
 	RoomMemberRequestHandler(RoomManager& room_manager, int _room_id, RequestHandlerFactory& handler_factory, LoggedUser m_user_, SOCKET client_socket) : m_room_manager(room_manager), m_handler_factory(handler_factory)

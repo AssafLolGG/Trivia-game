@@ -20,6 +20,7 @@ private:
 	RequestResult startGame(RequestInfo& info);
 	RequestResult closeGame(RequestInfo& info);
 	RequestResult getRoomState(RequestInfo& info);
+	RequestResult getPlayersInRoom(RequestInfo& info);
 
 public:
 	RoomAdminRequestHandler(RoomManager& room_manager, int _room_id, RequestHandlerFactory& handler_factory, LoggedUser m_user_, SOCKET client_socket)

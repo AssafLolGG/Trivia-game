@@ -8,7 +8,7 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 	result.new_handler = new RoomAdminRequestHandler(*this);
 	StartRoomResponse start_room;
 	
-	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, the_room)) // checking if the room id is valid, getting the current room for the server and checking if the room exists
+	if (this->room_id != INVALID_INDEX && this->m_room_manager.getRoom(this->room_id, the_room)) // checking if the room id is valid, getting the current room for the server and checking if the room exists
 	{
 		std::vector<string> users_in_room = the_room->getAllUsers();
 
@@ -90,15 +90,32 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo& info)
 {
 	GetRoomDataResponse roomdata = getRoomData(this->m_room_manager, this->room_id, this->m_user);
 	RequestResult result;
+
 	result.new_handler = new RoomAdminRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(roomdata);
+	return result;
+}
+
+RequestResult RoomAdminRequestHandler::getPlayersInRoom(RequestInfo& info)
+{
+	Room* the_room = new Room();
+	GetPlayersInRoomResponse players_in_room_response;
+	RequestResult result;
+
+	this->m_room_manager.getRoom(this->room_id, the_room);
+
+	players_in_room_response.players = the_room->getAllUsers();
+
+	result.new_handler = new RoomAdminRequestHandler(*this);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(players_in_room_response);
+
 	return result;
 }
 
 /* checking if the request code match the codes that the room admin accept */
 bool RoomAdminRequestHandler::isRequestRelevant(RequestInfo& info)
 {
-	return info.id == CLOSE_ROOM_CODE || info.id == START_ROOM_CODE || info.id == GET_ROOMDATA_CODE;
+	return info.id == CLOSE_ROOM_CODE || info.id == START_ROOM_CODE || info.id == GET_ROOMDATA_CODE || info.id == GET_PLAYERS_IN_ROOM_CODE;
 }
 
 /* checking the type of request and handling it */
@@ -118,6 +135,10 @@ RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo& info)
 	else if(info.id == CLOSE_ROOM_CODE)
 	{
 		result = this->closeGame(info);
+	}
+	else if (info.id == GET_PLAYERS_IN_ROOM_CODE)
+	{
+		result = this->getPlayersInRoom(info);
 	}
 	return result;
 }

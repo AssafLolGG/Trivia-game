@@ -40,10 +40,26 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo& info)
 	return result;
 }
 
+RequestResult RoomMemberRequestHandler::getPlayersInRoom(RequestInfo& info)
+{
+	Room* the_room = new Room();
+	GetPlayersInRoomResponse players_in_room_response;
+	RequestResult result;
+
+	this->m_room_manager.getRoom(this->room_id, the_room);
+
+	players_in_room_response.players = the_room->getAllUsers();
+
+	result.new_handler = new RoomMemberRequestHandler(*this);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(players_in_room_response);
+
+	return result;
+}
+
 /* checking if the request code match the codes that the room member accept*/
 bool RoomMemberRequestHandler::isRequestRelevant(RequestInfo& info)
 {
-	return info.id == LEAVE_ROOM_CODE || info.id == GET_ROOMDATA_CODE;
+	return info.id == LEAVE_ROOM_CODE || info.id == GET_ROOMDATA_CODE || info.id == GET_PLAYERS_IN_ROOM_CODE;
 }
 
 /* checking the type of request and handling it */
@@ -59,6 +75,10 @@ RequestResult RoomMemberRequestHandler::handleRequest(RequestInfo& info)
 	else if (info.id == LEAVE_ROOM_CODE)
 	{
 		result = this->leaveGame(info);
+	}
+	else if (info.id == GET_PLAYERS_IN_ROOM_CODE)
+	{
+		result = this->getPlayersInRoom(info);
 	}
 
 	return result;
