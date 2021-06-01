@@ -21,7 +21,7 @@ public:
 	LoginManager& getLoginManager();
 	LoginRequestHandler* createLoginRequestHandler();
 	MenuRequestHandler* createMenuRequestHandler(LoggedUser user);
-	RoomAdminRequestHandler* createRoomAdminRequestHandler();
+	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, int room_id);
 	StatisticsManager& getStatisticsManager();
 	RoomManager& getRoomManager();
 };

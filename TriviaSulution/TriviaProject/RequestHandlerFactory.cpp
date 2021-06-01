@@ -32,9 +32,9 @@ MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler(LoggedUser u
     return new MenuRequestHandler(this->m_room_manager, this->m_statistics_manager, *this, user);
 }
 
-RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler()
+RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, int room_id)
 {
-	return new RoomAdminRequestHandler;
+	return new RoomAdminRequestHandler(this->m_room_manager, room_id, *this, user);
 }
 
 /* getter to static manager */

@@ -56,3 +56,25 @@ void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IReque
 		}
 	}
 }
+
+GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id)
+{
+	GetRoomDataResponse roomDataResponse;
+	Room* theRoom = new Room();
+	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, theRoom))
+	{
+		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
+		roomDataResponse.status = STATUS_OK;
+		roomDataResponse.id = room_id;
+		roomDataResponse.isActive = roomdataOfTheRoom.isActive;
+		roomDataResponse.maxPlayers = roomdataOfTheRoom.maxPlayers;
+		roomDataResponse.name = roomdataOfTheRoom.name;
+		roomDataResponse.numOfQuestionsInGame = roomdataOfTheRoom.numOfQuestionsInGame;
+		roomDataResponse.timePerQuestion = roomdataOfTheRoom.timePerQuestion;
+	}
+	else
+	{
+		roomDataResponse.status = STATUS_FAIL;
+	}
+	return roomDataResponse;
+}
