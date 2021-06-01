@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Threading;
+using ServerFunctions;
 
 namespace TriviaGUI
 {
