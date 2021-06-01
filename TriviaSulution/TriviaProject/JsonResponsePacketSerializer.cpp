@@ -124,6 +124,33 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(TopFivePlay
 	return getCompleteMessage(GET_TOP_FIVE_CODE, jsonSerialized);
 }
 
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(CloseRoomResponse closeRoom)
+{
+	json responseJson;
+	responseJson["status"] = closeRoom.status;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(CLOSE_ROOM_CODE, jsonSerialized);
+}
+
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(StartRoomResponse startRoom)
+{
+	json responseJson;
+	responseJson["status"] = startRoom.status;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(START_ROOM_CODE, jsonSerialized);
+}
+
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LeaveRoomResponse leaveRoom)
+{
+	json responseJson;
+	responseJson["status"] = leaveRoom.status;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(LEAVE_ROOM_CODE, jsonSerialized);
+}
+
 /*	function that adds into one byte array the response code, the size of the response and the responce json itself.
 	input: the response code, and the json of the response.
 	output: the completed message. */
