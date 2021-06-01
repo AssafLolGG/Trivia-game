@@ -30,6 +30,8 @@ struct RequestResult
 {
 	std::vector<uint8_t> respone;
 	IRequestHandler* newHandler;
+	std::vector<uint8_t> responseToOthers;
+	std::vector<SOCKET> socketsToSendTo;
 };
 
 class IRequestHandler

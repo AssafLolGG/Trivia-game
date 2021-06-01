@@ -57,20 +57,28 @@ void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IReque
 	}
 }
 
-GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id)
+GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUser logged)
 {
 	GetRoomDataResponse roomDataResponse;
 	Room* theRoom = new Room();
-	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, theRoom))
+	if (room_id != INVALID_INDEX && room_manager.getRoom(room_id, theRoom))
 	{
-		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
-		roomDataResponse.status = STATUS_OK;
-		roomDataResponse.id = room_id;
-		roomDataResponse.isActive = roomdataOfTheRoom.isActive;
-		roomDataResponse.maxPlayers = roomdataOfTheRoom.maxPlayers;
-		roomDataResponse.name = roomdataOfTheRoom.name;
-		roomDataResponse.numOfQuestionsInGame = roomdataOfTheRoom.numOfQuestionsInGame;
-		roomDataResponse.timePerQuestion = roomdataOfTheRoom.timePerQuestion;
+		std::vector<string> usersInRoom = theRoom->getAllUsers();
+		if (std::find(usersInRoom.begin(), usersInRoom.end(), logged.getUserName()) != usersInRoom.end())
+		{
+			RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
+			roomDataResponse.status = STATUS_OK;
+			roomDataResponse.id = room_id;
+			roomDataResponse.isActive = roomdataOfTheRoom.isActive;
+			roomDataResponse.maxPlayers = roomdataOfTheRoom.maxPlayers;
+			roomDataResponse.name = roomdataOfTheRoom.name;
+			roomDataResponse.numOfQuestionsInGame = roomdataOfTheRoom.numOfQuestionsInGame;
+			roomDataResponse.timePerQuestion = roomdataOfTheRoom.timePerQuestion;
+		}
+		else
+		{
+			roomDataResponse.status = STATUS_FAIL;
+		}
 	}
 	else
 	{

@@ -2,17 +2,36 @@
 
 RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 {
-	return RequestResult();
+	Room* theRoom = new Room();
+	RequestResult result;
+	result.newHandler = new RoomAdminRequestHandler(*this);
+	StartRoomResponse startRoom;
+	
+	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, theRoom))
+	{
+		std::vector<string> usersInRoom = theRoom->getAllUsers();
+		startRoom.status = std::find(usersInRoom.begin(), usersInRoom.end(), this->m_user.getUserName()) != usersInRoom.end() ? STATUS_OK : STATUS_FAIL ;
+	}
+	else
+	{
+		startRoom.status = STATUS_FAIL;
+	}
+	result.respone = JsonResponsePacketSerializer::serializeResponse(startRoom);
+	return result;
 }
 
 RequestResult RoomAdminRequestHandler::closeGame(RequestInfo& info)
 {
-	return RequestResult();
+	Room* room = new Room();
 }
 
 RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo& info)
 {
-	return RequestResult();
+	GetRoomDataResponse roomdata = getRoomData(this->m_room_manager, this->room_id, this->m_user);
+	RequestResult result;
+	result.newHandler = new RoomAdminRequestHandler(*this);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(roomdata);
+	return result;
 }
 
 bool RoomAdminRequestHandler::isRequestRelevant(RequestInfo& info)

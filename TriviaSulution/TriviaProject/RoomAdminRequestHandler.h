@@ -3,7 +3,7 @@
 #include "LoginManager.h"
 #include "MenuRequestHandler.h"
 #include "RequestHandlerFactory.h"
-
+#include "ServerUtilities.h"
 class RoomAdminRequestHandler : public IRequestHandler
 {
 private:
