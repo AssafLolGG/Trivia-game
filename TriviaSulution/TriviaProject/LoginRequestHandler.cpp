@@ -17,11 +17,11 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     if (login_response.status == TRUE)
     {
         LoggedUser user(login_request.username);
-        result.newHandler = result.newHandler = result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(login_request.username), this->m_socket);
+        result.new_handler = result.new_handler = result.new_handler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(login_request.username), this->m_socket);
     }
     else
     {
-        result.newHandler = nullptr;
+        result.new_handler = nullptr;
     }
 
     return result;
@@ -41,11 +41,11 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
     // checks if the the user managed to signup succeessfully.
     if (signup_response.status == TRUE)
     {
-        result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(signup_request.username), this->m_socket);
+        result.new_handler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(signup_request.username), this->m_socket);
     }
     else
     {
-        result.newHandler = nullptr;
+        result.new_handler = nullptr;
     }
 
     return result;

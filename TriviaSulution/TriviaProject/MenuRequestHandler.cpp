@@ -60,7 +60,7 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 	Room* room = new Room;
 	logout.status = STATUS_OK; // double check that one.
 
-	result.newHandler = this->m_handler_factory.createLoginRequestHandler(this->m_socket); // return login request after signing out
+	result.new_handler = this->m_handler_factory.createLoginRequestHandler(this->m_socket); // return login request after signing out
 	result.respone = JsonResponsePacketSerializer::serializeResponse(logout);
 	for (auto it = this->m_room_manager.getAllRooms().begin(); it != this->m_room_manager.getAllRooms().end(); it++)
 	{
@@ -81,7 +81,7 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 	get_rooms.rooms = m_room_manager.getRooms();
 	
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(get_rooms);
 
 	return result;
@@ -103,7 +103,7 @@ RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 	{
 		players_response.players = std::vector<string>();
 	}
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(players_response);
 
 	return result;
@@ -118,7 +118,7 @@ RequestResult MenuRequestHandler::getPersonalStats(RequestInfo info)
 	stats.statistics = this->m_statistics_manager.getUserStatistics(this->m_user.getUserName());
 	stats.status = STATUS_OK;
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(stats);
 
 	return result;
@@ -166,7 +166,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	{
 		join_room.status = STATUS_FAIL;
 	}
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(join_room);
 
 	return result;
@@ -194,7 +194,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 
 	create_room_response.status = STATUS_OK;
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response
 
 	return result;
@@ -226,7 +226,7 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 		roomDataResponse.status = STATUS_FAIL;
 	}
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(roomDataResponse);
 
 	return result;
@@ -239,7 +239,7 @@ RequestResult MenuRequestHandler::topFivePlayer(RequestInfo info)
 
 	top_five = this->m_statistics_manager.getHighScore();
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(top_five);
 
 	return result;

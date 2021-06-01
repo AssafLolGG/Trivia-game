@@ -5,7 +5,9 @@
 #include "RequestHandlerFactory.h"
 #include "ServerUtilities.h"
 #include "MenuRequestHandler.h"
+
 class MenuRequestHandler;
+
 class RoomAdminRequestHandler : public IRequestHandler
 {
 private:
@@ -20,7 +22,8 @@ private:
 	RequestResult getRoomState(RequestInfo& info);
 
 public:
-	RoomAdminRequestHandler(RoomManager& room_manager, int _room_id, RequestHandlerFactory& handler_factory, LoggedUser m_user_, SOCKET client_socket) : m_room_manager(room_manager), m_handler_factory(handler_factory)
+	RoomAdminRequestHandler(RoomManager& room_manager, int _room_id, RequestHandlerFactory& handler_factory, LoggedUser m_user_, SOCKET client_socket)
+		: m_room_manager(room_manager), m_handler_factory(handler_factory)
 	{
 		this->m_client = client_socket;
 		this->room_id = _room_id;

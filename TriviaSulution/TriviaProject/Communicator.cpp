@@ -27,9 +27,10 @@ void Communicator::handleNewClient(SOCKET client_socket)
 	RequestResult result;
 	ErrorResponse error;
 	std::string server_message = STARTER_SERVER_MESSAGE;
-	char* message_buffer = new char[BUFFER_CAPACITY], serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
+	char* message_buffer = new char[BUFFER_CAPACITY], serialized_response_in_char_array[BUFFER_CAPACITY] = { 0 };
 	std::vector<uint8_t> buffer_vector;
 	IRequestHandler* request_handler = this->m_handlerFactory.createLoginRequestHandler(client_socket);
+	int count = 0;
 
 	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, request_handler));
 
@@ -50,17 +51,17 @@ void Communicator::handleNewClient(SOCKET client_socket)
 			if (request_handler->isRequestRelevant(request))
 			{
 				result = request_handler->handleRequest(request);
-				if (result.newHandler == nullptr)
+				if (result.new_handler == nullptr)
 				{
-					result.newHandler = request_handler;
+					result.new_handler = request_handler;
 				}
 				else
 				{
 					delete request_handler;
-					request_handler = result.newHandler;
+					request_handler = result.new_handler;
 				}
 
-				insertHandlerToClient(result.newHandler, this->m_clients, client_socket);
+				insertHandlerToClient(result.new_handler, this->m_clients, client_socket);
 			}
 			else
 			{
@@ -68,27 +69,31 @@ void Communicator::handleNewClient(SOCKET client_socket)
 				result.respone = JsonResponsePacketSerializer::serializeResponse(error);
 			}
 			
-			vectorToCharArray(serializedResponseInCharArray, result.respone);
+			vectorToCharArray(serialized_response_in_char_array, result.respone);
 
 			// sends the serialized response from the server to the client, after analyizing his response.
-			send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
-			int count = 0;
-			for (SOCKET s: result.socketsToSendTo)
-			{
-				if (s != client_socket)
-				{
-					memset(serializedResponseInCharArray, 0, BUFFER_CAPACITY);
-					vectorToCharArray(serializedResponseInCharArray, result.responseToOthers);
-					send(s, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
-					receiveMassageFromClient(s, message_buffer);
+			send(client_socket, serialized_response_in_char_array, BUFFER_CAPACITY, 0);
 
-					insertHandlerToClient(result.RequestHandlerToAll[count], this->m_clients, client_socket);
+			count = 0;
+
+			for (SOCKET current_player_socket: result.players_in_room_sockets) // iter over the sockets of the player in room and sending them messages
+			{
+				if (current_player_socket != client_socket)
+				{
+					memset(serialized_response_in_char_array, 0, BUFFER_CAPACITY);
+
+					vectorToCharArray(serialized_response_in_char_array, result.response_to_other_players);
+
+					send(current_player_socket, serialized_response_in_char_array, BUFFER_CAPACITY, 0);
+					receiveMassageFromClient(current_player_socket, message_buffer);
+
+					insertHandlerToClient(result.players_in_room_request_handlers[count], this->m_clients, client_socket);
 				}
 				count++;
 			}
 
 			// reset char array for future use
-			memset(serializedResponseInCharArray, 0, BUFFER_CAPACITY);
+			memset(serialized_response_in_char_array, 0, BUFFER_CAPACITY);
 
 			// clearing vectors for future usage
 			buffer_vector.clear();

@@ -1,36 +1,42 @@
 #include "RoomMemberRequestHandler.h"
 
+/**/
 RequestResult RoomMemberRequestHandler::leaveGame(RequestInfo& info)
 {
-	Room* theRoom = new Room();
+	Room* the_room = new Room();
 	RequestResult result;
-	result.newHandler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
-	LeaveRoomResponse leaveRoom;
+	result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
+	LeaveRoomResponse leave_room;
 
-	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, theRoom))
+	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, the_room))
 	{
-		std::vector<string> usersInRoom = theRoom->getAllUsers();
-		leaveRoom.status = std::find(usersInRoom.begin(), usersInRoom.end(), this->m_user.getUserName()) != usersInRoom.end() ? STATUS_OK : STATUS_FAIL;
+		std::vector<string> users_in_room = the_room->getAllUsers();
+		leave_room.status = std::find(users_in_room.begin(), users_in_room.end(), this->m_user.getUserName()) != users_in_room.end() ? STATUS_OK : STATUS_FAIL;
 	}
 	else
 	{
-		leaveRoom.status = STATUS_FAIL;
+		leave_room.status = STATUS_FAIL;
 	}
-	result.respone = JsonResponsePacketSerializer::serializeResponse(leaveRoom);
-	if (leaveRoom.status == 0)
+
+	result.respone = JsonResponsePacketSerializer::serializeResponse(leave_room);
+
+	if (leave_room.status == 0)
 	{
 		return result;
 	}
-	theRoom->removeUser(this->m_user, this->m_client);
+
+	the_room->removeUser(this->m_user, this->m_client);
 	return result;
 }
 
 RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo& info)
 {
-	GetRoomDataResponse roomdata = getRoomData(this->m_room_manager, this->room_id, this->m_user);
+	GetRoomDataResponse room_data = getRoomData(this->m_room_manager, this->room_id, this->m_user);
 	RequestResult result;
-	result.newHandler = new RoomMemberRequestHandler(*this);
-	result.respone = JsonResponsePacketSerializer::serializeResponse(roomdata);
+
+	result.new_handler = new RoomMemberRequestHandler(*this);
+	result.respone = JsonResponsePacketSerializer::serializeResponse(room_data);
+
 	return result;
 }
 
@@ -52,5 +58,6 @@ RequestResult RoomMemberRequestHandler::handleRequest(RequestInfo& info)
 	{
 		result = this->leaveGame(info);
 	}
+
 	return result;
 }

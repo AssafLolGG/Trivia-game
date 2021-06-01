@@ -79,6 +79,7 @@ std::vector<std::string> Room::getAllUsers()
     return usersNames;
 }
 
+/* return the sockets of all the players that are currently in the room */
 std::vector<SOCKET>& Room::getAllSockets()
 {
 	return this->m_sockets;
