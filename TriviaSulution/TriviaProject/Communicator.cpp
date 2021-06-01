@@ -29,7 +29,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 	std::string server_message = STARTER_SERVER_MESSAGE;
 	char* message_buffer = new char[BUFFER_CAPACITY], serializedResponseInCharArray[BUFFER_CAPACITY] = { 0 };
 	std::vector<uint8_t> buffer_vector;
-	IRequestHandler* request_handler = this->m_handlerFactory.createLoginRequestHandler();
+	IRequestHandler* request_handler = this->m_handlerFactory.createLoginRequestHandler(client_socket);
 
 	this->m_clients.insert(std::pair<SOCKET, IRequestHandler*>(client_socket, request_handler));
 
@@ -72,6 +72,20 @@ void Communicator::handleNewClient(SOCKET client_socket)
 
 			// sends the serialized response from the server to the client, after analyizing his response.
 			send(client_socket, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
+			int count = 0;
+			for (SOCKET s: result.socketsToSendTo)
+			{
+				if (s != client_socket)
+				{
+					memset(serializedResponseInCharArray, 0, BUFFER_CAPACITY);
+					vectorToCharArray(serializedResponseInCharArray, result.responseToOthers);
+					send(s, serializedResponseInCharArray, BUFFER_CAPACITY, 0);
+					receiveMassageFromClient(s, message_buffer);
+
+					insertHandlerToClient(result.RequestHandlerToAll[count], this->m_clients, client_socket);
+				}
+				count++;
+			}
 
 			// reset char array for future use
 			memset(serializedResponseInCharArray, 0, BUFFER_CAPACITY);

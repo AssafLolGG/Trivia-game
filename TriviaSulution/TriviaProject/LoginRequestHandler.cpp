@@ -17,7 +17,7 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     if (login_response.status == TRUE)
     {
         LoggedUser user(login_request.username);
-        result.newHandler = result.newHandler = result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(login_request.username));
+        result.newHandler = result.newHandler = result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(login_request.username), this->m_socket);
     }
     else
     {
@@ -41,7 +41,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
     // checks if the the user managed to signup succeessfully.
     if (signup_response.status == TRUE)
     {
-        result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(signup_request.username));
+        result.newHandler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(signup_request.username), this->m_socket);
     }
     else
     {
@@ -54,9 +54,9 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
 /*  constractor function for LoginRequestHandler.
     input: the handlerFactory, login manager.
     output: An object of LoginRequestHandler. */
-LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager) : m_request_handler_factory(handlerFactory), m_login_manager(loginManager)
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager, SOCKET client_socket) : m_request_handler_factory(handlerFactory), m_login_manager(loginManager)
 {
-
+	this->m_socket = client_socket;
 }
 
 /*  checks to see if the message code belongs to:

@@ -60,11 +60,11 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 	Room* room = new Room;
 	logout.status = STATUS_OK; // double check that one.
 
-	result.newHandler = this->m_handler_factory.createLoginRequestHandler(); // return login request after signing out
+	result.newHandler = this->m_handler_factory.createLoginRequestHandler(this->m_socket); // return login request after signing out
 	result.respone = JsonResponsePacketSerializer::serializeResponse(logout);
 	for (auto it = this->m_room_manager.getAllRooms().begin(); it != this->m_room_manager.getAllRooms().end(); it++)
 	{
-		it->second.removeUSer(this->m_user);
+		it->second.removeUser(this->m_user, this->m_socket);
 	}
 	this->m_handler_factory.getLoginManager().logout(this->m_user.getUserName());
 	
@@ -154,7 +154,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 		if (all_users_in_room.size() < (room)->GetRoomdata().maxPlayers &&
 			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found - assaf had pron
 		{
-			(room)->addUser(this->m_user); // adding user to room
+			(room)->addUser(this->m_user, this->m_socket); // adding user to room
 			join_room.status = STATUS_OK;
 		}
 		else
@@ -190,7 +190,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 	room_data.timePerQuestion = create_room_request.answer_time_out;
 	room_data.numOfQuestionsInGame = create_room_request.question_count;
 
-	this->m_room_manager.createRoom(this->m_user, room_data); // creating new room
+	this->m_room_manager.createRoom(this->m_user, room_data, this->m_socket); // creating new room
 
 	create_room_response.status = STATUS_OK;
 

@@ -28,9 +28,10 @@ in the room.
 input: the user to add to the list.
 output: None.
 */
-void Room::addUser(LoggedUser userToAdd)
+void Room::addUser(LoggedUser userToAdd, SOCKET userSocket)
 {
     this->m_users.push_back(userToAdd);
+	this->m_sockets.push_back(userSocket);
 }
 
 /*
@@ -39,12 +40,13 @@ of users connected to the room.
 input: the user to remove from the list.
 output: None.
 */
-void Room::removeUSer(LoggedUser userToRemove)
+void Room::removeUser(LoggedUser userToRemove, SOCKET socketToRemove)
 {
     for (auto it = this->m_users.begin(); it != this->m_users.end(); it++) // finds the room to erase through iterators and removes it.
     {
         if (it->getUserName() == userToRemove.getUserName())
         {
+			this->m_sockets.erase(std::find(this->m_sockets.begin(), this->m_sockets.end(), socketToRemove));
             this->m_users.erase(it);
             return;
         }
@@ -77,6 +79,11 @@ std::vector<std::string> Room::getAllUsers()
     return usersNames;
 }
 
+std::vector<SOCKET>& Room::getAllSockets()
+{
+	return this->m_sockets;
+}
+
 bool Room::isUserInRoom(LoggedUser userToFind)
 {
 	for (LoggedUser user : this->m_users)
@@ -94,20 +101,20 @@ function that creates room.
 input: the room logged usera and the room data.
 output: None.
 */
-void RoomManager::createRoom(LoggedUser loggedUserToRoom, RoomData currentRoomdata)
+void RoomManager::createRoom(LoggedUser loggedUserToRoom, RoomData currentRoomdata, SOCKET userSocket)
 {
     Room room(currentRoomdata);
-    room.addUser(loggedUserToRoom);
+    room.addUser(loggedUserToRoom, userSocket);
     this->m_rooms.insert(std::pair<unsigned int, Room>(currentRoomdata.id, room));
 }
 
 int RoomManager::getRoomID(LoggedUser loggedUserToRoom)
 {
-	for (std::pair<unsigned int, Room> pair : this->m_rooms)
+	for (auto iter = this->m_rooms.begin(); iter != this->m_rooms.end(); iter++)
 	{
-		if (pair.second.isUserInRoom(loggedUserToRoom))
+		if (iter->second.isUserInRoom(loggedUserToRoom))
 		{
-			return pair.first;
+			return iter->first;
 		}
 	}
 	return INVALID_INDEX;

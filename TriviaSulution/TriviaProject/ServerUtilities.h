@@ -6,9 +6,10 @@
 #include <chrono>
 #include <vector>
 #include <map>
-#include "LoginRequestHandler.h"
-#include "MenuRequestHandler.h"
+#include "RequestHandlerFactory.h"
 #define BUFFER_CAPACITY 1024
+
+class RequestHandlerFactory;
 
 bool receiveMassageFromClient(SOCKET& client_socket, char* message_buffer);
 RequestInfo createRequestInfo(std::vector<uint8_t>& buffer_vector);

@@ -1,12 +1,10 @@
 #pragma once
 #include "IRequestHandler.h"
-#include "LoginManager.h"
-#include "MenuRequestHandler.h"
 #include "RequestHandlerFactory.h"
+#include "LoginManager.h"
 #include "ServerUtilities.h"
-#include "MenuRequestHandler.h"
-class MenuRequestHandler;
-class RoomAdminRequestHandler : public IRequestHandler
+class RequestHandlerFactory;
+class RoomMemberRequestHandler : public IRequestHandler 
 {
 private:
 	SOCKET m_client;
@@ -15,12 +13,11 @@ private:
 	int room_id;
 	RequestHandlerFactory& m_handler_factory;
 
-	RequestResult startGame(RequestInfo& info);
-	RequestResult closeGame(RequestInfo& info);
+	RequestResult leaveGame(RequestInfo& info);
 	RequestResult getRoomState(RequestInfo& info);
 
 public:
-	RoomAdminRequestHandler(RoomManager& room_manager, int _room_id, RequestHandlerFactory& handler_factory, LoggedUser m_user_, SOCKET client_socket) : m_room_manager(room_manager), m_handler_factory(handler_factory)
+	RoomMemberRequestHandler(RoomManager& room_manager, int _room_id, RequestHandlerFactory& handler_factory, LoggedUser m_user_, SOCKET client_socket) : m_room_manager(room_manager), m_handler_factory(handler_factory)
 	{
 		this->m_client = client_socket;
 		this->room_id = _room_id;
@@ -28,6 +25,5 @@ public:
 	}
 	bool isRequestRelevant(RequestInfo& info) override;
 	RequestResult handleRequest(RequestInfo& info) override;
-	
 };
 

@@ -32,6 +32,7 @@ struct RequestResult
 	IRequestHandler* newHandler;
 	std::vector<uint8_t> responseToOthers;
 	std::vector<SOCKET> socketsToSendTo;
+	std::vector<IRequestHandler*> RequestHandlerToAll;
 };
 
 class IRequestHandler

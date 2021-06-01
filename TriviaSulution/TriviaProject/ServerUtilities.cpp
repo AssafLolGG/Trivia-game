@@ -33,7 +33,7 @@ RequestInfo createRequestInfo(std::vector<uint8_t>& buffer_vector)
 	return request;
 }
  
-bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_factory)
+bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_factory, SOCKET client_socket)
 {
 	if (new_handler != nullptr) // if an error doesn't occurs
 	{
@@ -41,7 +41,7 @@ bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_fac
 	}
 	else
 	{
-		new_handler = handler_factory.createLoginRequestHandler();
+		new_handler = handler_factory.createLoginRequestHandler(client_socket);
 		return false;
 	}
 }
