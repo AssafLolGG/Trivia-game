@@ -23,84 +23,6 @@ namespace TriviaGUI
     /// </summary>
     public partial class RoomMenu : Window
     {
-        private bool GetCurrentPlayersInRoom(TcpClient serverConnection, int roomId, out string[] completedData)
-        {
-            completedData = new string[1000];
-            Dictionary<string, object> RoomDitalis = new Dictionary<string, object>();
-            RoomDitalis.Add("roomID", roomId.ToString());
-            string json_parsed = JsonConvert.SerializeObject(RoomDitalis);
-            byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
-            byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(5, json_byted);
-
-            serverConnection.GetStream().Write(data_encoded, 0, 1000);
-
-            while (serverConnection.Available == 0) ;
-            System.Threading.Thread.Sleep(100);
-            byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
-            try
-            {
-                if (jsonReturned["players"].ToString() != "")
-                {
-                    string[] seperators = { ", " };
-                    string[] players = jsonReturned["players"].ToString().Split(seperators, System.StringSplitOptions.RemoveEmptyEntries);
-                    completedData = players;
-                    return true;
-                }
-            }
-            catch (Exception e)
-            { }
-            return false;
-        }
-
-        /* retrieving a specific room data*/
-        private bool GetRoomDataString(TcpClient serverConnection, string roomName, int room_id, out string completedData)
-        {
-            completedData = "";
-            Dictionary<string, object> RoomDitalis = new Dictionary<string, object>();
-            RoomDitalis.Add("roomID", room_id.ToString()); // inserting room id to json
-
-            string json_parsed = JsonConvert.SerializeObject(RoomDitalis); // serializing data
-            byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
-            byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(9, json_byted); // adding size and code for protocal
-
-            serverConnection.GetStream().Write(data_encoded, 0, 1000);
-
-            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-            byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput); // diserallizing json from server
-            try
-            {
-                string[] players;
-                if (jsonReturned["status"].ToString() == "1" && jsonReturned["isActive"].ToString() == "1") // checks if no error has occurred and if the server is active
-                {
-                    completedData += room_id.ToString() + "        ";
-
-                    if (this.GetCurrentPlayersInRoom(serverConnection, room_id, out players) == true) // getting the current players in room and checking if the number of max player is valid
-                    {
-                        // writing the room data to a string
-                        completedData += roomName + "         ";
-                        completedData += players.Length.ToString() + " / " + jsonReturned["maxPlayers"].ToString() + "                                        ";
-                        completedData += jsonReturned["questionsNumber"].ToString() + "                                    ";
-                        completedData += jsonReturned["timePerQuestion"].ToString();
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            catch (Exception e)
-            { }
-            return false;
-        }
-
         /* refreshing the rooms*/
         public void refreshRoomList()
         {
@@ -125,8 +47,17 @@ namespace TriviaGUI
             {
                 ListBoxItem item = new ListBoxItem();
                 string contentOfItem = "";
-                if (GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
+                if (ServerFunctions.ServerFunctions.GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
                 {
+                    string[] split_items = contentOfItem.Split(',');
+                    contentOfItem = "";
+
+                    contentOfItem += split_items[0] + "        ";                                                                        // id
+                    contentOfItem += split_items[1] + "         ";                                                          // room name
+                    contentOfItem += split_items[2] + " / " + split_items[3] + "                                        ";  // current players / max players
+                    contentOfItem += split_items[4] + "                                    ";                               // question num
+                    contentOfItem += split_items[5];                                                                        // time per question
+
                     item.Content = contentOfItem;
                     this.rooms_list.Items.Add(item);
                 }

@@ -5,8 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="RoomAdminWindow" Height="450" Width="800">
+        Title="RoomAdminWindow" Height="800" Width="800" Background="#C39BD3">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.ColumnSpan="2">
+            <Border Height="50"></Border>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center">
+                <Button x:Name="start_button" HorizontalAlignment="Center" Height="100" Width="300" FontSize="40" Background="#5DADE2" BorderThickness="0">Start</Button>
+            </Border>
+            <Border Height="50"></Border>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center">
+                <Button x:Name="close_button" HorizontalAlignment="Center" Height="100" Width="300" FontSize="40" Background="#5DADE2" BorderThickness="0">Close</Button>
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <TextBlock></TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            
+        </StackPanel>
     </Grid>
 </Window>

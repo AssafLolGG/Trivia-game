@@ -94,5 +94,86 @@ namespace ServerFunctions
             serverConnection.GetStream().Read(serverOutput, 0, serverOutput.Length);
             return serverOutput;
         }
+
+        public static bool GetCurrentPlayersInRoom(TcpClient serverConnection, int roomId, out string[] completedData)
+        {
+            completedData = new string[1000];
+            Dictionary<string, object> RoomDitalis = new Dictionary<string, object>();
+            RoomDitalis.Add("roomID", roomId.ToString());
+            string json_parsed = JsonConvert.SerializeObject(RoomDitalis);
+            byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
+            byte[] data_encoded = ServerFunctions.getCompleteMsg(5, json_byted);
+
+            serverConnection.GetStream().Write(data_encoded, 0, 1000);
+
+            while (serverConnection.Available == 0) ;
+            //System.Threading.Thread.Sleep(100);
+            byte[] serverOutput = ServerFunctions.ReadServerMessage(serverConnection);
+            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.diserallizeResponse(serverOutput);
+            try
+            {
+                if (jsonReturned["players"].ToString() != "")
+                {
+                    string[] seperators = { ", " };
+                    string[] players = jsonReturned["players"].ToString().Split(seperators, System.StringSplitOptions.RemoveEmptyEntries);
+                    completedData = players;
+                    return true;
+                }
+            }
+            catch (Exception e)
+            { }
+            return false;
+        }
+
+        /* retrieving a specific room data*/
+        public static bool GetRoomDataString(TcpClient serverConnection, string roomName, int room_id, out string completedData)
+        {
+            completedData = "";
+            Dictionary<string, object> RoomDitalis = new Dictionary<string, object>();
+            RoomDitalis.Add("roomID", room_id.ToString()); // inserting room id to json
+
+            string json_parsed = JsonConvert.SerializeObject(RoomDitalis); // serializing data
+            byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
+            byte[] data_encoded = ServerFunctions.getCompleteMsg(9, json_byted); // adding size and code for protocal
+
+            serverConnection.GetStream().Write(data_encoded, 0, 1000);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+            byte[] serverOutput = ServerFunctions.ReadServerMessage(serverConnection);
+            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.diserallizeResponse(serverOutput); // diserallizing json from server
+            try
+            {
+                string[] players;
+                if (jsonReturned["status"].ToString() == "1" && jsonReturned["isActive"].ToString() == "1") // checks if no error has occurred and if the server is active
+                {
+                    completedData += room_id.ToString();
+
+                    if (ServerFunctions.GetCurrentPlayersInRoom(serverConnection, room_id, out players) == true) // getting the current players in room and checking if the number of max player is valid
+                    {
+                        // writing the room data to a string
+                        completedData += "," + roomName + "," + players.Length.ToString() + "," + jsonReturned["maxPlayers"].ToString() + "," +
+                          jsonReturned["questionsNumber"].ToString() + "," + jsonReturned["timePerQuestion"].ToString();
+                      /*  completedData += roomName + "         ";
+                        completedData += players.Length.ToString() + " / " + jsonReturned["maxPlayers"].ToString() + "                                        ";
+                        completedData += jsonReturned["questionsNumber"].ToString() + "                                    ";
+                        completedData += jsonReturned["timePerQuestion"].ToString();*/
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception e)
+            { }
+            return false;
+        }
+
     }
 }

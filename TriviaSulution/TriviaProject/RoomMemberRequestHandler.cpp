@@ -40,11 +40,13 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo& info)
 	return result;
 }
 
+/* checking if the request code match the codes that the room member accept*/
 bool RoomMemberRequestHandler::isRequestRelevant(RequestInfo& info)
 {
 	return info.id == LEAVE_ROOM_CODE || info.id == GET_ROOMDATA_CODE;
 }
 
+/* checking the type of request and handling it */
 RequestResult RoomMemberRequestHandler::handleRequest(RequestInfo& info)
 {
 	RequestResult result;

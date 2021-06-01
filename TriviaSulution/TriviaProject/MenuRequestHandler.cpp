@@ -152,7 +152,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 
 
 		if (all_users_in_room.size() < (room)->GetRoomdata().maxPlayers &&
-			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found - assaf had pron
+			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found
 		{
 			(room)->addUser(this->m_user, this->m_socket); // adding user to room
 			join_room.status = STATUS_OK;
@@ -194,7 +194,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 
 	create_room_response.status = STATUS_OK;
 
-	result.new_handler = new MenuRequestHandler(*this);
+	result.new_handler = this->m_handler_factory.createRoomAdminRequestHandler(this->m_user, room_data.id, this->m_socket);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response
 
 	return result;
