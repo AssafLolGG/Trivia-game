@@ -47,7 +47,7 @@ public:
 	void deleteRoom(unsigned int ID);
 	unsigned int getRoomState(unsigned int ID);
 	std::vector<RoomData> getRooms();
-	bool getRoom(unsigned int id, Room* room);
+	Room* getRoom(unsigned int id);
 	std::map<unsigned int, Room>& getAllRooms();
 	int getRoomCount() const;
 	

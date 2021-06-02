@@ -23,20 +23,49 @@ namespace TriviaGUI
     /// </summary>
     public partial class RoomMemberWindow : Window
     {
-        public RoomMemberWindow(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
+        public RoomMemberWindow()
         {
             InitializeComponent();
 
-            Thread t = new Thread(new ThreadStart(refreshPlayersInRoom));
+            App.Current.Properties["dispatcher"] = this.Dispatcher;
+            App.Current.Properties["list_box"] = this.active_players_list;
+
+            Thread t = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
 
-            prepareText(room_id, room_name, max_players, questions_num, time_per_question);
+            Newtonsoft.Json.Linq.JObject room_data = getRoomData();
+
+            string room_id = room_data["id"].ToString();
+            string room_name = room_data["name"].ToString();
+            string max_players = room_data["maxPlayers"].ToString();
+            string question_num = room_data["questionsNumber"].ToString();
+            string time_per_question = room_data["timePerQuestion"].ToString();
+
+            prepareText(room_id, room_name, max_players, question_num, time_per_question);
         }
 
         private void leave_button_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private Newtonsoft.Json.Linq.JObject getRoomData()
+        {
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            byte[] client_message = { 9 };
+
+            serverConnection.GetStream().Write(client_message, 0, 1);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+            byte[] personal_statistics_json = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+            Newtonsoft.Json.Linq.JObject server_json = ServerFunctions.ServerFunctions.diserallizeResponse(personal_statistics_json);
+
+            if (server_json["status"].ToString() == "1")
+            {
+                return server_json;
+            }
+            return null;
         }
 
         private void leaveRoom()
@@ -62,48 +91,14 @@ namespace TriviaGUI
                 MessageBox.Show("Couldn't Leave Room");
             }
         }
+     
 
-        private void refreshPlayersInRoom()
+        private void prepareText(string room_id, string room_name, string max_players, string questions_num, string time_per_question)
         {
-            ListBoxItem item;
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            byte[] client_message = { 5 }; // get players in room
-
-            while (true)
-            {
-                serverConnection.GetStream().Write(client_message, 0, 1);
-
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-
-                string[] players = json_returned["players"].ToString().Split(',');
-
-                this.Dispatcher.Invoke(() =>
-                {
-                    active_players_list.Items.Clear();
-                });
-
-                for (int i = 0; i < players.Length; i++)
-                {
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        item = new ListBoxItem();
-                        item.Content = players[i];
-                        active_players_list.Items.Add(item);
-                    });
-                }
-
-                Thread.Sleep(3000);
-            }
-        }
-
-        private void prepareText(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
-        {
-            this.id_text.Text = "Id - " + room_id.ToString();
+            this.id_text.Text = "Id - " + room_id;
             this.name_text.Text = "Name - " + room_name;
-            this.question_number_text.Text = "Number Of Question - " + questions_num.ToString();
-            this.time_per_question_text.Text = "Time Per Question - " + time_per_question.ToString();
+            this.question_number_text.Text = "Number Of Question - " + questions_num;
+            this.time_per_question_text.Text = "Time Per Question - " + time_per_question;
         }
     }
 }

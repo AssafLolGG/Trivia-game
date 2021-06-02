@@ -60,8 +60,9 @@ void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IReque
 GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUser logged)
 {
 	GetRoomDataResponse roomDataResponse;
-	Room* theRoom = new Room();
-	if (room_id != INVALID_INDEX && room_manager.getRoom(room_id, theRoom))
+	Room* theRoom = room_manager.getRoom(room_id);
+
+	if (room_id != INVALID_INDEX && theRoom)
 	{
 		std::vector<string> usersInRoom = theRoom->getAllUsers();
 		if (std::find(usersInRoom.begin(), usersInRoom.end(), logged.getUserName()) != usersInRoom.end())

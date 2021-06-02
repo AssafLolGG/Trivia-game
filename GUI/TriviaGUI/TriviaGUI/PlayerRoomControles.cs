@@ -13,7 +13,7 @@ namespace TriviaGUI
 {
     class PlayerRoomControles
     {
-        public static void refreshPlayersInRoom(TcpClient client_socket)
+        public static void refreshPlayersInRoom()
         {
             ListBoxItem item;
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];

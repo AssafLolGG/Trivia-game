@@ -3,12 +3,12 @@
 /**/
 RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 {
-	Room* the_room = new Room();
+	Room* the_room = this->m_room_manager.getRoom(this->room_id);
 	RequestResult result;
 	result.new_handler = new RoomAdminRequestHandler(*this);
 	StartRoomResponse start_room;
 	
-	if (this->room_id != INVALID_INDEX && this->m_room_manager.getRoom(this->room_id, the_room)) // checking if the room id is valid, getting the current room for the server and checking if the room exists
+	if (this->room_id != INVALID_INDEX && the_room != nullptr) // checking if the room id is valid, getting the current room for the server and checking if the room exists
 	{
 		std::vector<string> users_in_room = the_room->getAllUsers();
 
@@ -40,12 +40,12 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 /* closing the game and the room */
 RequestResult RoomAdminRequestHandler::closeGame(RequestInfo& info)
 {
-	Room* the_room = new Room();
+	Room* the_room = this->m_room_manager.getRoom(room_id);
 	RequestResult result;
 	result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
 	CloseRoomResponse close_room;
 
-	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, the_room)) // checking if the room id is valid, getting the current room for the server and checking if the room exists
+	if (room_id != INVALID_INDEX && the_room != nullptr) // checking if the room id is valid, getting the current room for the server and checking if the room exists
 	{
 		std::vector<string> users_in_room = the_room->getAllUsers();
 
@@ -98,11 +98,11 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo& info)
 
 RequestResult RoomAdminRequestHandler::getPlayersInRoom(RequestInfo& info)
 {
-	Room* the_room = new Room();
+	Room* the_room = this->m_room_manager.getRoom(this->room_id);
 	GetPlayersInRoomResponse players_in_room_response;
 	RequestResult result;
 
-	this->m_room_manager.getRoom(this->room_id, the_room);
+	
 
 	players_in_room_response.players = the_room->getAllUsers();
 

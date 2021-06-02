@@ -169,17 +169,15 @@ std::vector<RoomData> RoomManager::getRooms()
 }
 
 /* get a specific room based on id */
-bool RoomManager::getRoom(unsigned int id, Room* room)
+Room* RoomManager::getRoom(unsigned int id)
 {
 	try
 	{
-		*room = this->m_rooms.find(id)->second;
-		return true;
+		return &this->m_rooms.find(id)->second;
 	}
 	catch (...)
 	{
-		room = nullptr;
-		return false;
+		return nullptr;
 	}
 }
 

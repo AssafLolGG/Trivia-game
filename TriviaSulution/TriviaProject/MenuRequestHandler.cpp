@@ -93,9 +93,11 @@ RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 	GetPlayersInRoomResponse players_response;
 	GetPlayersInRoomRequest players_request;
 	RequestResult result;
-	Room* room = new Room;
 	players_request = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(info.buffer);
-	if (this->m_room_manager.getRoom(players_request.room_id, room))
+
+	Room* room = this->m_room_manager.getRoom(players_request.room_id);
+
+	if (room != nullptr)
 	{
 		players_response.players = (room)->getAllUsers();
 	}
@@ -145,12 +147,11 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	JoinRoomResponse join_room;
 	RequestResult result;
 	JoinRoomRequest join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
-	Room* room = nullptr;
+	Room* room = this->m_room_manager.getRoom(join_room_request.room_id);
 
-	if (this->m_room_manager.getRoom(join_room_request.room_id, room))
+	if (room != nullptr)
 	{
 		std::vector<string> all_users_in_room = (room)->getAllUsers();
-
 
 		if (all_users_in_room.size() < (room)->GetRoomdata().maxPlayers &&
 			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found
@@ -207,12 +208,13 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 	GetRoomDataRequest roomDataRequest;
 	GetRoomDataResponse roomDataResponse;
 	RequestResult result;
-	Room* theRoom = new Room();
-	
 
 	roomDataRequest = JsonRequestPacketDeserializer::deserializeRoomDataRequest(info.buffer);
 	int theRoomId = roomDataRequest.room_id;
-	if (theRoomId != INVALID_INDEX && this->m_room_manager.getRoom(theRoomId, theRoom))
+
+	Room* theRoom = this->m_room_manager.getRoom(theRoomId);
+
+	if (theRoomId != INVALID_INDEX && theRoom != nullptr)
 	{
 		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
 		roomDataResponse.status = STATUS_OK;

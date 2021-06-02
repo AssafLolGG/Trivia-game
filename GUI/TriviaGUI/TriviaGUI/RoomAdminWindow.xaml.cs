@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Threading;
-using ServerFunctions;
+using TriviaGUI;
 
 namespace TriviaGUI
 {
@@ -34,7 +34,7 @@ namespace TriviaGUI
             App.Current.Properties["dispatcher"] = this.Dispatcher;
             App.Current.Properties["list_box"] = this.active_players_list;
 
-            Thread t = new Thread(new ThreadStart(refreshPlayersInRoom));
+            Thread t = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
 

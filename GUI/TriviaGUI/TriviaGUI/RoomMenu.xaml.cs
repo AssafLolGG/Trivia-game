@@ -50,6 +50,7 @@ namespace TriviaGUI
                 if (ServerFunctions.ServerFunctions.GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
                 {
                     string[] split_items = contentOfItem.Split(',');
+
                     contentOfItem = "";
 
                     contentOfItem += split_items[0] + "        ";                                                                        // id
@@ -62,7 +63,6 @@ namespace TriviaGUI
                     this.rooms_list.Items.Add(item);
                 }
             }
-            
         }
         public RoomMenu()
         {
@@ -73,38 +73,43 @@ namespace TriviaGUI
 
         private void join_room_button_Click(object sender, RoutedEventArgs e)
         {
-            char room_id = this.rooms_list.SelectedItem.ToString()[0];
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            Dictionary<string, object> RoomToBeCreatedDitalis = new Dictionary<string, object>();
-            RoomToBeCreatedDitalis.Add("roomID", room_id);
-
-            string json_parsed = JsonConvert.SerializeObject(RoomToBeCreatedDitalis); // serializing data
-            byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
-            byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(6, json_byted); // adding size and code for protocal
-            serverConnection.GetStream().Write(data_encoded, 0, 1000);
-
-            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-            byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput); // diserallizing json from server
-
-            try
+            if(rooms_list.SelectedItem != null)
             {
-                if (jsonReturned["status"].ToString() == "1")
-                {
-                  //  RoomMemberWindow member = new RoomMemberWindow(Int32.Parse(room_id))
-                   // member.Show();
+                string room_string = this.rooms_list.SelectedItem.ToString().Split(' ')[1];
+                int room_id = Int32.Parse(room_string[0].ToString());
+                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+                Dictionary<string, object> join_room_request = new Dictionary<string, object>();
+                join_room_request.Add("roomID", room_id.ToString());
 
-                    this.Close();
-                }
-                else
+                string json_parsed = JsonConvert.SerializeObject(join_room_request); // serializing data
+                byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
+                byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(6, json_byted); // adding size and code for protocal
+                serverConnection.GetStream().Write(data_encoded, 0, 1000);
+
+                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+                Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput); // diserallizing json from server
+
+                try
                 {
-                  //  this.IsCreated_TB.Text = "The Room wasn't created.";
+                    if (jsonReturned["status"].ToString() == "1")
+                    {
+                        RoomMemberWindow member = new RoomMemberWindow();
+                        member.Show();
+
+                        this.Close();
+                    }
+                    else
+                    {
+                        //  this.IsCreated_TB.Text = "The Room wasn't created.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //this.IsCreated_TB.Text = "The Room wasn't created.";
                 }
             }
-            catch (Exception ex)
-            {
-                //this.IsCreated_TB.Text = "The Room wasn't created.";
-            }
+            
         }
 
         private void back_to_menu_button_Click(object sender, RoutedEventArgs e)

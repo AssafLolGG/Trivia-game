@@ -3,12 +3,12 @@
 /**/
 RequestResult RoomMemberRequestHandler::leaveGame(RequestInfo& info)
 {
-	Room* the_room = new Room();
+	Room* the_room = this->m_room_manager.getRoom(room_id);
 	RequestResult result;
 	result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
 	LeaveRoomResponse leave_room;
 
-	if (room_id != INVALID_INDEX && this->m_room_manager.getRoom(room_id, the_room))
+	if (room_id != INVALID_INDEX && the_room != NULL)
 	{
 		std::vector<string> users_in_room = the_room->getAllUsers();
 		leave_room.status = std::find(users_in_room.begin(), users_in_room.end(), this->m_user.getUserName()) != users_in_room.end() ? STATUS_OK : STATUS_FAIL;
@@ -42,11 +42,11 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo& info)
 
 RequestResult RoomMemberRequestHandler::getPlayersInRoom(RequestInfo& info)
 {
-	Room* the_room = new Room();
+	Room* the_room = this->m_room_manager.getRoom(this->room_id);
 	GetPlayersInRoomResponse players_in_room_response;
 	RequestResult result;
 
-	this->m_room_manager.getRoom(this->room_id, the_room);
+	
 
 	players_in_room_response.players = the_room->getAllUsers();
 
