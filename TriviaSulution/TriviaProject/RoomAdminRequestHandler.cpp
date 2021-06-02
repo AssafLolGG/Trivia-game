@@ -76,9 +76,9 @@ RequestResult RoomAdminRequestHandler::closeGame(RequestInfo& info)
 	}
 
 	// Remove all users from room
-	for (int i = 0; i < result.players_in_room_sockets.size(); i++)
+	for (int i = 0; the_room->getAllUsers().size() != 0; i++)
 	{
-		LoggedUser logged(the_room->getAllUsers()[i]);
+		LoggedUser logged(the_room->getAllUsers()[0]);
 		the_room->removeUser(logged, result.players_in_room_sockets[i]);
 	}
 

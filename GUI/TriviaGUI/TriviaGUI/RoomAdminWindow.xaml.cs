@@ -23,10 +23,9 @@ namespace TriviaGUI
     /// </summary>
     public partial class RoomAdminWindow : Window
     {
-        public RoomAdminWindow()
-        {
-            InitializeComponent();
-        }
+        private Thread refresh_players_list_thread;
+        private Mutex server_mutex;
+
         public RoomAdminWindow(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
         {
             InitializeComponent();
@@ -34,9 +33,12 @@ namespace TriviaGUI
             App.Current.Properties["dispatcher"] = this.Dispatcher;
             App.Current.Properties["list_box"] = this.active_players_list;
 
-            Thread t = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
+            server_mutex = new Mutex();
+            App.Current.Properties["server_mutex"] = server_mutex;
+
+            this.refresh_players_list_thread = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
+            this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
+            this.refresh_players_list_thread.Start();
 
             prepareText(room_id, room_name, max_players, questions_num, time_per_question);
         }
@@ -88,10 +90,15 @@ namespace TriviaGUI
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] client_message = { 12 }; // start room code
 
+            server_mutex.WaitOne();
+
             serverConnection.GetStream().Write(client_message, 0, 1);
 
             while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
             byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+
+            server_mutex.ReleaseMutex();
+
             Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
             if(json_returned["status"].ToString() == "1")
@@ -109,14 +116,21 @@ namespace TriviaGUI
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] client_message = { 11 }; // close room code
 
+            server_mutex.WaitOne();
+
             serverConnection.GetStream().Write(client_message, 0, 1);
 
             while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
             byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+
+            server_mutex.ReleaseMutex();
+
             Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
             if(json_returned["status"].ToString() == "1")
             {
+                this.refresh_players_list_thread.Abort();
+
                 RoomMenu rmenu = new RoomMenu();
                 rmenu.Show();
 

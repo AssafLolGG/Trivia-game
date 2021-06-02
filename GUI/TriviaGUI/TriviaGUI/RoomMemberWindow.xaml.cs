@@ -23,6 +23,8 @@ namespace TriviaGUI
     /// </summary>
     public partial class RoomMemberWindow : Window
     {
+        private Thread refresh_players_list_thread;
+        private Mutex server_mutex;
         public RoomMemberWindow()
         {
             InitializeComponent();
@@ -30,9 +32,12 @@ namespace TriviaGUI
             App.Current.Properties["dispatcher"] = this.Dispatcher;
             App.Current.Properties["list_box"] = this.active_players_list;
 
-            Thread t = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
+            server_mutex = new Mutex();
+            App.Current.Properties["server_mutex"] = server_mutex;
+
+            this.refresh_players_list_thread = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
+            this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
+            this.refresh_players_list_thread.Start();
 
             Newtonsoft.Json.Linq.JObject room_data = getRoomData();
 
