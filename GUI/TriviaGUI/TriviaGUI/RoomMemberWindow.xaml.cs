@@ -93,6 +93,7 @@ namespace TriviaGUI
                         active_players_list.Items.Add(item);
                     });
                 }
+
                 Thread.Sleep(3000);
             }
         }

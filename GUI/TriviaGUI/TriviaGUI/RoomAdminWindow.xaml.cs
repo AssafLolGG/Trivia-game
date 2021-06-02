@@ -31,6 +31,9 @@ namespace TriviaGUI
         {
             InitializeComponent();
 
+            App.Current.Properties["dispatcher"] = this.Dispatcher;
+            App.Current.Properties["list_box"] = this.active_players_list;
+
             Thread t = new Thread(new ThreadStart(refreshPlayersInRoom));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();

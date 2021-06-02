@@ -64,6 +64,7 @@
     <Compile Include="MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PlayerRoomControles.cs" />
     <Compile Include="RoomAdminWindow.xaml.cs">
       <DependentUpon>RoomAdminWindow.xaml</DependentUpon>
     </Compile>

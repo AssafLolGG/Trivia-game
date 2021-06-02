@@ -67,6 +67,7 @@ namespace TriviaGUI
         public RoomMenu()
         {
             InitializeComponent();
+
             refreshRoomList();
         }
 
@@ -90,19 +91,19 @@ namespace TriviaGUI
             {
                 if (jsonReturned["status"].ToString() == "1")
                 {
-                    RoomMemberWindow member = new RoomMemberWindow(Int32.Parse(room_id))
-                    member.Show();
+                  //  RoomMemberWindow member = new RoomMemberWindow(Int32.Parse(room_id))
+                   // member.Show();
 
                     this.Close();
                 }
                 else
                 {
-                    this.IsCreated_TB.Text = "The Room wasn't created.";
+                  //  this.IsCreated_TB.Text = "The Room wasn't created.";
                 }
             }
             catch (Exception ex)
             {
-                this.IsCreated_TB.Text = "The Room wasn't created.";
+                //this.IsCreated_TB.Text = "The Room wasn't created.";
             }
         }
 
