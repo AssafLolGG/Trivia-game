@@ -25,36 +25,46 @@ namespace TriviaGUI
 
             while (true)
             {
-                
-                server_mutex.WaitOne();
+                byte[] server_message;
 
-                serverConnection.GetStream().Write(client_message, 0, 1);
-
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-
-                server_mutex.ReleaseMutex();
-
-                dis.Invoke(() =>
+                try
                 {
-                    Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-                    players = json_returned["players"].ToString().Split(',');
-
-                    if(players != null)
+                    lock (App.Current.Properties["send_lock"])
                     {
-                        list_box.Items.Clear();
+                        serverConnection.GetStream().Write(client_message, 0, 1);
+                    }
+                    lock (App.Current.Properties["receive_lock"])
+                    {
+                        while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                        server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+                    }
 
-                        for (int i = 0; i < players.Length; i++)
+                    dis.Invoke(() =>
+                    {
+                        Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+                        players = json_returned["players"].ToString().Split(',');
+
+                        if (players != null)
                         {
-                            ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]).Invoke(() =>
+                            list_box.Items.Clear();
+
+                            for (int i = 0; i < players.Length; i++)
                             {
-                                item = new ListBoxItem();
-                                item.Content = players[i];
-                                list_box.Items.Add(item);
-                            });
+                                ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]).Invoke(() =>
+                                {
+                                    item = new ListBoxItem();
+                                    item.Content = players[i];
+                                    list_box.Items.Add(item);
+                                });
+                            }
                         }
-                    }         
-                });
+                    });
+                }
+                finally
+                {
+
+                }
+
                 Thread.Sleep(3000);
             }
         }

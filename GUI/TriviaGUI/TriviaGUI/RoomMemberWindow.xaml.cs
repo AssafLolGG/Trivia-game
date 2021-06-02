@@ -25,6 +25,9 @@ namespace TriviaGUI
     {
         private Thread refresh_players_list_thread;
         private Mutex server_mutex;
+
+        private readonly object sendSyncRoot = new object();
+        private readonly object receiveSyncRoot = new object();
         public RoomMemberWindow()
         {
             InitializeComponent();
@@ -34,6 +37,8 @@ namespace TriviaGUI
 
             server_mutex = new Mutex();
             App.Current.Properties["server_mutex"] = server_mutex;
+            App.Current.Properties["send_lock"] = sendSyncRoot;
+            App.Current.Properties["receive_lock"] = receiveSyncRoot;
 
             this.refresh_players_list_thread = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
             this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
@@ -59,17 +64,25 @@ namespace TriviaGUI
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] client_message = { 9 };
+            byte[] personal_statistics_json;
 
-            serverConnection.GetStream().Write(client_message, 0, 1);
+            lock (sendSyncRoot)
+            {
+                serverConnection.GetStream().Write(client_message, 0, 1);
+            }
+            lock (receiveSyncRoot)
+            {
+                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                personal_statistics_json = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+            }
 
-            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-            byte[] personal_statistics_json = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
             Newtonsoft.Json.Linq.JObject server_json = ServerFunctions.ServerFunctions.diserallizeResponse(personal_statistics_json);
 
             if (server_json["status"].ToString() == "1")
             {
                 return server_json;
             }
+
             return null;
         }
 

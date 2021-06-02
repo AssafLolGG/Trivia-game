@@ -25,6 +25,8 @@ namespace TriviaGUI
     {
         private Thread refresh_players_list_thread;
         private Mutex server_mutex;
+        private readonly object sendSyncRoot = new object();
+        private readonly object receiveSyncRoot = new object();
 
         public RoomAdminWindow(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
         {
@@ -35,6 +37,8 @@ namespace TriviaGUI
 
             server_mutex = new Mutex();
             App.Current.Properties["server_mutex"] = server_mutex;
+            App.Current.Properties["send_lock"] = sendSyncRoot;
+            App.Current.Properties["receive_lock"] = receiveSyncRoot;
 
             this.refresh_players_list_thread = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
             this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
@@ -115,15 +119,18 @@ namespace TriviaGUI
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] client_message = { 11 }; // close room code
+            byte[] server_message;
 
-            server_mutex.WaitOne();
-
-            serverConnection.GetStream().Write(client_message, 0, 1);
-
-            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-            byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-
-            server_mutex.ReleaseMutex();
+            lock (this.sendSyncRoot)
+            {
+                serverConnection.GetStream().Write(client_message, 0, 1);
+            }
+            lock (this.receiveSyncRoot)
+            {
+                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+            }
+            
 
             Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
