@@ -57,6 +57,17 @@ void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IReque
 	}
 }
 
+IRequestHandler* getHandlerOfClient(std::map<SOCKET, IRequestHandler*>& clients, SOCKET& client_socket)
+{
+	for (auto it = clients.begin(); it != clients.end(); ++it) // going through all of the clients
+	{
+		if (it->first == client_socket) // finding the client that used the function
+		{
+			return it->second; // inserting the current request handler
+		}
+	}
+}
+
 GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUser logged)
 {
 	GetRoomDataResponse roomDataResponse;

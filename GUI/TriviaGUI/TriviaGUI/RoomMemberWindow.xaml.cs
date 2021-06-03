@@ -40,7 +40,7 @@ namespace TriviaGUI
             App.Current.Properties["send_lock"] = sendSyncRoot;
             App.Current.Properties["receive_lock"] = receiveSyncRoot;
 
-            this.refresh_players_list_thread = new Thread(() => TriviaGUI.PlayerRoomControles.refreshPlayersInRoom());
+            this.refresh_players_list_thread = new Thread(() => this.listenIfExit());
             this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
             this.refresh_players_list_thread.Start();
 
@@ -57,7 +57,8 @@ namespace TriviaGUI
 
         private void leave_button_Click(object sender, RoutedEventArgs e)
         {
-
+            App.Current.Properties["isInRoom"] = false;
+            leaveRoom();
         }
 
         private Newtonsoft.Json.Linq.JObject getRoomData()
@@ -117,6 +118,79 @@ namespace TriviaGUI
             this.name_text.Text = "Name - " + room_name;
             this.question_number_text.Text = "Number Of Question - " + questions_num;
             this.time_per_question_text.Text = "Time Per Question - " + time_per_question;
+        }
+        private void listenIfExit()
+        {
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            Mutex server_mutex = (Mutex)App.Current.Properties["server_mutex"];
+            ListBoxItem item;
+            byte[] client_message = { 5 }; // get players in room
+            System.Windows.Threading.Dispatcher dis = ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]);
+            ListBox list_box = (ListBox)App.Current.Properties["list_box"];
+            string[] players;
+            while ((bool)App.Current.Properties["isInRoom"] == true)
+            {
+                byte[] server_message;
+
+                try
+                {
+                    serverConnection.GetStream().Write(client_message, 0, 1);
+                    while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                    server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+
+                    if (dis.HasShutdownFinished == false)
+                    {
+                        dis.Invoke(() =>
+                        {
+                            if (server_message[0] == 5)
+                            {
+                                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+                                players = json_returned["players"].ToString().Split(',');
+
+                                if (players != null)
+                                {
+                                    list_box.Items.Clear();
+
+                                    for (int i = 0; i < players.Length; i++)
+                                    {
+                                        ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]).Invoke(() =>
+                                        {
+                                            item = new ListBoxItem();
+                                            item.Content = players[i];
+                                            list_box.Items.Add(item);
+                                        });
+                                    }
+                                }
+                            }
+                            else if (server_message[0] == 11)
+                            {
+                                App.Current.Properties["isInRoom"] = false;
+                                RoomMenu rmenu = new RoomMenu();
+                                rmenu.Show();
+
+                                this.Close();
+                                return;
+                            }
+                        });
+
+                    }
+                }
+                catch(Exception E)
+                {
+                    App.Current.Properties["isInRoom"] = false;
+                    RoomMenu rmenu = new RoomMenu();
+                    rmenu.Show();
+
+                    this.Close();
+                    return;
+                }
+                finally
+                {
+
+                }
+
+                Thread.Sleep(3000);
+            }
         }
     }
 }

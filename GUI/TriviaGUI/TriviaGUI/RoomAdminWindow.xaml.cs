@@ -49,35 +49,38 @@ namespace TriviaGUI
 
         private void refreshPlayersInRoom()
         {
-            ListBoxItem item;
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            byte[] client_message = { 5 }; // get players in room
-
-            while (true)
+            if ((bool)App.Current.Properties["isInRoom"] == true)
             {
-                serverConnection.GetStream().Write(client_message, 0, 1);
+                ListBoxItem item;
+                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+                byte[] client_message = { 5 }; // get players in room
 
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-
-                string[] players = json_returned["players"].ToString().Split(',');
-
-                this.Dispatcher.Invoke(() =>
+                while (true)
                 {
-                    active_players_list.Items.Clear();
-                });
+                    serverConnection.GetStream().Write(client_message, 0, 1);
 
-                for (int i = 0; i < players.Length; i++)
-                {
+                    while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                    byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+                    Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+
+                    string[] players = json_returned["players"].ToString().Split(',');
+
                     this.Dispatcher.Invoke(() =>
                     {
-                        item = new ListBoxItem();
-                        item.Content = players[i];
-                        active_players_list.Items.Add(item);
+                        active_players_list.Items.Clear();
                     });
+
+                    for (int i = 0; i < players.Length; i++)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            item = new ListBoxItem();
+                            item.Content = players[i];
+                            active_players_list.Items.Add(item);
+                        });
+                    }
+                    Thread.Sleep(3000);
                 }
-                Thread.Sleep(3000);
             }
         }
 
@@ -117,35 +120,36 @@ namespace TriviaGUI
 
         private void close_button_Click(object sender, RoutedEventArgs e)
         {
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            byte[] client_message = { 11 }; // close room code
-            byte[] server_message;
+            App.Current.Properties["isInRoom"] = false;
+            lock (server_mutex)
+            {
+                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+                byte[] client_message = { 11 }; // close room code
+                byte[] server_message;
 
-            lock (this.sendSyncRoot)
-            {
+
                 serverConnection.GetStream().Write(client_message, 0, 1);
-            }
-            lock (this.receiveSyncRoot)
-            {
+
                 while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
                 server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-            }
-            
 
-            Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
-            if(json_returned["status"].ToString() == "1")
-            {
-                this.refresh_players_list_thread.Abort();
 
-                RoomMenu rmenu = new RoomMenu();
-                rmenu.Show();
+                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Room Closed Request Failed");
+                if (json_returned["status"].ToString() == "1")
+                {
+                    this.refresh_players_list_thread.Abort();
+
+                    RoomMenu rmenu = new RoomMenu();
+                    rmenu.Show();
+
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Room Closed Request Failed");
+                }
             }
         }
     }

@@ -46,7 +46,7 @@ namespace TriviaGUI
             InitializeComponent();
             Thread connectThread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
             connectThread.Start();
-
+            App.Current.Properties["isInRoom"] = false;
             /*Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
             connectThreadTwo.Start();*/
         }

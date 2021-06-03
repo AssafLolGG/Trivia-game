@@ -42,6 +42,21 @@ void Communicator::handleNewClient(SOCKET client_socket)
 
 		while (true)
 		{
+			request_handler = getHandlerOfClient(this->m_clients, client_socket);
+			/*
+			buffer_vector.push_back(1);
+			RequestInfo requestTest = createRequestInfo(buffer_vector);
+			requestTest.id = LOGIN_CODE;
+			std::cout << "1: " << request_handler->isRequestRelevant(requestTest) << " ";
+			requestTest.id = LOGOUT_CODE;
+			std::cout << "2: " << request_handler->isRequestRelevant(requestTest) << " ";
+			requestTest.id = CLOSE_ROOM_CODE;
+			std::cout << "3: " << request_handler->isRequestRelevant(requestTest) << " ";
+			requestTest.id = LEAVE_ROOM_CODE;
+			std::cout << "4: " << request_handler->isRequestRelevant(requestTest) << std::endl;
+			std::cout << client_socket << std::endl;
+			buffer_vector.clear();
+			*/
 			receiveMassageFromClient(client_socket, message_buffer);
 
 			CharPointerToVector(message_buffer, BUFFER_CAPACITY, buffer_vector); // converting char array to vector
@@ -87,7 +102,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 					send(current_player_socket, serialized_response_in_char_array, BUFFER_CAPACITY, 0);
 					receiveMassageFromClient(current_player_socket, message_buffer);
 
-					insertHandlerToClient(result.players_in_room_request_handlers[count], this->m_clients, client_socket);
+					insertHandlerToClient(result.players_in_room_request_handlers[count], this->m_clients, current_player_socket);
 				}
 				count++;
 			}

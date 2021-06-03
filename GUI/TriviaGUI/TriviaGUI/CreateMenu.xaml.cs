@@ -63,6 +63,7 @@ namespace TriviaGUI
                 if (jsonReturned["status"].ToString() == "1")
                 {
                     this.IsCreated_TB.Text = "The Room was successfully created.";
+                    App.Current.Properties["isInRoom"] = true;
                     RoomAdminWindow admin = new RoomAdminWindow(Int32.Parse(jsonReturned["id"].ToString()), this.roomName_TB.Text,
                         Int32.Parse(this.MaximumUsers_TB.Text), Int32.Parse(this.QuestionCount_TB.Text), Int32.Parse(this.AnswerTimeOut_TB.Text));
                     admin.Show();
