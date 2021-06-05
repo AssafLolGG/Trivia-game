@@ -46,6 +46,11 @@ namespace TriviaGUI
 
             Newtonsoft.Json.Linq.JObject room_data = getRoomData();
 
+            while(room_data == null)
+            {
+                room_data = getRoomData();
+            }
+
             string room_id = room_data["id"].ToString();
             string room_name = room_data["name"].ToString();
             string max_players = room_data["maxPlayers"].ToString();
@@ -79,7 +84,8 @@ namespace TriviaGUI
 
             Newtonsoft.Json.Linq.JObject server_json = ServerFunctions.ServerFunctions.diserallizeResponse(personal_statistics_json);
 
-            if (server_json["status"].ToString() == "1")
+
+            if (server_json.ContainsKey("status") && server_json["status"].ToString() == "1")
             {
                 return server_json;
             }
