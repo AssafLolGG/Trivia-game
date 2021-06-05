@@ -24,8 +24,9 @@ namespace TriviaGUI
                 ListBox list_box = (ListBox)App.Current.Properties["list_box"];
                 Mutex server_mutex = (Mutex)App.Current.Properties["server_mutex"];
                 string[] players;
-                    while ((bool)App.Current.Properties["isInRoom"] == true)
-                    {
+
+                while ((bool)App.Current.Properties["isInRoom"] == true)
+                {
                     lock (server_mutex)
                     {
                         byte[] server_message;

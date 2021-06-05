@@ -23,63 +23,89 @@ namespace TriviaGUI
     /// </summary>
     public partial class RoomMenu : Window
     {
-        /* refreshing the rooms*/
-        public void refreshRoomList()
-        {
-            Thread.Sleep(1000);
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"]; // saving socket inside the app
-            byte[] data_encoded = { 4 }; // preparing a message with get rooms code (4) as the code
-            serverConnection.GetStream().Write(data_encoded, 0, 1);
-            System.Threading.Thread.Sleep(1000);
+        private Thread refresh_room_list;
+        private readonly object lock_name = new object();
 
-            // getting server json and diserallizing it
-            byte[] rooms_names = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(rooms_names);
-
-            // server json will return a json with room names and id's with ',' as a seperator, the name and id will match in the corresponding place
-            try
-            {
-                string rooms_names_string = jsonReturned["rooms"].ToString();
-                string[] seperators = { ", " };
-                string[] rooms = rooms_names_string.Split(seperators, System.StringSplitOptions.RemoveEmptyEntries); // seperates the room names to a string array
-                string rooms_id_string = jsonReturned["rooms_id"].ToString();
-                string[] rooms_id = rooms_id_string.Split(seperators, System.StringSplitOptions.RemoveEmptyEntries); // seperates the room id's to a string array
-
-                // creating a list box with all of the rooms with thew corresponding data
-                for (int i = 0; i < rooms.Length; i++)
-                {
-                    ListBoxItem item = new ListBoxItem();
-                    string contentOfItem = "";
-                    if (ServerFunctions.ServerFunctions.GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
-                    {
-                        string[] split_items = contentOfItem.Split(',');
-
-                        contentOfItem = "";
-
-                        contentOfItem += split_items[0] + "        ";                                                                        // id
-                        contentOfItem += split_items[1] + "         ";                                                          // room name
-                        contentOfItem += split_items[2] + " / " + split_items[3] + "                                        ";  // current players / max players
-                        contentOfItem += split_items[4] + "                                    ";                               // question num
-                        contentOfItem += split_items[5];                                                                        // time per question
-
-                        item.Content = contentOfItem;
-                        this.rooms_list.Items.Add(item);
-                    }
-                }
-            }
-            catch (Exception e)
-            { }
-            
-        }
         public RoomMenu()
         {
             InitializeComponent();
 
-            refreshRoomList();
+            App.Current.Properties["room_list"] = this.rooms_list;
+            App.Current.Properties["dispatcher"] = this.Dispatcher;
+
+            this.refresh_room_list = new Thread(() => this.refreshRoomList());
+            this.refresh_room_list.SetApartmentState(ApartmentState.STA);
+            this.refresh_room_list.Start();
+        }
+
+        /* refreshing the rooms*/
+        public void refreshRoomList()
+        {
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            byte[] data_encoded = { 4 }; // preparing a message with get rooms code (4) as the code
+            System.Windows.Threading.Dispatcher dis = ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]);
+            Mutex server_mutex = (Mutex)App.Current.Properties["server_mutex"];
+
+            while (true)
+            {
+                serverConnection.GetStream().Write(data_encoded, 0, 1);
+
+                // getting server json and diserallizing it
+                byte[] rooms_names = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+                Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(rooms_names);
+
+                // server json will return a json with room names and id's with ',' as a seperator, the name and id will match in the corresponding place
+                try
+                {
+                    string rooms_names_string = jsonReturned["rooms"].ToString();
+                    string[] seperators = { ", " };
+                    string[] rooms = rooms_names_string.Split(seperators, System.StringSplitOptions.RemoveEmptyEntries); // seperates the room names to a string array
+                    string rooms_id_string = jsonReturned["rooms_id"].ToString();
+                    string[] rooms_id = rooms_id_string.Split(seperators, System.StringSplitOptions.RemoveEmptyEntries); // seperates the room id's to a string array
+
+                    dis.Invoke(() =>
+                    {
+                        ((ListBox)App.Current.Properties["room_list"]).Items.Clear();
+                    });
+
+                    // creating a list box with all of the rooms with thew corresponding data
+                    for (int i = 0; i < rooms.Length; i++)
+                    {
+                        string contentOfItem = "";
+
+                        if (ServerFunctions.ServerFunctions.GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
+                        {
+                            dis.Invoke(() =>
+                            {
+                                ListBoxItem item = new ListBoxItem();
+                                string[] split_items = contentOfItem.Split(',');
+
+                                contentOfItem = "";
+
+                                contentOfItem += split_items[0] + "        ";                                                                        // id
+                                contentOfItem += split_items[1] + "         ";                                                          // room name
+                                contentOfItem += split_items[2] + " / " + split_items[3] + "                                        ";  // current players / max players
+                                contentOfItem += split_items[4] + "                                    ";                               // question num
+                                contentOfItem += split_items[5];                                                                        // time per question
+
+                                item.Content = contentOfItem;
+                            
+                                ((ListBox)App.Current.Properties["room_list"]).Items.Add(item);
+                            });
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                { }
+
+                Thread.Sleep(3000);
+            }
         }
 
         private void join_room_button_Click(object sender, RoutedEventArgs e)
         {
+            this.refresh_room_list.Abort();
             if(rooms_list.SelectedItem != null)
             {
                 App.Current.Properties["isInRoom"] = true;
@@ -110,6 +136,7 @@ namespace TriviaGUI
                     else
                     {
                         //  this.IsCreated_TB.Text = "The Room wasn't created.";
+                        this.refresh_room_list.Start();
                     }
                 }
                 catch (Exception ex)
@@ -122,6 +149,8 @@ namespace TriviaGUI
 
         private void back_to_menu_button_Click(object sender, RoutedEventArgs e)
         {
+            this.refresh_room_list.Abort();
+
             MainMenu menu = new MainMenu();
             menu.Show();
 
@@ -130,6 +159,8 @@ namespace TriviaGUI
 
         private void create_room_button_Click(object sender, RoutedEventArgs e)
         {
+            this.refresh_room_list.Abort();
+
             CreateMenu create = new CreateMenu();
             create.Show();
 
