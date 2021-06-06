@@ -31,6 +31,7 @@ namespace TriviaGUI
         {
             RoomMenu room_menu = new RoomMenu();
             room_menu.Show();
+
             this.Close();
         }
 
@@ -38,6 +39,7 @@ namespace TriviaGUI
         {
             Statistics stats = new Statistics();
             stats.Show();
+
             this.Close();
         }
 
@@ -51,6 +53,7 @@ namespace TriviaGUI
             ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
             MainWindow login_screen = new MainWindow();
             login_screen.Show();
+
             this.Close();
         }
     }

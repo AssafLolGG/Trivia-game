@@ -71,16 +71,7 @@ namespace TriviaGUI
             App.Current.Properties["ThreadOfConnecting"] = connectThreadTwo;
             connectThreadTwo.Start();
         }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
+  
         private void cancel_button_Click(object sender, RoutedEventArgs e)
         {
             user_name_text_box.Text = string.Empty;
@@ -146,6 +137,7 @@ namespace TriviaGUI
                     int nowIndex = 0;
                     user_name_text_box.Text = "";
                     password_text_box.Password = "";
+
                     if (App.Current.Properties["oneBefore"] == null)
                     {
                         nowIndex = rand.Next(0, disappointing_sentenses.Count);
@@ -158,6 +150,7 @@ namespace TriviaGUI
                         {
                             nowIndex = rand.Next(0, disappointing_sentenses.Count);
                         } while (nowIndex == (int)App.Current.Properties["oneBefore"]);
+
                         App.Current.Properties["oneBefore"] = nowIndex;
                         Error_label.Content = disappointing_sentenses[nowIndex];
                     }
@@ -175,6 +168,7 @@ namespace TriviaGUI
             {
                 SignupScreen signup_window = new SignupScreen();
                 signup_window.Show();
+
                 this.Close();
             }
         }

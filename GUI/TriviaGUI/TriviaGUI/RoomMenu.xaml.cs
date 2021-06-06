@@ -18,9 +18,6 @@ using ServerFunctions;
 
 namespace TriviaGUI
 {
-    /// <summary>
-    /// Interaction logic for RoomMenu.xaml
-    /// </summary>
     public partial class RoomMenu : Window
     {
         private Thread refresh_room_list;
@@ -102,19 +99,10 @@ namespace TriviaGUI
                 catch (Exception e)
                 { }
 
-                Thread.Sleep(3000);
+                Thread.Sleep(3000); // refresh every 3 seconds
             }
         }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
+ 
         private void join_room_button_Click(object sender, RoutedEventArgs e)
         {
             this.refresh_room_list.Abort();

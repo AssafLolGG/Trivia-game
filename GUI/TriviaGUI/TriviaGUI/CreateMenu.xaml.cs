@@ -24,16 +24,6 @@ namespace TriviaGUI
     /// </summary>
     public partial class CreateMenu : Window
     {
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -48,6 +38,7 @@ namespace TriviaGUI
         {
             RoomMenu menu = new RoomMenu();
             menu.Show();
+
             this.Close();
         }
 

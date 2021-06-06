@@ -21,16 +21,6 @@ namespace TriviaGUI
     /// </summary>
     public partial class Statistics : Window
     {
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((System.Threading.Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((System.Threading.Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
         private void getPersonalStatistics()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];

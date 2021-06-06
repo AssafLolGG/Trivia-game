@@ -46,16 +46,7 @@ namespace TriviaGUI
 
             prepareText(room_id, room_name, max_players, questions_num, time_per_question);
         }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
+      
         private void refreshPlayersInRoom()
         {
             if ((bool)App.Current.Properties["isInRoom"] == true)

@@ -63,17 +63,7 @@ namespace TriviaGUI
         private void leave_button_Click(object sender, RoutedEventArgs e)
         {
             App.Current.Properties["isInRoom"] = false;
-            leaveRoom();
-        }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
+            leaveRoom(e);
         }
         private Newtonsoft.Json.Linq.JObject getRoomData()
         {
@@ -102,7 +92,7 @@ namespace TriviaGUI
             return null;
         }
 
-        private void leaveRoom()
+        private void leaveRoom(EventArgs event_e)
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] client_message = { 13 }; // leave room code
@@ -134,6 +124,7 @@ namespace TriviaGUI
             this.question_number_text.Text = "Number Of Question - " + questions_num;
             this.time_per_question_text.Text = "Time Per Question - " + time_per_question;
         }
+
         private void listenIfExit()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
