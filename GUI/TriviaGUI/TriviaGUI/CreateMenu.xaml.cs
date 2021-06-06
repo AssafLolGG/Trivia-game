@@ -24,6 +24,11 @@ namespace TriviaGUI
     /// </summary>
     public partial class CreateMenu : Window
     {
+        /// <summary>
+        /// checks if the text contains something that is not numbers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -34,7 +39,7 @@ namespace TriviaGUI
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void back_to_menu_Click(object sender, RoutedEventArgs e)
         {
             RoomMenu menu = new RoomMenu();
             menu.Show();
@@ -42,24 +47,31 @@ namespace TriviaGUI
             this.Close();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Creating new room
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void create_room_Click(object sender, RoutedEventArgs e)
         {
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            Dictionary<string, object> RoomToBeCreatedDitalis = new Dictionary<string, object>();
+            TcpClient server_connection = (TcpClient)App.Current.Properties["server"];
+            Dictionary<string, object> romm_to_be_created = new Dictionary<string, object>();
             if(this.roomName_TB.Text != "" && this.MaximumUsers_TB.Text != "" && this.QuestionCount_TB.Text != "" && this.AnswerTimeOut_TB.Text != "") // checks to see if any of the field is empty
             {
-                RoomToBeCreatedDitalis.Add("roomName", this.roomName_TB.Text);
-                RoomToBeCreatedDitalis.Add("maximumUsers", this.MaximumUsers_TB.Text);
-                RoomToBeCreatedDitalis.Add("questionCount", this.QuestionCount_TB.Text);
-                RoomToBeCreatedDitalis.Add("timeToAnswer", this.AnswerTimeOut_TB.Text);
-                string json_parsed = JsonConvert.SerializeObject(RoomToBeCreatedDitalis); // serializing data
+                // adding room data to "to be" json
+                romm_to_be_created.Add("roomName", this.roomName_TB.Text);
+                romm_to_be_created.Add("maximumUsers", this.MaximumUsers_TB.Text);
+                romm_to_be_created.Add("questionCount", this.QuestionCount_TB.Text);
+                romm_to_be_created.Add("timeToAnswer", this.AnswerTimeOut_TB.Text);
+
+                string json_parsed = JsonConvert.SerializeObject(romm_to_be_created); // serializing data
                 byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
                 byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(7, json_byted); // adding size and code for protocal
-                serverConnection.GetStream().Write(data_encoded, 0, 1000);
+                server_connection.GetStream().Write(data_encoded, 0, 1000);
 
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-                Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput); // diserallizing json from server
+                while (server_connection.Available == 0) ; // wait until a new message arrived from the server
+                byte[] server_output = ServerFunctions.ServerFunctions.ReadServerMessage(server_connection);
+                Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(server_output); // diserallizing json from server
 
                 try
                 {
@@ -82,6 +94,10 @@ namespace TriviaGUI
                 {
                     this.IsCreated_TB.Text = "The Room wasn't created.";
                 }
+            }
+            else
+            {
+                this.IsCreated_TB.Text = "Some Fields Are missing!";
             }
         }
     }

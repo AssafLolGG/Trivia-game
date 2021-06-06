@@ -43,6 +43,11 @@ namespace TriviaGUI
             this.Close();
         }
 
+        /// <summary>
+        /// logging out of account and sending user back to login window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void log_out_button_Click(object sender, RoutedEventArgs e)
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];

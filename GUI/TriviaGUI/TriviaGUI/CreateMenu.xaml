@@ -50,7 +50,7 @@
             </StackPanel>
             <TextBlock x:Name="IsCreated_TB" FontSize="40" Grid.Row="8" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"></TextBlock>
         </Grid>
-        <Button FontSize="30" Grid.Row="1" Background="#5DADE2" Click="Button_Click_1">Create Room</Button>
-        <Button FontSize="30" Grid.Row="1" Grid.Column="2" Background="#1ABC9C" Click="Button_Click">Back To Menu</Button>
+        <Button x:Name="create_room" FontSize="30" Grid.Row="1" Background="#5DADE2" Click="create_room_Click">Create Room</Button>
+        <Button x:Name="back_to_menu" FontSize="30" Grid.Row="1" Grid.Column="2" Background="#1ABC9C" Click="back_to_menu_Click">Back To Menu</Button>
     </Grid>
 </Window>

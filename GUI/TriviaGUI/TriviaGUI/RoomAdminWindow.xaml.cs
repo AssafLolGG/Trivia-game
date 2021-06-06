@@ -28,6 +28,14 @@ namespace TriviaGUI
         private readonly object sendSyncRoot = new object();
         private readonly object receiveSyncRoot = new object();
 
+        /// <summary>
+        /// Getting dispatcher and list box for future use, creating thread to refesh player list
+        /// </summary>
+        /// <param name="room_id"></param>
+        /// <param name="room_name"></param>
+        /// <param name="max_players"></param>
+        /// <param name="questions_num"></param>
+        /// <param name="time_per_question"></param>
         public RoomAdminWindow(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
         {
             InitializeComponent();
@@ -45,43 +53,6 @@ namespace TriviaGUI
             this.refresh_players_list_thread.Start();
 
             prepareText(room_id, room_name, max_players, questions_num, time_per_question);
-        }
-      
-        private void refreshPlayersInRoom()
-        {
-            if ((bool)App.Current.Properties["isInRoom"] == true)
-            {
-                ListBoxItem item;
-                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-                byte[] client_message = { 5 }; // get players in room
-
-                while (true)
-                {
-                    serverConnection.GetStream().Write(client_message, 0, 1);
-
-                    while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                    byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-                    Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-
-                    string[] players = json_returned["players"].ToString().Split(',');
-
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        active_players_list.Items.Clear();
-                    });
-
-                    for (int i = 0; i < players.Length; i++)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            item = new ListBoxItem();
-                            item.Content = players[i];
-                            active_players_list.Items.Add(item);
-                        });
-                    }
-                    Thread.Sleep(3000);
-                }
-            }
         }
 
         private void prepareText(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
