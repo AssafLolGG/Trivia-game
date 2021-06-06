@@ -60,11 +60,11 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 	Room* room = new Room;
 	logout.status = STATUS_OK; // double check that one.
 
-	result.newHandler = this->m_handler_factory.createLoginRequestHandler(); // return login request after signing out
+	result.new_handler = this->m_handler_factory.createLoginRequestHandler(this->m_socket); // return login request after signing out
 	result.respone = JsonResponsePacketSerializer::serializeResponse(logout);
 	for (auto it = this->m_room_manager.getAllRooms().begin(); it != this->m_room_manager.getAllRooms().end(); it++)
 	{
-		it->second.removeUSer(this->m_user);
+		it->second.removeUser(this->m_user, this->m_socket);
 	}
 	this->m_handler_factory.getLoginManager().logout(this->m_user.getUserName());
 	
@@ -81,7 +81,7 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 	get_rooms.rooms = m_room_manager.getRooms();
 	
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(get_rooms);
 
 	return result;
@@ -93,9 +93,11 @@ RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 	GetPlayersInRoomResponse players_response;
 	GetPlayersInRoomRequest players_request;
 	RequestResult result;
-	Room* room = new Room;
 	players_request = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(info.buffer);
-	if (this->m_room_manager.getRoom(players_request.room_id, room))
+
+	Room* room = this->m_room_manager.getRoom(players_request.room_id);
+
+	if (room != nullptr)
 	{
 		players_response.players = (room)->getAllUsers();
 	}
@@ -103,7 +105,7 @@ RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 	{
 		players_response.players = std::vector<string>();
 	}
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(players_response);
 
 	return result;
@@ -118,7 +120,7 @@ RequestResult MenuRequestHandler::getPersonalStats(RequestInfo info)
 	stats.statistics = this->m_statistics_manager.getUserStatistics(this->m_user.getUserName());
 	stats.status = STATUS_OK;
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(stats);
 
 	return result;
@@ -145,16 +147,16 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	JoinRoomResponse join_room;
 	RequestResult result;
 	JoinRoomRequest join_room_request = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
-	Room* room = nullptr;
-	if (this->m_room_manager.getRoom(join_room_request.room_id, room))
+	Room* room = this->m_room_manager.getRoom(join_room_request.room_id);
+
+	if (room != nullptr)
 	{
 		std::vector<string> all_users_in_room = (room)->getAllUsers();
 
-
 		if (all_users_in_room.size() < (room)->GetRoomdata().maxPlayers &&
-			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found - assaf had pron
+			(std::find(all_users_in_room.begin(), all_users_in_room.end(), this->m_user.getUserName()) == all_users_in_room.end())) // if user name NOT found
 		{
-			(room)->addUser(this->m_user); // adding user to room
+			(room)->addUser(this->m_user, this->m_socket); // adding user to room
 			join_room.status = STATUS_OK;
 		}
 		else
@@ -166,7 +168,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	{
 		join_room.status = STATUS_FAIL;
 	}
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = this->m_handler_factory.createRoomMemberRequestHandler(this->m_user, join_room_request.room_id, this->m_socket);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(join_room);
 
 	return result;
@@ -190,11 +192,12 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 	room_data.timePerQuestion = create_room_request.answer_time_out;
 	room_data.numOfQuestionsInGame = create_room_request.question_count;
 
-	this->m_room_manager.createRoom(this->m_user, room_data); // creating new room
+	this->m_room_manager.createRoom(this->m_user, room_data, this->m_socket); // creating new room
 
 	create_room_response.status = STATUS_OK;
+	create_room_response.id = room_data.id;
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = this->m_handler_factory.createRoomAdminRequestHandler(this->m_user, room_data.id, this->m_socket);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response
 
 	return result;
@@ -205,12 +208,13 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 	GetRoomDataRequest roomDataRequest;
 	GetRoomDataResponse roomDataResponse;
 	RequestResult result;
-	Room* theRoom = new Room();
-	
 
 	roomDataRequest = JsonRequestPacketDeserializer::deserializeRoomDataRequest(info.buffer);
 	int theRoomId = roomDataRequest.room_id;
-	if (theRoomId != INVALID_INDEX && this->m_room_manager.getRoom(theRoomId, theRoom))
+
+	Room* theRoom = this->m_room_manager.getRoom(theRoomId);
+
+	if (theRoomId != INVALID_INDEX && theRoom != nullptr)
 	{
 		RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
 		roomDataResponse.status = STATUS_OK;
@@ -226,7 +230,7 @@ RequestResult MenuRequestHandler::getRoomData(RequestInfo info)
 		roomDataResponse.status = STATUS_FAIL;
 	}
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(roomDataResponse);
 
 	return result;
@@ -239,7 +243,7 @@ RequestResult MenuRequestHandler::topFivePlayer(RequestInfo info)
 
 	top_five = this->m_statistics_manager.getHighScore();
 
-	result.newHandler = new MenuRequestHandler(*this);
+	result.new_handler = new MenuRequestHandler(*this);
 	result.respone = JsonResponsePacketSerializer::serializeResponse(top_five);
 
 	return result;

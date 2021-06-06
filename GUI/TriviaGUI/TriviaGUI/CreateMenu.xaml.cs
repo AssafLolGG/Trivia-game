@@ -24,6 +24,16 @@ namespace TriviaGUI
     /// </summary>
     public partial class CreateMenu : Window
     {
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
+            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
+            App.Current.Shutdown();
+            Environment.Exit(0);
+            this.Close();
+        }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -63,6 +73,12 @@ namespace TriviaGUI
                 if (jsonReturned["status"].ToString() == "1")
                 {
                     this.IsCreated_TB.Text = "The Room was successfully created.";
+                    App.Current.Properties["isInRoom"] = true;
+                    RoomAdminWindow admin = new RoomAdminWindow(Int32.Parse(jsonReturned["id"].ToString()), this.roomName_TB.Text,
+                        Int32.Parse(this.MaximumUsers_TB.Text), Int32.Parse(this.QuestionCount_TB.Text), Int32.Parse(this.AnswerTimeOut_TB.Text));
+                    admin.Show();
+
+                    this.Close();
                 }
                 else
                 {

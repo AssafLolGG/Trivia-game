@@ -18,13 +18,10 @@ using System.Threading;
 using Newtonsoft.Json;
 using ServerFunctions;
 using System.Media;
+using System.IO;
 
 namespace TriviaGUI
 {
-    public class ServerMessage
-    {
-        public int Status { get; set; }
-    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -33,24 +30,57 @@ namespace TriviaGUI
     {
         private void PlaySound()
         {
-            var uri = new Uri(@"C:\Users\Leon\triviaprojectmagshimim\music\bMusic.wav", UriKind.RelativeOrAbsolute);
-            var player = new MediaPlayer();
+            if ((bool)App.Current.Properties["IsPlayingMusic"] == false)
+            {
+                var player = new MediaPlayer();
+                try
+                {
+                    App.Current.Properties["IsPlayingMusic"] = true;
+                    string basePath = Environment.CurrentDirectory;
+                    var relativePath = @"..\..\..\..\..";
+                    string fullPath = System.IO.Path.Combine(basePath, relativePath);
+                    relativePath = @"music/bMusic.wav";
+                    fullPath = System.IO.Path.Combine(fullPath, relativePath);
+                    fullPath = System.IO.Path.GetFullPath(fullPath);
+                    var uri = new Uri(fullPath, UriKind.RelativeOrAbsolute);
 
-            player.Open(uri);
-            player.Play();
-            Thread.Sleep(1000000);
+                    player.Open(uri);
+                    player.Play();
+
+                    Thread.Sleep(1000000);
+                }
+                catch (Exception e)
+                {
+                    player.Stop();
+                }
+            }
         }
-
+        
         public MainWindow()
         {
             InitializeComponent();
             Thread connectThread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
             connectThread.Start();
-
-            /*Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
-            connectThreadTwo.Start();*/
+            App.Current.Properties["isInRoom"] = false;
+            if (App.Current.Properties["IsPlayingMusic"] == null)
+            {
+                App.Current.Properties["IsPlayingMusic"] = false;
+            }
+            Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
+            App.Current.Properties["ThreadOfSound"] = connectThreadTwo;
+            App.Current.Properties["ThreadOfConnecting"] = connectThreadTwo;
+            connectThreadTwo.Start();
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
 
+            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
+            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
+            App.Current.Shutdown();
+            Environment.Exit(0);
+            this.Close();
+        }
         private void cancel_button_Click(object sender, RoutedEventArgs e)
         {
             user_name_text_box.Text = string.Empty;
@@ -75,7 +105,7 @@ namespace TriviaGUI
                 disappointing_sentenses.Add("Tell me Robots joke since you are bot.");
 
                 MessageBox.Show("Calculating if you are a bot or not..");
-                if (rand.Next(1, 3) == 1)
+                if (rand.Next(1, 3) == 1) 
                 {
                     Thread.Sleep(1000);
                     MessageBox.Show("congratulations! you are not a bot! (at least not yet)");

@@ -67,6 +67,7 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(std::v
     json result;
     JoinRoomRequest join_room;
 
+
     result = JsonRequestPacketDeserializer::getJson(buffer);
 
     join_room.room_id = std::stoi(result.value(ROOM_ID, ""));

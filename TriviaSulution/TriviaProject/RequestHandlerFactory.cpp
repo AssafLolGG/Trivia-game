@@ -21,15 +21,25 @@ LoginManager& RequestHandlerFactory::getLoginManager()
 /*function that creates loginRequestHandler.
 input: None.
 output : a LoginRequestHandler.*/
-LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
+LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler(SOCKET client_socket)
 {
-    return new LoginRequestHandler(*this, this->m_login_manager);
+    return new LoginRequestHandler(*this, this->m_login_manager, client_socket);
 }
 
 /* returns a pointer to MenuRequestHandler class*/
-MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
+MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler(LoggedUser user, SOCKET client_socket)
 {
-    return new MenuRequestHandler(this->m_room_manager, this->m_statistics_manager, *this, user);
+    return new MenuRequestHandler(this->m_room_manager, this->m_statistics_manager, *this, user, client_socket);
+}
+
+RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, int room_id, SOCKET client_socket)
+{
+	return new RoomAdminRequestHandler(this->m_room_manager, room_id, *this, user, client_socket);
+}
+
+RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, int room_id, SOCKET client_socket)
+{
+	return new RoomMemberRequestHandler(this->m_room_manager, room_id, *this, user, client_socket);
 }
 
 /* getter to static manager */
