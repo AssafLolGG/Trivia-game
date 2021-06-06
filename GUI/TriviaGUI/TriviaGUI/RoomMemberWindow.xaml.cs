@@ -65,7 +65,16 @@ namespace TriviaGUI
             App.Current.Properties["isInRoom"] = false;
             leaveRoom();
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
 
+            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
+            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
+            App.Current.Shutdown();
+            Environment.Exit(0);
+            this.Close();
+        }
         private Newtonsoft.Json.Linq.JObject getRoomData()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
