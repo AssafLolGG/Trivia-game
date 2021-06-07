@@ -168,7 +168,7 @@ namespace TriviaGUI
                                     }
                                 }
                             }
-                            else if (server_message[0] == 11)
+                            else if (server_message[0] == 11) // if the room closed
                             {
                                 App.Current.Properties["isInRoom"] = false;
                                 RoomMenu rmenu = new RoomMenu();
@@ -176,6 +176,11 @@ namespace TriviaGUI
 
                                 this.Close();
                                 return;
+                            }
+                            else if (server_message[0] == 12) // if the room started
+                            {
+                                Thread t = new Thread(new ThreadStart(() => MessageBox.Show("The Room Started")));
+                                t.Start();
                             }
                         });
 

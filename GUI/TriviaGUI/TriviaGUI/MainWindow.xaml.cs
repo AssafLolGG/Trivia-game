@@ -48,6 +48,7 @@ namespace TriviaGUI
                     var uri = new Uri(fullPath, UriKind.RelativeOrAbsolute);
 
                     player.Open(uri);
+                    player.Volume = 0.1;
                     player.Play();
 
                     Thread.Sleep(1000000);

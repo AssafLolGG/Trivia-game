@@ -109,7 +109,6 @@ namespace TriviaGUI
 
             if(rooms_list.SelectedItem != null)
             {
-                App.Current.Properties["isInRoom"] = true;
                 string room_string = this.rooms_list.SelectedItem.ToString().Split(' ')[1];
                 int room_id = Int32.Parse(room_string[0].ToString());
                 TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -129,14 +128,11 @@ namespace TriviaGUI
                 {
                     if (jsonReturned["status"].ToString() == "1")
                     {
+                        App.Current.Properties["isInRoom"] = true;
                         RoomMemberWindow member = new RoomMemberWindow();
                         member.Show();
 
                         this.Close();
-                    }
-                    else
-                    {
-                        this.refresh_room_list.Start();
                     }
                 }
                 catch (Exception ex)
