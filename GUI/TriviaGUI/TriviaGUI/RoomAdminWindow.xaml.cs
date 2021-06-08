@@ -55,6 +55,14 @@ namespace TriviaGUI
             prepareText(room_id, room_name, max_players, questions_num, time_per_question);
         }
 
+        /// <summary>
+        /// Writing down the room data to a text box in the UI
+        /// </summary>
+        /// <param name="room_id"></param>
+        /// <param name="room_name"></param>
+        /// <param name="max_players"></param>
+        /// <param name="questions_num"></param>
+        /// <param name="time_per_question"></param>
         private void prepareText(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
         {
             this.id_text.Text = "Id - " + room_id.ToString();
@@ -63,6 +71,11 @@ namespace TriviaGUI
             this.time_per_question_text.Text = "Time Per Question - " + time_per_question.ToString();
         }
 
+        /// <summary>
+        /// Starting the game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void start_button_Click(object sender, RoutedEventArgs e)
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -89,38 +102,41 @@ namespace TriviaGUI
             }
         }
 
+        /// <summary>
+        /// Closing the room, and returning to room menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void close_button_Click(object sender, RoutedEventArgs e)
         {
-            App.Current.Properties["isInRoom"] = false;
-            lock (server_mutex)
+        App.Current.Properties["isInRoom"] = false;
+            
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            byte[] client_message = { 11 }; // close room code
+            byte[] server_message;
+
+
+            serverConnection.GetStream().Write(client_message, 0, 1);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+            server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+
+
+
+            Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+
+            if (json_returned["status"].ToString() == "1")
             {
-                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-                byte[] client_message = { 11 }; // close room code
-                byte[] server_message;
+                this.refresh_players_list_thread.Abort();
 
+                RoomMenu rmenu = new RoomMenu();
+                rmenu.Show();
 
-                serverConnection.GetStream().Write(client_message, 0, 1);
-
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-
-
-
-                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-
-                if (json_returned["status"].ToString() == "1")
-                {
-                    this.refresh_players_list_thread.Abort();
-
-                    RoomMenu rmenu = new RoomMenu();
-                    rmenu.Show();
-
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show("Room Closed Request Failed");
-                }
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Room Closed Request Failed");
             }
         }
     }
