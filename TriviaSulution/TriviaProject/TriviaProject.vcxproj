@@ -135,6 +135,8 @@
     <ClCompile Include="MenuRequestHandler.cpp" />
     <ClCompile Include="RequestHandlerFactory.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="RoomAdminRequestHandler.cpp" />
+    <ClCompile Include="RoomMemberRequestHandler.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerUtilities.cpp" />
     <ClCompile Include="sqlite3.c" />
@@ -157,6 +159,8 @@
     <ClInclude Include="RequestToDeserializer.h" />
     <ClInclude Include="ResponseToSerializer.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="RoomAdminRequestHandler.h" />
+    <ClInclude Include="RoomMemberRequestHandler.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="ServerUtilities.h" />
     <ClInclude Include="sqlite3.h" />

@@ -33,7 +33,7 @@ RequestInfo createRequestInfo(std::vector<uint8_t>& buffer_vector)
 	return request;
 }
  
-bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_factory)
+bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_factory, SOCKET client_socket)
 {
 	if (new_handler != nullptr) // if an error doesn't occurs
 	{
@@ -41,7 +41,7 @@ bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_fac
 	}
 	else
 	{
-		new_handler = handler_factory.createLoginRequestHandler();
+		new_handler = handler_factory.createLoginRequestHandler(client_socket);
 		return false;
 	}
 }
@@ -55,4 +55,46 @@ void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IReque
 			it->second = new_handler; // inserting the current request handler
 		}
 	}
+}
+
+IRequestHandler* getHandlerOfClient(std::map<SOCKET, IRequestHandler*>& clients, SOCKET& client_socket)
+{
+	for (auto it = clients.begin(); it != clients.end(); ++it) // going through all of the clients
+	{
+		if (it->first == client_socket) // finding the client that used the function
+		{
+			return it->second; // inserting the current request handler
+		}
+	}
+}
+
+GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUser logged)
+{
+	GetRoomDataResponse roomDataResponse;
+	Room* theRoom = room_manager.getRoom(room_id);
+
+	if (room_id != INVALID_INDEX && theRoom)
+	{
+		std::vector<string> usersInRoom = theRoom->getAllUsers();
+		if (std::find(usersInRoom.begin(), usersInRoom.end(), logged.getUserName()) != usersInRoom.end())
+		{
+			RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
+			roomDataResponse.status = STATUS_OK;
+			roomDataResponse.id = room_id;
+			roomDataResponse.isActive = roomdataOfTheRoom.isActive;
+			roomDataResponse.maxPlayers = roomdataOfTheRoom.maxPlayers;
+			roomDataResponse.name = roomdataOfTheRoom.name;
+			roomDataResponse.numOfQuestionsInGame = roomdataOfTheRoom.numOfQuestionsInGame;
+			roomDataResponse.timePerQuestion = roomdataOfTheRoom.timePerQuestion;
+		}
+		else
+		{
+			roomDataResponse.status = STATUS_FAIL;
+		}
+	}
+	else
+	{
+		roomDataResponse.status = STATUS_FAIL;
+	}
+	return roomDataResponse;
 }

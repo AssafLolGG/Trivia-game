@@ -64,6 +64,13 @@
     <Compile Include="MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PlayerRoomControles.cs" />
+    <Compile Include="RoomAdminWindow.xaml.cs">
+      <DependentUpon>RoomAdminWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RoomMemberWindow.xaml.cs">
+      <DependentUpon>RoomMemberWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RoomMenu.xaml.cs">
       <DependentUpon>RoomMenu.xaml</DependentUpon>
     </Compile>
@@ -94,6 +101,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RoomAdminWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RoomMemberWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RoomMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

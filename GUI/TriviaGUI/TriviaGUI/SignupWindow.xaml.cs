@@ -1,20 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Net.Sockets;
-using System.Threading;
-using Newtonsoft.Json;
-using ServerFunctions;
+using System.Windows;
 
 namespace TriviaGUI
 {
@@ -37,55 +25,61 @@ namespace TriviaGUI
             this.Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void signup_button_Click(object sender, RoutedEventArgs e)
         {
             if (App.Current.Properties["server"] != null)
             {
                 TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-
-                Dictionary<string, string> loginDitails = new Dictionary<string, string>();
-                string address_str = this.street_control.Text + "," + this.apt_control.Text + "," + this.city_control.Text;
-                loginDitails.Add("username", username_control.Text);
-                loginDitails.Add("password", password_control.Password);
-                loginDitails.Add("email", email_control.Text);
-                loginDitails.Add("address", address_str);
-                loginDitails.Add("phone", phone_number_control.Text);
-                loginDitails.Add("birthdate", "");
-                if (birthdateControl.SelectedDate.HasValue)
-                {
-                    loginDitails["birthdate"] = birthdateControl.SelectedDate.Value.ToString("MM/dd/yyyy");
-                }
                 
-
-                string json_parsed = JsonConvert.SerializeObject(loginDitails);
-                byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
-                byte[] data_encoded =  ServerFunctions.ServerFunctions.getCompleteMsg(2, json_byted);
-
-                serverConnection.GetStream().Write(data_encoded, 0, 1000);
-                System.Threading.Thread.Sleep(100);
-
-                byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-                Newtonsoft.Json.Linq.JObject dis = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
-                try
+                if (username_control.Text != "" && password_control.Password != "" && email_control.Text != "" &&
+                    street_control.Text != "" && apt_control.Text != "" && phone_number_control.Text != "" && city_control.Text != "" && birthdateControl.SelectedDate.HasValue) // check if one of the fields is empty
                 {
-                    if (dis.First.First.ToString() == "1")
-                    {
-                        MainMenu menu = new MainMenu();
-                        menu.Show();
+                    Dictionary<string, string> loginDitails = new Dictionary<string, string>();
+                    string address_str = this.street_control.Text + "," + this.apt_control.Text + "," + this.city_control.Text;  
 
-                        this.Close();
-                    }
-                    else
+                    // add all fields to the dictionary (Json to be)
+                    loginDitails.Add("username", username_control.Text);
+                    loginDitails.Add("password", password_control.Password);
+                    loginDitails.Add("email", email_control.Text);
+                    loginDitails.Add("address", address_str);
+                    loginDitails.Add("phone", phone_number_control.Text);
+                    loginDitails.Add("birthdate", "");
+                    loginDitails["birthdate"] = birthdateControl.SelectedDate.Value.ToString("MM/dd/yyyy");
+
+                    string json_parsed = JsonConvert.SerializeObject(loginDitails);
+                    byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
+                    byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(2, json_byted);
+
+                    serverConnection.GetStream().Write(data_encoded, 0, 1000);
+                    System.Threading.Thread.Sleep(100);
+
+                    byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+                    Newtonsoft.Json.Linq.JObject dis = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);
+                    try
                     {
-                        infoBox.Content = "error! check the validty of the fields(username, email, etc..)";
+                        if (dis.First.First.ToString() == "1")
+                        {
+                            MainMenu menu = new MainMenu();
+                            menu.Show();
+
+                            this.Close();
+                        }
+                        else // one of the fields does not meet the server requirements
+                        {
+                            infoBox.Content = "error! check the validty of the fields (username, email, etc..)";
+                        }
+                    }
+                    catch (Exception ex) // runtime error (unidentified)
+                    {
+                        infoBox.Content = "there is an error.";
                     }
                 }
-                catch (Exception ex)
+                else // one of the fields is empty error
                 {
-                    infoBox.Content = "there is an error.";
+                    infoBox.Content = "Error! One of the fields in empty!";
                 }
             }
-            else
+            else // the server is not connected
             {
                 infoBox.Content = "error! client isn't connected to the server";
             }

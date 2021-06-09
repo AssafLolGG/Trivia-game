@@ -1,0 +1,42 @@
+﻿<Window x:Class="TriviaGUI.RoomMemberWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TriviaGUI"
+        mc:Ignorable="d"
+        Height="600" Width="800" Background="#C39BD3">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.ColumnSpan="2">
+
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <Border Height="25"></Border>
+            <TextBlock x:Name="id_text" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#515A5A"></TextBlock>
+            <Border Height="10"></Border>
+            <TextBlock x:Name="name_text" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#515A5A"></TextBlock>
+            <Border Height="10"></Border>
+            <TextBlock x:Name="question_number_text" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#515A5A"></TextBlock>
+            <Border Height="10"></Border>
+            <TextBlock x:Name="time_per_question_text" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#515A5A"></TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Border Height="60"></Border>
+            <Border CornerRadius="6" BorderBrush="#5DADE2" BorderThickness="6" HorizontalAlignment="Center">
+                <Button x:Name="leave_button" HorizontalAlignment="Center" Height="150" Width="200" FontSize="40" Background="#5DADE2" BorderThickness="0" Click="leave_button_Click">Leave</Button>
+            </Border>
+        </StackPanel>
+        <ScrollViewer Grid.ColumnSpan="2">
+            <ListBox x:Name="active_players_list" FontSize="15" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            </ListBox>
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -29,7 +29,10 @@ struct RequestInfo
 struct RequestResult
 {
 	std::vector<uint8_t> respone;
-	IRequestHandler* newHandler;
+	IRequestHandler* new_handler;
+	std::vector<uint8_t> response_to_other_players;
+	std::vector<SOCKET> players_in_room_sockets;
+	std::vector<IRequestHandler*> players_in_room_request_handlers;
 };
 
 class IRequestHandler

@@ -56,6 +56,7 @@ struct JoinRoomResponse
 struct CreateRoomResponse
 {
 	unsigned int status;
+	unsigned int id;
 };
 
 struct GetRoomDataResponse
@@ -73,4 +74,19 @@ struct TopFivePlayers
 {
 	std::vector<std::string> top_players;
 	std::vector<std::string> top_score;
+};
+
+struct CloseRoomResponse
+{
+	int status;
+};
+
+struct StartRoomResponse
+{
+	int status;
+};
+
+struct LeaveRoomResponse
+{
+	int status;
 };

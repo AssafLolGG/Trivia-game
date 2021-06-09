@@ -51,7 +51,8 @@ public:
 	virtual int getNumOfPlayerGames(int user_id) = 0;
 	virtual int usernameToID(std::string username) = 0;
 	virtual statisticsDB getStatistics(int user_id) = 0;
-	virtual std::vector<Question> getQuestions() = 0;
+	virtual std::vector<Question> getAllQuestions() = 0;
+	virtual std::vector<Question> getQuestions(int num_of_questions);
 	virtual std::vector<User> getTop5Players() = 0;
 	virtual std::vector<statisticsDB> getTopFiveScore() = 0;
 };

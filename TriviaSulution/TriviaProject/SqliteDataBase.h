@@ -31,7 +31,7 @@ public:
 	int getNumOfPlayerGames(int user_id);
 	
 	int usernameToID(std::string username);
-	std::vector<Question> getQuestions();
+	std::vector<Question> getAllQuestions();
 	std::vector<User> getTop5Players();
 	std::vector<statisticsDB> getTopFiveScore();
 	statisticsDB getStatistics(int user_id);
