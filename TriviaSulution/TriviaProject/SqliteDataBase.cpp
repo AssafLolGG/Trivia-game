@@ -149,7 +149,7 @@ int SqliteDataBase::callbackQuestionsAndAnswers(void* data, int argc, char** arg
 	{
 		if (std::string(azColName[i]) == "question_id")
 		{
-			if (dataQuestions->size() != 0 && std::stoi(argv[i]) != dataQuestions->front().id)
+			if (dataQuestions->size() != 0 && std::stoi(argv[i]) != dataQuestions->back().id)
 			{
 				q.answers.clear();
 				q.id = std::stoi(argv[i]);
@@ -161,21 +161,21 @@ int SqliteDataBase::callbackQuestionsAndAnswers(void* data, int argc, char** arg
 				dataQuestions->push_back(q);
 			}
 		}
-		else if(std::string(azColName[i]) == "question")
+		if(std::string(azColName[i]) == "question")
 		{
-			dataQuestions->front().questionText = argv[i];
+			dataQuestions->back().questionText = argv[i];
 		}
 		if (std::string(azColName[i]) == "answer")
 		{
-			ans.answerText = std::stoi(argv[i]);
+			ans.answerText = argv[i];
 		}
 		
-		else if (std::string(azColName[i]) == "if_correct")
+		if (std::string(azColName[i]) == "if_correct")
 		{
 			ans.isCorrect = std::stoi(argv[i]) == 0 ? false : true;
 		}
-		dataQuestions->front().answers.push_back(ans);
 	}
+	dataQuestions->back().answers.push_back(ans);
 	return 0;
 }
 
