@@ -24,10 +24,7 @@ namespace TriviaGUI
     public partial class RoomMemberWindow : Window
     {
         private Thread refresh_players_list_thread;
-        private Mutex server_mutex;
 
-        private readonly object sendSyncRoot = new object();
-        private readonly object receiveSyncRoot = new object();
         public RoomMemberWindow()
         {
             InitializeComponent();
@@ -35,11 +32,7 @@ namespace TriviaGUI
             App.Current.Properties["dispatcher"] = this.Dispatcher;
             App.Current.Properties["list_box"] = this.active_players_list;
 
-            server_mutex = new Mutex();
-            App.Current.Properties["server_mutex"] = server_mutex;
-            App.Current.Properties["send_lock"] = sendSyncRoot;
-            App.Current.Properties["receive_lock"] = receiveSyncRoot;
-
+            // creating thread to check exit
             this.refresh_players_list_thread = new Thread(() => this.listenIfExit());
             this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
             this.refresh_players_list_thread.Start();
@@ -51,6 +44,7 @@ namespace TriviaGUI
                 room_data = getRoomData();
             }
 
+            // getting string of roomData
             string room_id = room_data["id"].ToString();
             string room_name = room_data["name"].ToString();
             string max_players = room_data["maxPlayers"].ToString();
@@ -63,17 +57,7 @@ namespace TriviaGUI
         private void leave_button_Click(object sender, RoutedEventArgs e)
         {
             App.Current.Properties["isInRoom"] = false;
-            leaveRoom();
-        }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
+            leaveRoom(e);
         }
         private Newtonsoft.Json.Linq.JObject getRoomData()
         {
@@ -81,15 +65,10 @@ namespace TriviaGUI
             byte[] client_message = { 9 };
             byte[] personal_statistics_json;
 
-            lock (sendSyncRoot)
-            {
-                serverConnection.GetStream().Write(client_message, 0, 1);
-            }
-            lock (receiveSyncRoot)
-            {
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                personal_statistics_json = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
-            }
+            serverConnection.GetStream().Write(client_message, 0, 1);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+            personal_statistics_json = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
 
             Newtonsoft.Json.Linq.JObject server_json = ServerFunctions.ServerFunctions.diserallizeResponse(personal_statistics_json);
 
@@ -102,7 +81,7 @@ namespace TriviaGUI
             return null;
         }
 
-        private void leaveRoom()
+        private void leaveRoom(EventArgs event_e)
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
             byte[] client_message = { 13 }; // leave room code
@@ -125,7 +104,6 @@ namespace TriviaGUI
                 MessageBox.Show("Couldn't Leave Room");
             }
         }
-     
 
         private void prepareText(string room_id, string room_name, string max_players, string questions_num, string time_per_question)
         {
@@ -134,6 +112,7 @@ namespace TriviaGUI
             this.question_number_text.Text = "Number Of Question - " + questions_num;
             this.time_per_question_text.Text = "Time Per Question - " + time_per_question;
         }
+
         private void listenIfExit()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -177,7 +156,7 @@ namespace TriviaGUI
                                     }
                                 }
                             }
-                            else if (server_message[0] == 11)
+                            else if (server_message[0] == 11) // if the room closed
                             {
                                 App.Current.Properties["isInRoom"] = false;
                                 RoomMenu rmenu = new RoomMenu();
@@ -185,6 +164,11 @@ namespace TriviaGUI
 
                                 this.Close();
                                 return;
+                            }
+                            else if (server_message[0] == 12) // if the room started
+                            {
+                                Thread t = new Thread(new ThreadStart(() => MessageBox.Show("The Room Started")));
+                                t.Start();
                             }
                         });
 

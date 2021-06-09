@@ -18,7 +18,6 @@ class MenuRequestHandler : public IRequestHandler
 	RequestResult getRooms(RequestInfo info);
 	RequestResult getPlayersInRoom(RequestInfo info);
 	RequestResult getPersonalStats(RequestInfo info);
-	RequestResult getHighScore(RequestInfo info);
 	RequestResult joinRoom(RequestInfo info);
 	RequestResult createRoom(RequestInfo info);
 	RequestResult getRoomData(RequestInfo info);

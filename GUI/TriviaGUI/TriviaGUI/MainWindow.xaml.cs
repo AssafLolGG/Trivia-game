@@ -28,6 +28,9 @@ namespace TriviaGUI
     ///
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Playing music so the user won't lose his mind trying to log in
+        /// </summary>
         private void PlaySound()
         {
             if ((bool)App.Current.Properties["IsPlayingMusic"] == false)
@@ -45,6 +48,7 @@ namespace TriviaGUI
                     var uri = new Uri(fullPath, UriKind.RelativeOrAbsolute);
 
                     player.Open(uri);
+                    player.Volume = 0.1;
                     player.Play();
 
                     Thread.Sleep(1000000);
@@ -56,37 +60,34 @@ namespace TriviaGUI
             }
         }
         
+        /// <summary>
+        /// Creating thread to connect to server, creating thread to play music.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-            Thread connectThread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
-            connectThread.Start();
+            Thread connect_thread = new Thread(new ThreadStart(ServerFunctions.ServerFunctions.ConnectingToServer));
+            connect_thread.Start();
+
             App.Current.Properties["isInRoom"] = false;
+
             if (App.Current.Properties["IsPlayingMusic"] == null)
             {
                 App.Current.Properties["IsPlayingMusic"] = false;
             }
+
             Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
+
             App.Current.Properties["ThreadOfSound"] = connectThreadTwo;
             App.Current.Properties["ThreadOfConnecting"] = connectThreadTwo;
             connectThreadTwo.Start();
         }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
 
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
-        private void cancel_button_Click(object sender, RoutedEventArgs e)
-        {
-            user_name_text_box.Text = string.Empty;
-            password_text_box.Password = string.Empty;
-        }
-
+        /// <summary>
+        /// logging user in to account (if username and password are currect)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void login_button_Click(object sender, RoutedEventArgs e)
         {
             if (App.Current.Properties["server"] != null)
@@ -94,6 +95,8 @@ namespace TriviaGUI
                 TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
                 Random rand = new Random();
                 List<string> disappointing_sentenses = new List<string>();
+
+                // Creating excuses to why the user is a bot
                 disappointing_sentenses.Add("our highly advanced mechanism has determined\nthat you are a bot,\nplease unbot yourself and try again!");
                 disappointing_sentenses.Add("unfortunately you are a bot :<\n(press F to pay respects)");
                 disappointing_sentenses.Add("Im sry this is for humans only\nsince you are a bot, get away.");
@@ -105,11 +108,15 @@ namespace TriviaGUI
                 disappointing_sentenses.Add("Tell me Robots joke since you are bot.");
 
                 MessageBox.Show("Calculating if you are a bot or not..");
-                if (rand.Next(1, 3) == 1) 
+
+                if (rand.Next(1, 3) == 1) // checking if the user is a bot or not (a joke, it's random)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500 * rand.Next(1, 10)); // artificially making the waiting time longer
+
                     MessageBox.Show("congratulations! you are not a bot! (at least not yet)");
+
                     Dictionary<string, string> loginDitails = new Dictionary<string, string>();
+
                     loginDitails.Add("username", user_name_text_box.Text);
                     loginDitails.Add("password", password_text_box.Password);
 
@@ -146,6 +153,7 @@ namespace TriviaGUI
                     int nowIndex = 0;
                     user_name_text_box.Text = "";
                     password_text_box.Password = "";
+
                     if (App.Current.Properties["oneBefore"] == null)
                     {
                         nowIndex = rand.Next(0, disappointing_sentenses.Count);
@@ -158,6 +166,7 @@ namespace TriviaGUI
                         {
                             nowIndex = rand.Next(0, disappointing_sentenses.Count);
                         } while (nowIndex == (int)App.Current.Properties["oneBefore"]);
+
                         App.Current.Properties["oneBefore"] = nowIndex;
                         Error_label.Content = disappointing_sentenses[nowIndex];
                     }
@@ -175,6 +184,7 @@ namespace TriviaGUI
             {
                 SignupScreen signup_window = new SignupScreen();
                 signup_window.Show();
+
                 this.Close();
             }
         }

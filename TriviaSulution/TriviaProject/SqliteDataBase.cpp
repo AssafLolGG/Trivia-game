@@ -322,7 +322,7 @@ function that gets the questions from the database to a vector.
 input: None.
 output: the vector of the questions(also containing their answers).
 */
-std::vector<Question> SqliteDataBase::getQuestions()
+std::vector<Question> SqliteDataBase::getAllQuestions()
 {
 	std::string sql_statement = "SELECT * FROM Answers inner join Questions ON Answers.question_id = Questions.question_id;";
 	std::vector<Question> questionsVector = std::vector<Question>();

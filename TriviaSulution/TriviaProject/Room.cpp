@@ -28,10 +28,18 @@ in the room.
 input: the user to add to the list.
 output: None.
 */
-void Room::addUser(LoggedUser userToAdd, SOCKET userSocket)
+bool Room::addUser(LoggedUser userToAdd, SOCKET userSocket)
 {
-    this->m_users.push_back(userToAdd);
-	this->m_sockets.push_back(userSocket);
+	if (this->m_users.size() < this->m_metadata.maxPlayers) // if the room isn't full.
+	{
+		this->m_users.push_back(userToAdd);
+		this->m_sockets.push_back(userSocket);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /*

@@ -29,7 +29,7 @@ private:
 public:
 	Room();
 	Room(RoomData roomdata);
-	void addUser(LoggedUser userToAdd, SOCKET userSocket);
+	bool addUser(LoggedUser userToAdd, SOCKET userSocket);
 	void removeUser(LoggedUser userToRemove, SOCKET socketToRemove);
 	RoomData& GetRoomdata();
 	std::vector<std::string> getAllUsers();

@@ -65,6 +65,8 @@ namespace ServerFunctions
             string jsonObjectInString = System.Text.Encoding.ASCII.GetString(dataDecoded);
             return (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(jsonObjectInString);
         }
+
+        /*Connect user to server*/
         public static void ConnectingToServer()
         {
             if (TriviaGUI.App.Current.Properties["server"] == null)
@@ -88,6 +90,8 @@ namespace ServerFunctions
                 }
             }
         }
+
+        /* Reading message from server*/
         public static byte[] ReadServerMessage(TcpClient serverConnection)
         {
             byte[] serverOutput = new byte[1024];
@@ -172,4 +176,5 @@ namespace ServerFunctions
         }
 
     }
+
 }

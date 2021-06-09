@@ -24,16 +24,11 @@ namespace TriviaGUI
     /// </summary>
     public partial class CreateMenu : Window
     {
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
+        /// <summary>
+        /// checks if the text contains something that is not numbers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -44,50 +39,65 @@ namespace TriviaGUI
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void back_to_menu_Click(object sender, RoutedEventArgs e)
         {
             RoomMenu menu = new RoomMenu();
             menu.Show();
+
             this.Close();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Creating new room
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void create_room_Click(object sender, RoutedEventArgs e)
         {
-            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-            Dictionary<string, object> RoomToBeCreatedDitalis = new Dictionary<string, object>();
-            RoomToBeCreatedDitalis.Add("roomName", this.roomName_TB.Text);
-            RoomToBeCreatedDitalis.Add("maximumUsers", this.MaximumUsers_TB.Text);
-            RoomToBeCreatedDitalis.Add("questionCount", this.QuestionCount_TB.Text);
-            RoomToBeCreatedDitalis.Add("timeToAnswer", this.AnswerTimeOut_TB.Text);
-            string json_parsed = JsonConvert.SerializeObject(RoomToBeCreatedDitalis); // serializing data
-            byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
-            byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(7, json_byted); // adding size and code for protocal
-            serverConnection.GetStream().Write(data_encoded, 0, 1000);
-
-            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-            byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-            Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput); // diserallizing json from server
-
-            try
+            TcpClient server_connection = (TcpClient)App.Current.Properties["server"];
+            Dictionary<string, object> romm_to_be_created = new Dictionary<string, object>();
+            if(this.roomName_TB.Text != "" && this.MaximumUsers_TB.Text != "" && this.QuestionCount_TB.Text != "" && this.AnswerTimeOut_TB.Text != "") // checks to see if any of the field is empty
             {
-                if (jsonReturned["status"].ToString() == "1")
-                {
-                    this.IsCreated_TB.Text = "The Room was successfully created.";
-                    App.Current.Properties["isInRoom"] = true;
-                    RoomAdminWindow admin = new RoomAdminWindow(Int32.Parse(jsonReturned["id"].ToString()), this.roomName_TB.Text,
-                        Int32.Parse(this.MaximumUsers_TB.Text), Int32.Parse(this.QuestionCount_TB.Text), Int32.Parse(this.AnswerTimeOut_TB.Text));
-                    admin.Show();
+                // adding room data to "to be" json
+                romm_to_be_created.Add("roomName", this.roomName_TB.Text);
+                romm_to_be_created.Add("maximumUsers", this.MaximumUsers_TB.Text);
+                romm_to_be_created.Add("questionCount", this.QuestionCount_TB.Text);
+                romm_to_be_created.Add("timeToAnswer", this.AnswerTimeOut_TB.Text);
 
-                    this.Close();
+                string json_parsed = JsonConvert.SerializeObject(romm_to_be_created); // serializing data
+                byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
+                byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(7, json_byted); // adding size and code for protocal
+                server_connection.GetStream().Write(data_encoded, 0, 1000);
+
+                while (server_connection.Available == 0) ; // wait until a new message arrived from the server
+                byte[] server_output = ServerFunctions.ServerFunctions.ReadServerMessage(server_connection);
+                Newtonsoft.Json.Linq.JObject jsonReturned = ServerFunctions.ServerFunctions.diserallizeResponse(server_output); // diserallizing json from server
+
+                try
+                {
+                    if (jsonReturned["status"].ToString() == "1") // checks if the room was created.
+                    {
+                        this.IsCreated_TB.Text = "The Room was successfully created.";
+                        App.Current.Properties["isInRoom"] = true;
+                        RoomAdminWindow admin = new RoomAdminWindow(Int32.Parse(jsonReturned["id"].ToString()), this.roomName_TB.Text,
+                            Int32.Parse(this.MaximumUsers_TB.Text), Int32.Parse(this.QuestionCount_TB.Text), Int32.Parse(this.AnswerTimeOut_TB.Text));
+                        admin.Show();
+
+                        this.Close();
+                    }
+                    else
+                    {
+                        this.IsCreated_TB.Text = "The Room wasn't created.";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     this.IsCreated_TB.Text = "The Room wasn't created.";
                 }
             }
-            catch (Exception ex)
+            else
             {
-                this.IsCreated_TB.Text = "The Room wasn't created.";
+                this.IsCreated_TB.Text = "Some Fields Are missing!";
             }
         }
     }

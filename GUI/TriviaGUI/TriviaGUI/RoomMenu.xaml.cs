@@ -18,9 +18,6 @@ using ServerFunctions;
 
 namespace TriviaGUI
 {
-    /// <summary>
-    /// Interaction logic for RoomMenu.xaml
-    /// </summary>
     public partial class RoomMenu : Window
     {
         private Thread refresh_room_list;
@@ -38,7 +35,9 @@ namespace TriviaGUI
             this.refresh_room_list.Start();
         }
 
-        /* refreshing the rooms*/
+        /// <summary>
+        /// refreshing the rooms
+        /// </summary>
         public void refreshRoomList()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -68,16 +67,13 @@ namespace TriviaGUI
                         dis.Invoke(() =>
                         {
                             ((ListBox)App.Current.Properties["room_list"]).Items.Clear();
-                        });
 
-                        // creating a list box with all of the rooms with thew corresponding data
-                        for (int i = 0; i < rooms.Length; i++)
-                        {
-                            string contentOfItem = "";
-
-                            if (ServerFunctions.ServerFunctions.GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
+                            // creating a list box with all of the rooms with thew corresponding data
+                            for (int i = 0; i < rooms.Length; i++)
                             {
-                                dis.Invoke(() =>
+                                string contentOfItem = "";
+
+                                if (ServerFunctions.ServerFunctions.GetRoomDataString(serverConnection, rooms[i], int.Parse(rooms_id[i]), out contentOfItem) == true)
                                 {
                                     ListBoxItem item = new ListBoxItem();
                                     string[] split_items = contentOfItem.Split(',');
@@ -92,41 +88,38 @@ namespace TriviaGUI
 
                                     item.Content = contentOfItem;
 
-                                    ((ListBox)App.Current.Properties["room_list"]).Items.Add(item);
-                                });
-
+                                    ((ListBox)App.Current.Properties["room_list"]).Items.Add(item);                                    
+                                }
                             }
-                        }
+                        });
                     }
                 }
                 catch (Exception e)
                 { }
 
-                Thread.Sleep(3000);
+                Thread.Sleep(3000); // refresh every 3 seconds
             }
         }
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
+        
+        /// <summary>
+        /// Join a room
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void join_room_button_Click(object sender, RoutedEventArgs e)
         {
             this.refresh_room_list.Abort();
 
             if(rooms_list.SelectedItem != null)
             {
-                App.Current.Properties["isInRoom"] = true;
-                string room_string = this.rooms_list.SelectedItem.ToString().Split(' ')[1];
-                int room_id = Int32.Parse(room_string[0].ToString());
                 TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
                 Dictionary<string, object> join_room_request = new Dictionary<string, object>();
-                join_room_request.Add("roomID", room_id.ToString());
+
+                string room_string = this.rooms_list.SelectedItem.ToString().Split(' ')[1]; // getting the room data string from the selected room
+
+                int room_id = Int32.Parse(room_string[0].ToString()); // getting the id from the room data string
+
+                join_room_request.Add("roomID", room_id.ToString()); // adding room 
 
                 string json_parsed = JsonConvert.SerializeObject(join_room_request); // serializing data
                 byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed); // encoding json
@@ -141,6 +134,8 @@ namespace TriviaGUI
                 {
                     if (jsonReturned["status"].ToString() == "1")
                     {
+                        App.Current.Properties["isInRoom"] = true;
+
                         RoomMemberWindow member = new RoomMemberWindow();
                         member.Show();
 
@@ -154,6 +149,10 @@ namespace TriviaGUI
                 catch (Exception ex)
                 {
                 }
+            }
+            else
+            {
+                this.refresh_room_list.Start();
             }
             
         }

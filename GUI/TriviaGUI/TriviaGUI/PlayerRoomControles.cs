@@ -13,6 +13,9 @@ namespace TriviaGUI
 {
     class PlayerRoomControles
     {
+        /// <summary>
+        /// Refreshing the players in the room
+        /// </summary>
         public static void refreshPlayersInRoom()
         {
             if ((bool)App.Current.Properties["isInRoom"] == true)
@@ -22,49 +25,38 @@ namespace TriviaGUI
                 byte[] client_message = { 5 }; // get players in room
                 System.Windows.Threading.Dispatcher dis = ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]);
                 ListBox list_box = (ListBox)App.Current.Properties["list_box"];
-                Mutex server_mutex = (Mutex)App.Current.Properties["server_mutex"];
                 string[] players;
 
                 while ((bool)App.Current.Properties["isInRoom"] == true)
                 {
-                    lock (server_mutex)
+                    byte[] server_message;
+
+                    serverConnection.GetStream().Write(client_message, 0, 1);
+                    while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                    server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+
+                    dis.Invoke(() =>
                     {
-                        byte[] server_message;
+                        Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+                        players = json_returned["players"].ToString().Split(',');
 
-                        try
+                        if (players != null) // players will be null if an error in the server has happend
                         {
-                            serverConnection.GetStream().Write(client_message, 0, 1);
-                            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-                            server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+                            list_box.Items.Clear();
 
-                            dis.Invoke(() =>
+                            for (int i = 0; i < players.Length; i++)
                             {
-                                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-                                players = json_returned["players"].ToString().Split(',');
-
-                                if (players != null)
+                                ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]).Invoke(() =>
                                 {
-                                    list_box.Items.Clear();
-
-                                    for (int i = 0; i < players.Length; i++)
-                                    {
-                                        ((System.Windows.Threading.Dispatcher)App.Current.Properties["dispatcher"]).Invoke(() =>
-                                        {
-                                            item = new ListBoxItem();
-                                            item.Content = players[i];
-                                            list_box.Items.Add(item);
-                                        });
-                                    }
-                                }
-                            });
+                                    item = new ListBoxItem();
+                                    item.Content = players[i];
+                                    list_box.Items.Add(item);
+                                });
+                            }
                         }
-                        finally
-                        {
+                    });
 
-                        }
-
-                        Thread.Sleep(3000);
-                    }   
+                    Thread.Sleep(3000); // refreshing every 3 seconds
                 }
             }
         }

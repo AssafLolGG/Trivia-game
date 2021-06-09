@@ -31,7 +31,7 @@
                 <Label HorizontalAlignment="Center" Content="BirthDate:" Height="40" FontSize="20"/>
                 <DatePicker Name="birthdateControl" Height="40"></DatePicker>
                 <Border BorderBrush="Black" Height="30"/>
-                <Button x:Name="signup_button" Height="50" Width="90" Content="Signup" Click="Button_Click"/>
+                <Button x:Name="signup_button" Height="50" Width="90" Content="Signup" Click="signup_button_Click"/>
                 <Border BorderBrush="Black" Height="30"/>
                 <Button x:Name="login_button" Height="50" Width="90" Content="Login" Margin="156,0,155,0" RenderTransformOrigin="1.022,0.694" Click="back_to_login_Button_Click"/>
                 <Border BorderBrush="Black" Height="30"/>

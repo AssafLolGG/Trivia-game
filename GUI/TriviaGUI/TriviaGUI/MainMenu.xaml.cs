@@ -31,6 +31,7 @@ namespace TriviaGUI
         {
             RoomMenu room_menu = new RoomMenu();
             room_menu.Show();
+
             this.Close();
         }
 
@@ -38,9 +39,15 @@ namespace TriviaGUI
         {
             Statistics stats = new Statistics();
             stats.Show();
+
             this.Close();
         }
 
+        /// <summary>
+        /// logging out of account and sending user back to login window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void log_out_button_Click(object sender, RoutedEventArgs e)
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -51,6 +58,7 @@ namespace TriviaGUI
             ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
             MainWindow login_screen = new MainWindow();
             login_screen.Show();
+
             this.Close();
         }
     }

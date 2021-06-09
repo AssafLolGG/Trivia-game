@@ -21,16 +21,6 @@ namespace TriviaGUI
     /// </summary>
     public partial class Statistics : Window
     {
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            ((System.Threading.Thread)App.Current.Properties["ThreadOfSound"]).Abort();
-            ((System.Threading.Thread)App.Current.Properties["ThreadOfConnecting"]).Abort();
-            App.Current.Shutdown();
-            Environment.Exit(0);
-            this.Close();
-        }
         private void getPersonalStatistics()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -43,6 +33,8 @@ namespace TriviaGUI
             Newtonsoft.Json.Linq.JObject server_json = ServerFunctions.ServerFunctions.diserallizeResponse(personal_statistics_json);
 
             string[] personal_statistics = server_json["user_statistics"].ToString().Replace("\"", "").Replace("]", "").Replace("[","").Replace("\n", "").Replace(", ",",").Split(',');
+
+            // writing personal statistics by the order they were received
             this.player_id_text.Text = personal_statistics[0];
             this.games_played_text.Text = personal_statistics[1];
             this.total_answers_text.Text = personal_statistics[2];
@@ -57,6 +49,9 @@ namespace TriviaGUI
             this.player_score_text.Text = " Your Score: " + personal_statistics[11].Replace("\r", "").Replace(" ", "");
         }
 
+        /// <summary>
+        /// Getting top five players with the highest score
+        /// </summary>
         private void getTopFive()
         {
             TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
@@ -68,18 +63,20 @@ namespace TriviaGUI
             byte[] personal_statistics_json = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
             Newtonsoft.Json.Linq.JObject server_json = ServerFunctions.ServerFunctions.diserallizeResponse(personal_statistics_json);
 
+            // splitting the players and score json to an array of strings containing one score / player each index
             string[] top_users = server_json["players"].ToString().Replace(", ", ",").Split(',');
             string[] top_score = server_json["score"].ToString().Replace(", ", ",").Split(',');
 
             string connected_top = "";
 
+            // writing the players and the score to a string
             for(int i = 0; i < top_users.Length; i++)
             {
                 connected_top += top_users[i] + " - " + top_score[i] + "\n";
             }
-            connected_top = connected_top.Substring(0, connected_top.Length - 1);
+            connected_top = connected_top.Substring(0, connected_top.Length - 1); // removing the finale '\n'
 
-            this.top_text.Text = connected_top;
+            this.top_text.Text = connected_top; // writing the string of players and score to the textBox
         }
 
         public Statistics()
