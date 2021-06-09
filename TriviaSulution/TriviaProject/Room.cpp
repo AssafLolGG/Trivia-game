@@ -30,7 +30,7 @@ output: None.
 */
 bool Room::addUser(LoggedUser userToAdd, SOCKET userSocket)
 {
-	if (this->m_users.size() < this->m_metadata.maxPlayers)
+	if (this->m_users.size() < this->m_metadata.maxPlayers) // if the room isn't full.
 	{
 		this->m_users.push_back(userToAdd);
 		this->m_sockets.push_back(userSocket);

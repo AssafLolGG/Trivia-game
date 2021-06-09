@@ -31,11 +31,11 @@ namespace TriviaGUI
         /// <summary>
         /// Getting dispatcher and list box for future use, creating thread to refesh player list
         /// </summary>
-        /// <param name="room_id"></param>
-        /// <param name="room_name"></param>
-        /// <param name="max_players"></param>
-        /// <param name="questions_num"></param>
-        /// <param name="time_per_question"></param>
+        /// <param name="room_id">The ID of the room.</param>
+        /// <param name="room_name">The name of the room.</param>
+        /// <param name="max_players">Max number of users in the room.</param>
+        /// <param name="questions_num">number of questions in the room.</param>
+        /// <param name="time_per_question">the time per question in the room.</param>
         public RoomAdminWindow(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
         {
             InitializeComponent();
@@ -58,11 +58,11 @@ namespace TriviaGUI
         /// <summary>
         /// Writing down the room data to a text box in the UI
         /// </summary>
-        /// <param name="room_id"></param>
-        /// <param name="room_name"></param>
-        /// <param name="max_players"></param>
-        /// <param name="questions_num"></param>
-        /// <param name="time_per_question"></param>
+        /// <param name="room_id">The ID of the room.</param>
+        /// <param name="room_name">The name of the room.</param>
+        /// <param name="max_players">Max number of users in the room.</param>
+        /// <param name="questions_num">number of questions in the room.</param>
+        /// <param name="time_per_question">the time per question in the room.</param>
         private void prepareText(int room_id, string room_name, int max_players, int questions_num, int time_per_question)
         {
             this.id_text.Text = "Id - " + room_id.ToString();
@@ -125,7 +125,7 @@ namespace TriviaGUI
 
             Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
-            if (json_returned["status"].ToString() == "1")
+            if (json_returned["status"].ToString() == "1") // if the room closed succefully
             {
                 this.refresh_players_list_thread.Abort();
 

@@ -126,21 +126,6 @@ RequestResult MenuRequestHandler::getPersonalStats(RequestInfo info)
 	return result;
 }
 
-///* getting user high score */
-//RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
-//{
-//	GetPersonalStatsResponse stats;
-//	RequestResult result;
-//
-//	stats.statistics = this->m_statistics_manager.getHighScore();
-//	stats.status = STATUS_OK;
-//
-//	result.newHandler = new MenuRequestHandler(*this);
-//	result.respone = JsonResponsePacketSerializer::serializeResponse(stats);
-//
-//	return result;
-//}
-
 /* joining room */
 RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 {
@@ -167,7 +152,8 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 	{
 		join_room.status = STATUS_FAIL;
 	}
-	if (join_room.status == STATUS_OK)
+
+	if (join_room.status == STATUS_OK) // if the user succefully joined the room.
 	{
 		result.new_handler = this->m_handler_factory.createRoomMemberRequestHandler(this->m_user, join_room_request.room_id, this->m_socket);
 	}
@@ -198,12 +184,22 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 	room_data.timePerQuestion = create_room_request.answer_time_out;
 	room_data.numOfQuestionsInGame = create_room_request.question_count;
 
-	this->m_room_manager.createRoom(this->m_user, room_data, this->m_socket); // creating new room
+	// checks if the room has max player greater than 0, time to answer till time out greater than 0 seconds, and
+	// question count that is greater than 0.
+	if (create_room_request.max_users > 0 && create_room_request.answer_time_out > 0 && create_room_request.question_count > 0) 
+	{
+		this->m_room_manager.createRoom(this->m_user, room_data, this->m_socket); // creating new room
 
-	create_room_response.status = STATUS_OK;
-	create_room_response.id = room_data.id;
-
-	result.new_handler = this->m_handler_factory.createRoomAdminRequestHandler(this->m_user, room_data.id, this->m_socket);
+		create_room_response.status = STATUS_OK;
+		create_room_response.id = room_data.id;
+		result.new_handler = this->m_handler_factory.createRoomAdminRequestHandler(this->m_user, room_data.id, this->m_socket);
+	}
+	else // if the room's stats aren't valid.
+	{
+		create_room_response.status = STATUS_FAIL;
+		create_room_response.id = 0;
+		result.new_handler = new MenuRequestHandler(*this);
+	}
 	result.respone = JsonResponsePacketSerializer::serializeResponse(create_room_response); // creating response
 
 	return result;

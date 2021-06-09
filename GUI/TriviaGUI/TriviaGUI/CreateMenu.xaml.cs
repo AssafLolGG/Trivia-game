@@ -75,7 +75,7 @@ namespace TriviaGUI
 
                 try
                 {
-                    if (jsonReturned["status"].ToString() == "1")
+                    if (jsonReturned["status"].ToString() == "1") // checks if the room was created.
                     {
                         this.IsCreated_TB.Text = "The Room was successfully created.";
                         App.Current.Properties["isInRoom"] = true;
