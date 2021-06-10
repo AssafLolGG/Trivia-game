@@ -1,0 +1,17 @@
+﻿<Window x:Class="TriviaGUI.TriviaGameRoom"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TriviaGUI"
+        mc:Ignorable="d"
+        Title="TriviaGameRoom" Height="450" Width="800">
+    <Grid>
+        <Label x:Name="Question_Text_TB" Height="40" Margin="240,60,256,319" Content="Question" FontSize="20"/>
+        <Label x:Name="timer_TB" Margin="577,30,10,319" Content="timer: 130s" HorizontalAlignment="Center" FontSize="32"/>
+        <Button x:Name="Ans_1_TB" Click="Ans_1_TB_Click" Margin="56,188,440,191" Content="Answer 1"/>
+        <Button x:Name="Ans_2_TB" Click="Ans_2_TB_Click" Margin="432,188,64,191" Content="Answer 2"/>
+        <Button x:Name="Ans_3_TB" Click="Ans_3_TB_Click" Margin="56,307,440,72" Content="Answer 3"/>
+        <Button x:Name="Ans_4_TB" Click="Ans_4_TB_Click" Margin="432,307,64,72" Content="Answer 4"/>
+    </Grid>
+</Window>
