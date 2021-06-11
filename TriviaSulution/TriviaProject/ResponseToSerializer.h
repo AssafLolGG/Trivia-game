@@ -90,3 +90,30 @@ struct LeaveRoomResponse
 {
 	int status;
 };
+
+struct PlayerResults
+{
+	string Username;
+	int CorrectAnswersCount;
+	int WrongAnswerCount;
+	int averageAnswerTime;
+
+};
+
+struct GetGameResultsResponse
+{
+	int status;
+	std::vector<PlayerResults> results;
+};
+
+struct GetQuestionResponse
+{
+	int status;
+	string question;
+	std::map<int, string> Answers;
+};
+
+struct SubmitAnswerResponse
+{
+	int status;
+};

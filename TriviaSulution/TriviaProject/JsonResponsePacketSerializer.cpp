@@ -152,6 +152,47 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LeaveRoomRe
 	return getCompleteMessage(LEAVE_ROOM_CODE, jsonSerialized);
 }
 
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetGameResultsResponse getGameResults)
+{
+	json responseJson;
+	responseJson["status"] = getGameResults.status;
+	responseJson["results"] = getGameResults.results;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(GET_GAME_RESULTS_CODE, jsonSerialized);
+}
+
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(SubmitAnswerResponse submitAnswer)
+{
+	json responseJson;
+	responseJson["status"] = submitAnswer.status;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(SUBMIT_ANSWER_CODE, jsonSerialized);
+}
+
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetQuestionResponse getQuestion)
+{
+	json responseJson;
+	responseJson["status"] = getQuestion.status;
+	responseJson["question"] = getQuestion.question;
+	responseJson["answers"] = getQuestion.Answers;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(GET_QUESTION_CODE, jsonSerialized);
+}
+
+void to_json(json& j, const PlayerResults& result)
+{
+	j = 
+	{
+		{"username", result.Username},
+		{"num_of_correct_answers", result.CorrectAnswersCount},
+		{"num_of_wrong_answers", result.WrongAnswerCount},
+		{"average_answer_time", result.averageAnswerTime}
+	};
+}
+
 /*	function that adds into one byte array the response code, the size of the response and the responce json itself.
 	input: the response code, and the json of the response.
 	output: the completed message. */
