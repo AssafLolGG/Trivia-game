@@ -16,6 +16,7 @@ std::vector<uint8_t> getCompleteMessage(unsigned char ResponseCode, std::string 
 string roomDataToString(std::vector<RoomData> rooms);
 string stringVectorToString(std::vector<string> strings);
 string roomDataVectorToRoomIdString(std::vector<RoomData> rooms);
+void to_json(json& j, const PlayerResults& result);
 
 class JsonResponsePacketSerializer
 {
