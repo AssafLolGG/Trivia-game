@@ -100,3 +100,12 @@ GetRoomDataRequest JsonRequestPacketDeserializer::deserializeRoomDataRequest(std
 	roomDataReq.room_id = std::stoi(result.value(ROOM_ID, ""));
 	return roomDataReq;
 }
+
+SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(std::vector<uint8_t> buffer)
+{
+	json result;
+	SubmitAnswerRequest submitAnswerReq;
+	result = JsonRequestPacketDeserializer::getJson(buffer);
+	submitAnswerReq.answerID = std::stoi(result.value(ANSWER_ID, ""));
+	return submitAnswerReq;
+}

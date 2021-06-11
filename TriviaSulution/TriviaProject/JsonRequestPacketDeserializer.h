@@ -21,6 +21,7 @@ using json = nlohmann::json;
 #define MAX_USERS_IN_ROOM "maximumUsers"
 #define QUESTION_COUNT "questionCount"
 #define TIME_TO_ANSWER "timeToAnswer"
+#define ANSWER_ID "ANSWER_ID"
 
 class JsonRequestPacketDeserializer
 {
@@ -35,6 +36,7 @@ public:
 	static JoinRoomRequest deserializeJoinRoomRequest(std::vector<uint8_t> buffer);
 	static CreateRoomRequest deserializeCreateRoomRequest(std::vector<uint8_t> buffer);
 	static GetRoomDataRequest deserializeRoomDataRequest(std::vector<uint8_t> buffer);
+	static SubmitAnswerRequest deserializeSubmitAnswerRequest(std::vector<uint8_t> buffer);
 
 };
 
