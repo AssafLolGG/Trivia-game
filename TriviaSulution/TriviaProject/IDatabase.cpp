@@ -10,3 +10,15 @@ std::vector<Question> IDatabase::getQuestions(int num_of_questions)
 	}
 	return questions_vec;
 }
+
+string Question::getCorrectAnswer()
+{
+	for (Answer ans : this->answers)
+	{
+		if (ans.isCorrect)
+		{
+			return ans.answerText;
+		}
+	}
+	return "";
+}

@@ -9,11 +9,13 @@ struct Answer
 	bool isCorrect;
 	std::string answerText;
 };
-struct Question
+class Question
 {
+public:
 	int id;
 	std::vector<Answer> answers;
 	std::string questionText;
+	string getCorrectAnswer();
 };
 
 struct User
