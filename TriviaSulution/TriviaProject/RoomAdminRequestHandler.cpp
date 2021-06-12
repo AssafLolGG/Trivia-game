@@ -7,7 +7,6 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 	RequestResult result;
 	result.new_handler = new RoomAdminRequestHandler(*this);
 	StartRoomResponse start_room;
-	
 	if (this->room_id != INVALID_INDEX && the_room != nullptr) // checking if the room id is valid, getting the current room for the server and checking if the room exists
 	{
 		std::vector<string> users_in_room = the_room->getAllUsers();
@@ -17,7 +16,15 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 
 		if (start_room.status != STATUS_FAIL)
 		{
+			Game& gameCreated = this->m_handler_factory.getGameManager().createGame(*the_room);
 			result.players_in_room_sockets = the_room->getAllSockets();
+			result.response_to_other_players = JsonResponsePacketSerializer::serializeResponse(start_room);
+
+			for (int i = 0; i < result.players_in_room_sockets.size(); i++) // assigning new handlers to all players
+			{
+				LoggedUser logged(the_room->getAllUsers()[i]); // memory leak - fix
+				result.players_in_room_request_handlers.push_back(this->m_handler_factory.createGameRequestHandler(logged, gameCreated));
+			}
 		}
 	}
 	else
@@ -26,13 +33,6 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 	}
 
 	result.respone = JsonResponsePacketSerializer::serializeResponse(start_room);
-	result.response_to_other_players = JsonResponsePacketSerializer::serializeResponse(start_room);
-
-	for (int i = 0; i < result.players_in_room_sockets.size(); i++) // assigning new handlers to all players
-	{
-		LoggedUser logged(the_room->getAllUsers()[i]); // memory leak - fix
-		result.players_in_room_request_handlers.push_back(this->m_handler_factory.createMenuRequestHandler(logged, result.players_in_room_sockets[i]));
-	}
 
 	return result;
 }
