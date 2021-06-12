@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
-
+using System.Net.Sockets;
 namespace TriviaGUI
 {
     /// <summary>
@@ -21,6 +21,7 @@ namespace TriviaGUI
     public partial class TriviaGameRoom : Window
     {
         private int time_out;
+        private int questionsLeft;
         private System.Windows.Threading.DispatcherTimer _timer;
         private List<int> vecChoices;
         TimeSpan _time;
@@ -61,7 +62,11 @@ namespace TriviaGUI
         {
             InitializeComponent();
             this.vecChoices = new List<int>();
-            this.time_out = 2;
+            //App.Current.Properties["numOfQuestions"] = room_data["questionsNumber"].ToString();
+            //App.Current.Properties["timeOutPerQuestion"] = room_data["timePerQuestion"].ToString();
+            object a = App.Current.Properties["numOfQuestions"];
+            this.questionsLeft =int.Parse(App.Current.Properties["numOfQuestions"].ToString());
+            this.time_out = int.Parse(App.Current.Properties["timeOutPerQuestion"].ToString());
             App.Current.Properties["TimeLeft"] = time_out;
             App.Current.Properties["timeOut"] = false;
             Thread screenSwitchThread = new Thread(new ThreadStart(QuestionsScreenSwitch));
@@ -70,13 +75,31 @@ namespace TriviaGUI
 
         private void QuestionsScreenSwitch()
         {
-            int questionsLeft = 4;
             for (int i = 0; i < questionsLeft; i++)
             {
                 App.Current.Properties["TimeLeft"] = time_out;
-                
+
+                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+                byte[] client_message = { 16 };
+                serverConnection.GetStream().Write(client_message, 0, 1);
+
+                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+
+                byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+
+                string questionText = json_returned["question"].ToString();
+                string ans1 = json_returned["answers"][0][1].ToString();
+                string ans2 = json_returned["answers"][1][1].ToString();
+                string ans3 = json_returned["answers"][2][1].ToString();
+                string ans4 = json_returned["answers"][3][1].ToString();
                 this.Dispatcher.Invoke(() =>
                 {
+                    this.Question_Text_TB.Content = questionText;
+                    this.Ans_1_TB.Content = ans1;
+                    this.Ans_2_TB.Content = ans2;
+                    this.Ans_3_TB.Content = ans3;
+                    this.Ans_4_TB.Content = ans4;
                     this.ShowQuestionScreen();
                     Waiting_TB.Visibility = Visibility.Hidden;
                 }
@@ -108,12 +131,13 @@ namespace TriviaGUI
                 while (_timer.IsEnabled == true) ;
                 if (vecChoices.Count < i + 1)
                 {
-                    vecChoices.Add(0);
+                    vecChoices.Add(1);
                 }
             }
             this.Dispatcher.Invoke(() =>
             {
                 this.End_TB.Visibility = Visibility.Visible;
+                Waiting_TB.Visibility = Visibility.Hidden;
             });
         }
         private void Ans_1_TB_Click(object sender, RoutedEventArgs e)

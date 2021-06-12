@@ -51,6 +51,9 @@ namespace TriviaGUI
             string question_num = room_data["questionsNumber"].ToString();
             string time_per_question = room_data["timePerQuestion"].ToString();
 
+            App.Current.Properties["numOfQuestions"] = room_data["questionsNumber"].ToString();
+            App.Current.Properties["timeOutPerQuestion"] = room_data["timePerQuestion"].ToString();
+
             prepareText(room_id, room_name, max_players, question_num, time_per_question);
         }
 
@@ -167,8 +170,11 @@ namespace TriviaGUI
                             }
                             else if (server_message[0] == 12) // if the room started
                             {
-                                Thread t = new Thread(new ThreadStart(() => MessageBox.Show("The Room Started")));
-                                t.Start();
+                                App.Current.Properties["isInRoom"] = false;
+                                TriviaGameRoom triviaGame = new TriviaGameRoom();
+                                triviaGame.Show();
+
+                                this.Close();
                             }
                         });
 

@@ -52,6 +52,9 @@ namespace TriviaGUI
             this.refresh_players_list_thread.SetApartmentState(ApartmentState.STA);
             this.refresh_players_list_thread.Start();
 
+            App.Current.Properties["numOfQuestions"] = questions_num.ToString();
+            App.Current.Properties["timeOutPerQuestion"] = time_per_question.ToString();
+
             prepareText(room_id, room_name, max_players, questions_num, time_per_question);
         }
 
@@ -94,7 +97,11 @@ namespace TriviaGUI
 
             if(json_returned["status"].ToString() == "1")
             {
-                MessageBox.Show("Game Started");
+                App.Current.Properties["isInRoom"] = false;
+                TriviaGameRoom triviaGame = new TriviaGameRoom();
+                triviaGame.Show();
+
+                this.Close();
             }
             else
             {

@@ -14,6 +14,7 @@ private:
 	IDatabase* m_database;
 	std::vector<Game> m_games;
 public:
+	GameManager(IDatabase* db);
 	std::vector<Game> getGames() const;
 	Game& getGame(LoggedUser);
 	Game& createGame(Room roomInGame);

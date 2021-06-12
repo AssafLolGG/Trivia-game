@@ -10,11 +10,14 @@ RequestResult GameRequestHandler::getQuestion(RequestInfo info)
         i++;
         getQuestion.Answers.insert(std::pair<int, string>(i, ans.answerText));
     }
+	getQuestion.status = this->m_game.getUserData(this->m_user).isThereQuestions == true ? STATUS_OK : STATUS_FAIL;
     getQuestion.question = this->m_game.getUserData(this->m_user).currentQuestion.questionText;
-    getQuestion.status = this->m_game.getUserData(this->m_user).isThereQuestions == true ? STATUS_OK : STATUS_FAIL;
+
     result.new_handler = new GameRequestHandler(*this);
     result.respone = JsonResponsePacketSerializer::serializeResponse(getQuestion);
     
+	this->m_game.getQuestionForUser(this->m_user);
+
     return result;
 }
 

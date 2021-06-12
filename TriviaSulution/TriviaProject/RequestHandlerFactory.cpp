@@ -4,7 +4,7 @@
     and initaliize his attribiuts.
     input: a database.
     output: an object of RequestHandlerFactory. */
-RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_login_manager(LoginManager(db))
+RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_login_manager(LoginManager(db)), m_game_manager(GameManager(db))
 {
     this->m_database = db;
     this->m_statistics_manager = StatisticsManager(this->m_database);

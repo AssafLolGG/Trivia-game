@@ -5,7 +5,6 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 {
 	Room* the_room = this->m_room_manager.getRoom(this->room_id);
 	RequestResult result;
-	result.new_handler = new RoomAdminRequestHandler(*this);
 	StartRoomResponse start_room;
 	if (this->room_id != INVALID_INDEX && the_room != nullptr) // checking if the room id is valid, getting the current room for the server and checking if the room exists
 	{
@@ -19,7 +18,7 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 			Game& gameCreated = this->m_handler_factory.getGameManager().createGame(*the_room);
 			result.players_in_room_sockets = the_room->getAllSockets();
 			result.response_to_other_players = JsonResponsePacketSerializer::serializeResponse(start_room);
-
+			result.new_handler = this->m_handler_factory.createGameRequestHandler(this->m_user, gameCreated);
 			for (int i = 0; i < result.players_in_room_sockets.size(); i++) // assigning new handlers to all players
 			{
 				LoggedUser logged(the_room->getAllUsers()[i]); // memory leak - fix

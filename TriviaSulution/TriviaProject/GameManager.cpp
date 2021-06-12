@@ -152,6 +152,11 @@ bool Game::checkIfFinished()
 
 
 
+GameManager::GameManager(IDatabase* db)
+{
+	this->m_database = db;
+}
+
 std::vector<Game> GameManager::getGames() const
 {
 	return this->m_games;
