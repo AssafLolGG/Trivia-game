@@ -182,10 +182,19 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetQuestion
 	return getCompleteMessage(GET_QUESTION_CODE, jsonSerialized);
 }
 
+std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LeaveGameResponse leaveGame)
+{
+	json responseJson;
+	responseJson["status"] = leaveGame.status;
+	std::string jsonSerialized = responseJson.dump();
+
+	return getCompleteMessage(LEAVE_GAME_CODE, jsonSerialized);
+}
+
 
 void to_json(json& j, const PlayerResults& result)
 {
-	j += 
+	j = 
 	{
 		{"username", result.Username},
 		{"num_of_correct_answers", result.CorrectAnswersCount},

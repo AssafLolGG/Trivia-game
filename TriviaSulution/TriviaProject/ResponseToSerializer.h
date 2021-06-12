@@ -117,3 +117,8 @@ struct SubmitAnswerResponse
 {
 	int status;
 };
+
+struct LeaveGameResponse
+{
+	int status;
+};

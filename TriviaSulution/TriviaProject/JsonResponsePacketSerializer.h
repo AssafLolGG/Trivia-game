@@ -39,5 +39,6 @@ public:
 	static std::vector<uint8_t> serializeResponse(GetGameResultsResponse);
 	static std::vector<uint8_t> serializeResponse(SubmitAnswerResponse);
 	static std::vector<uint8_t> serializeResponse(GetQuestionResponse);
+	static std::vector<uint8_t> serializeResponse(LeaveGameResponse);
 };
 
