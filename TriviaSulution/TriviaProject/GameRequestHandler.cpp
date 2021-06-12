@@ -57,6 +57,7 @@ RequestResult GameRequestHandler::getGameResults(RequestInfo info)
         playerResult.CorrectAnswersCount = player.second.correctAnswerCount;
         playerResult.WrongAnswerCount = player.second.wrongAnswerCount;
         playerResult.Username = player.first.getUserName();
+		getGameResults.results.push_back(playerResult);
     }
     
     getGameResults.status = this->m_game.checkIfFinished() ? STATUS_OK : STATUS_FAIL;
@@ -74,7 +75,7 @@ RequestResult GameRequestHandler::leaveGame(RequestInfo info)
     this->m_game.removePlayer(this->m_user);
     leaveGame.status = STATUS_OK;
 
-    result.new_handler = new GameRequestHandler(*this);
+    result.new_handler = this->m_handlerFactory.createMenuRequestHandler(this->m_user, this->m_socket);
     result.respone = JsonResponsePacketSerializer::serializeResponse(leaveGame);
 
     return result;
@@ -107,4 +108,9 @@ RequestResult GameRequestHandler::handleRequest(RequestInfo& info)
         result = this->submitAnswer(info);
     }
 	return result;
+}
+
+int GameRequestHandler::GetRequestHandlerType()
+{
+	return 5;
 }

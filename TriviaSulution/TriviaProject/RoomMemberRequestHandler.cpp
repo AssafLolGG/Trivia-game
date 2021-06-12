@@ -83,3 +83,8 @@ RequestResult RoomMemberRequestHandler::handleRequest(RequestInfo& info)
 
 	return result;
 }
+
+int RoomMemberRequestHandler::GetRequestHandlerType()
+{
+	return 3;
+}

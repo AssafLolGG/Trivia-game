@@ -23,6 +23,7 @@ public:
 	LoginRequestHandler(RequestHandlerFactory& handlerFactory, LoginManager& loginManager, SOCKET client_socket);
 	bool isRequestRelevant(RequestInfo& info) override;
 	RequestResult handleRequest(RequestInfo& info) override;
+	int GetRequestHandlerType() override;
 };
 
 

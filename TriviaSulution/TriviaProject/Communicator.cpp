@@ -109,6 +109,22 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		{
 			if (it->first == client_socket)
 			{
+				auto handlerID = it->second->GetRequestHandlerType();
+				RequestInfo info;
+				info.buffer = std::vector<uint8_t>();
+				info.id = -1;
+				if (handlerID == 3)
+				{
+					dynamic_cast<RoomMemberRequestHandler*>(it->second)->leaveGame(info);
+				}
+				else if (handlerID == 4)
+				{
+					dynamic_cast<RoomAdminRequestHandler*>(it->second)->closeGame(info);
+				}
+				else if (handlerID == 5)
+				{
+					dynamic_cast<GameRequestHandler*>(it->second)->leaveGame(info);
+				}
 				this->m_clients.erase(it);
 				closesocket(client_socket); // closing the client socket
 

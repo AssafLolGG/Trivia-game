@@ -85,3 +85,8 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
     }
     return result;
 }
+
+int LoginRequestHandler::GetRequestHandlerType()
+{
+	return 1;
+}

@@ -52,6 +52,11 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo& info)
 	return result;
 }
 
+int MenuRequestHandler::GetRequestHandlerType()
+{
+	return 2;
+}
+
 /* signing out */
 RequestResult MenuRequestHandler::signout(RequestInfo info)
 {

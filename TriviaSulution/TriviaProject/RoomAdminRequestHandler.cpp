@@ -15,6 +15,7 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 
 		if (start_room.status != STATUS_FAIL)
 		{
+			the_room->GetRoomdata().isActive = 0;
 			Game& gameCreated = this->m_handler_factory.getGameManager().createGame(*the_room);
 			result.players_in_room_sockets = the_room->getAllSockets();
 			result.response_to_other_players = JsonResponsePacketSerializer::serializeResponse(start_room);
@@ -140,4 +141,9 @@ RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo& info)
 		result = this->getPlayersInRoom(info);
 	}
 	return result;
+}
+
+int RoomAdminRequestHandler::GetRequestHandlerType()
+{
+	return 4;
 }

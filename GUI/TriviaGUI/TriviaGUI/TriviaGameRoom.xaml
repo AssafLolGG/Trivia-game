@@ -7,13 +7,14 @@
         mc:Ignorable="d"
         Title="TriviaGameRoom" Height="450" Width="800">
     <Grid>
-        <Label x:Name="Question_Text_TB" Height="40" Margin="89,60,298,319" Content="Question" FontSize="20"/>
-        <TextBlock x:Name="timer_TB" Margin="520,30,24,332" HorizontalAlignment="Center" FontSize="16" Width="248"/>
-        <Button x:Name="Ans_1_TB" Click="Ans_1_TB_Click" Margin="56,188,440,191" Content="Answer 1"/>
-        <Button x:Name="Ans_2_TB" Click="Ans_2_TB_Click" Margin="432,188,64,191" Content="Answer 2"/>
-        <Button x:Name="Ans_3_TB" Click="Ans_3_TB_Click" Margin="56,307,440,72" Content="Answer 3"/>
-        <Button x:Name="Ans_4_TB" Click="Ans_4_TB_Click" Margin="432,307,64,72" Content="Answer 4"/>
+        <TextBlock x:Name="Question_Text_TB" Margin="56,49,321,279" Text="Question" FontSize="20" TextWrapping="WrapWithOverflow"/>
+        <TextBlock x:Name="timer_TB" Margin="526,42,0,314" HorizontalAlignment="Center" FontSize="16" Width="266"/>
+        <Button x:Name="Ans_1_TB" Click="Ans_1_TB_Click" Margin="56,188,440,176" Content="Answer 1"/>
+        <Button x:Name="Ans_2_TB" Click="Ans_2_TB_Click" Margin="432,188,64,176" Content="Answer 2"/>
+        <Button x:Name="Ans_3_TB" Click="Ans_3_TB_Click" Margin="56,307,440,57" Content="Answer 3"/>
+        <Button x:Name="Ans_4_TB" Click="Ans_4_TB_Click" Margin="432,307,64,57" Content="Answer 4"/>
         <TextBlock Name="Waiting_TB" Visibility="Hidden" Text="Waiting..."/>
-        <TextBlock Name="End_TB" Text="End" Visibility="Hidden"/>
+        <ListBox x:Name="Results_list" Width="400" Visibility="Hidden" HorizontalAlignment="Left"></ListBox>
+        <Button x:Name="exit_button" FontSize="30" Content="exit" Click="Exit_button_Click" Margin="526,0,0,377"/>
     </Grid>
 </Window>

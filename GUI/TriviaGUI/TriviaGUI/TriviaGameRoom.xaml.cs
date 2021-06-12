@@ -13,8 +13,27 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
 using System.Net.Sockets;
+using Newtonsoft.Json;
+
 namespace TriviaGUI
 {
+    public class playerResult
+    {
+        public string Username { get; set; }
+        public int CorrectAnswersCount { get; set; }
+        public int WrongAnswerCount { get; set; }
+        public int averageAnswerTime { get; set; }
+    }
+
+    public class playersResult
+    {
+        public List<playerResult> results { get; set; }
+        public playersResult()
+        {
+            results = new List<playerResult>();
+        }
+    }
+
     /// <summary>
     /// Interaction logic for TriviaGameRoom.xaml
     /// </summary>
@@ -75,18 +94,19 @@ namespace TriviaGUI
 
         private void QuestionsScreenSwitch()
         {
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            byte[] client_message = { 16 };
+            byte[] server_message = { };
+            Newtonsoft.Json.Linq.JObject json_returned;
             for (int i = 0; i < questionsLeft; i++)
             {
                 App.Current.Properties["TimeLeft"] = time_out;
-
-                TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
-                byte[] client_message = { 16 };
                 serverConnection.GetStream().Write(client_message, 0, 1);
 
                 while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
 
-                byte[] server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-                Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+                json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
                 string questionText = json_returned["question"].ToString();
                 string ans1 = json_returned["answers"][0][1].ToString();
@@ -95,7 +115,7 @@ namespace TriviaGUI
                 string ans4 = json_returned["answers"][3][1].ToString();
                 this.Dispatcher.Invoke(() =>
                 {
-                    this.Question_Text_TB.Content = questionText;
+                    this.Question_Text_TB.Text = questionText;
                     this.Ans_1_TB.Content = ans1;
                     this.Ans_2_TB.Content = ans2;
                     this.Ans_3_TB.Content = ans3;
@@ -133,13 +153,63 @@ namespace TriviaGUI
                 {
                     vecChoices.Add(1);
                 }
+                int choice = vecChoices[vecChoices.Count - 1];
+                Dictionary<string, string> submitAnswer = new Dictionary<string, string>();
+                submitAnswer["ANSWER_ID"] = choice.ToString();
+                string json_parsed = JsonConvert.SerializeObject(submitAnswer);
+                byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
+                byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(15, json_byted);
+
+                serverConnection.GetStream().Write(data_encoded, 0, 1000);
+                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+
+                ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+            }
+
+            this.Dispatcher.Invoke(() =>
+            {
+                Waiting_TB.Visibility = Visibility.Hidden;
+            });
+            serverConnection = (TcpClient)App.Current.Properties["server"];
+            Array.Clear(client_message, 0, client_message.Length);
+            client_message[0] = 14;
+            serverConnection.GetStream().Write(client_message, 0, 1);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+
+            server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+            json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+            playersResult resultsInList = new playersResult();
+            Newtonsoft.Json.Linq.JArray results = (Newtonsoft.Json.Linq.JArray)json_returned["results"];
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                Newtonsoft.Json.Linq.JToken currentResult = results[i];
+                playerResult result = new playerResult();
+                result.Username = currentResult["username"].ToString();
+                result.WrongAnswerCount = int.Parse(currentResult["num_of_wrong_answers"].ToString());
+                result.CorrectAnswersCount = int.Parse(currentResult["num_of_correct_answers"].ToString());
+                result.averageAnswerTime = int.Parse(currentResult["average_answer_time"].ToString());
+                resultsInList.results.Add(result);
+            }
+
+            foreach (playerResult p in resultsInList.results)
+            {
+                string currentResult = $"name: {p.Username}\r\ncorrect answers: {p.CorrectAnswersCount}\r\n";
+                currentResult += $"wrong answers: {p.WrongAnswerCount}\r\nAverage time to answer: {p.averageAnswerTime}";
+                this.Dispatcher.Invoke(() =>
+                {
+                    ListBoxItem item = new ListBoxItem();
+                    item.Content = currentResult;
+                    this.Results_list.Items.Add(item);
+                });
             }
             this.Dispatcher.Invoke(() =>
             {
-                this.End_TB.Visibility = Visibility.Visible;
-                Waiting_TB.Visibility = Visibility.Hidden;
+                this.Results_list.Visibility = Visibility.Visible;
             });
         }
+
         private void Ans_1_TB_Click(object sender, RoutedEventArgs e)
         {
             vecChoices.Add(1);
@@ -163,6 +233,11 @@ namespace TriviaGUI
         {
             vecChoices.Add(4);
             App.Current.Properties["QuestionsShown"] = false;
+        }
+
+        private void Exit_button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

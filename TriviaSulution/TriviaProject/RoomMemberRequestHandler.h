@@ -13,7 +13,6 @@ private:
 	int room_id;
 	RequestHandlerFactory& m_handler_factory;
 
-	RequestResult leaveGame(RequestInfo& info);
 	RequestResult getRoomState(RequestInfo& info);
 	RequestResult getPlayersInRoom(RequestInfo& info);
 
@@ -26,5 +25,7 @@ public:
 	}
 	bool isRequestRelevant(RequestInfo& info) override;
 	RequestResult handleRequest(RequestInfo& info) override;
+	int GetRequestHandlerType() override;
+	RequestResult leaveGame(RequestInfo& info);
 };
 
