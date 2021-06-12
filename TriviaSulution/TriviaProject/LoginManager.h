@@ -24,6 +24,7 @@ public:
 	LoggedUser();
 	LoggedUser(std::string username);
 	std::string getUserName() const;
+	bool operator<(const LoggedUser& other) const;
 };
 
 class LoginManager

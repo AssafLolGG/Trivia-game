@@ -24,6 +24,11 @@ std::string LoggedUser::getUserName() const
     return this->_username;
 }
 
+bool LoggedUser::operator<(const LoggedUser& other) const
+{
+	return this->getUserName() < other.getUserName();
+}
+
 /*getting username
   input: string username, string password, string email
   output: none */

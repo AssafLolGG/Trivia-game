@@ -15,8 +15,10 @@ private:
 	std::vector<Game> m_games;
 public:
 	std::vector<Game> getGames() const;
-	Game createGame(Room roomInGame);
+	Game& getGame(LoggedUser);
+	Game& createGame(Room roomInGame);
 	void deleteGame(Game gameToRemove);
+
 };
 
 struct GameData
@@ -32,6 +34,7 @@ struct GameData
 class Game
 {
 private:
+	bool isFinished = false;
 	std::vector<Question> m_questions;
 	std::map<LoggedUser, GameData> m_players;
 
@@ -41,5 +44,9 @@ public:
 	void getQuestionForUser(LoggedUser User);
 	void submitAnswer(LoggedUser User, string answer);
 	void removePlayer(LoggedUser User);
+	bool isUserInGame(LoggedUser);
+	GameData getUserData(LoggedUser user);
+	std::map<LoggedUser, GameData> getPlayers();
+	bool checkIfFinished();
 };
 

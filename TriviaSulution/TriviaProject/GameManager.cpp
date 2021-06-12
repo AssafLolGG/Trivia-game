@@ -23,7 +23,15 @@ bool Game::operator==(const Game& other) const
 {
 	if (this != &other)
 	{
-		return this->m_players == other.m_players;
+		for (auto iter_this = this->m_players.begin(), iter_other = other.m_players.begin(); iter_this !=
+			this->m_players.end() && iter_other != this->m_players.end(); iter_this++, iter_other++)
+		{
+			if (iter_this->first.getUserName() != iter_other->first.getUserName())
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	else
 	{
@@ -34,6 +42,7 @@ bool Game::operator==(const Game& other) const
 void Game::getQuestionForUser(LoggedUser User)
 {
 	auto userIter = this->m_players.end();
+
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
 	{
 		if (User.getUserName() == iter->first.getUserName())
@@ -92,14 +101,79 @@ void Game::removePlayer(LoggedUser User)
 	}
 }
 
+bool Game::isUserInGame(LoggedUser user)
+{
+	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
+	{
+		if (iter->first.getUserName() == user.getUserName())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+GameData Game::getUserData(LoggedUser user)
+{
+	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
+	{
+		if (iter->first.getUserName() == user.getUserName())
+		{
+			return iter->second;
+		}
+	}
+	return GameData();
+}
+
+std::map<LoggedUser, GameData> Game::getPlayers()
+{
+	return this->m_players;
+}
+
+bool Game::checkIfFinished()
+{
+	if (this->isFinished)
+	{
+		return true;
+	}
+	else
+	{
+		for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
+		{
+			if (iter->second.isThereQuestions)
+			{
+				return false;
+			}
+		}
+		this->isFinished = true;
+		return true;
+	}
+}
+
+
+
 std::vector<Game> GameManager::getGames() const
 {
 	return this->m_games;
 }
 
-Game GameManager::createGame(Room roomInGame)
+Game& GameManager::getGame(LoggedUser user)
+{
+	for (Game& game : this->m_games)
+	{
+		if (game.isUserInGame(user))
+		{
+			return game;
+		}
+	}
+}
+
+
+
+Game& GameManager::createGame(Room roomInGame)
 {
 	this->m_games.push_back(Game(roomInGame.getAllUsers(), this->m_database->getQuestions(roomInGame.GetRoomdata().numOfQuestionsInGame)));
+	return this->m_games.back();
 }
 
 void GameManager::deleteGame(Game gameToRemove)

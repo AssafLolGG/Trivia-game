@@ -53,3 +53,13 @@ RoomManager& RequestHandlerFactory::getRoomManager()
 {
     return this->m_room_manager;
 }
+
+GameRequestHandler* RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
+{
+    return new GameRequestHandler(this->m_game_manager, game, *this, user);
+}
+
+GameManager& RequestHandlerFactory::getGameManager()
+{
+    return this->m_game_manager;
+}

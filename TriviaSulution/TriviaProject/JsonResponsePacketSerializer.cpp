@@ -274,3 +274,13 @@ string roomDataVectorToRoomIdString(std::vector<RoomData> rooms)
 	}
 	return stringVectorToString(rooms_id_vector);
 }
+
+string answerVectorToString(std::vector<Answer> answers)
+{
+	std::vector<string> answers_vector;
+	for (auto iter = answers.begin(); iter != answers.end(); iter++)
+	{
+		answers_vector.push_back(iter->answerText);
+	}
+	return stringVectorToString(answers_vector);
+}
