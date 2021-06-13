@@ -81,8 +81,6 @@ namespace TriviaGUI
         {
             InitializeComponent();
             this.vecChoices = new List<int>();
-            //App.Current.Properties["numOfQuestions"] = room_data["questionsNumber"].ToString();
-            //App.Current.Properties["timeOutPerQuestion"] = room_data["timePerQuestion"].ToString();
             object a = App.Current.Properties["numOfQuestions"];
             this.questionsLeft =int.Parse(App.Current.Properties["numOfQuestions"].ToString());
             this.time_out = int.Parse(App.Current.Properties["timeOutPerQuestion"].ToString());
@@ -90,6 +88,7 @@ namespace TriviaGUI
             App.Current.Properties["timeOut"] = false;
             Thread screenSwitchThread = new Thread(new ThreadStart(QuestionsScreenSwitch));
             screenSwitchThread.Start();
+            App.Current.Properties["screenChangingThread"] = screenSwitchThread;
         }
 
         private void QuestionsScreenSwitch()
@@ -237,6 +236,19 @@ namespace TriviaGUI
 
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
+            ((Thread)App.Current.Properties["screenChangingThread"]).Abort();
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            byte[] client_message = { 17 };
+            byte[] server_message = { };
+            serverConnection.GetStream().Write(client_message, 0, 1);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+
+            server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+
+            RoomMenu rmenu = new RoomMenu();
+            rmenu.Show();
+            this.Close();
 
         }
     }

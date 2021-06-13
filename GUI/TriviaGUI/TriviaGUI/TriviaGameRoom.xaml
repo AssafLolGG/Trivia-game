@@ -15,6 +15,6 @@
         <Button x:Name="Ans_4_TB" Click="Ans_4_TB_Click" Margin="432,307,64,57" Content="Answer 4"/>
         <TextBlock Name="Waiting_TB" Visibility="Hidden" Text="Waiting..."/>
         <ListBox x:Name="Results_list" Width="400" Visibility="Hidden" HorizontalAlignment="Left"></ListBox>
-        <Button x:Name="exit_button" FontSize="30" Content="exit" Click="Exit_button_Click" Margin="526,0,0,377"/>
+        <Button x:Name="exit_button" FontSize="30" Content="exit" Click="Exit_button_Click" Margin="526,0,0,364"/>
     </Grid>
 </Window>

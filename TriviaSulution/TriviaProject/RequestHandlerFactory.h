@@ -31,6 +31,6 @@ public:
 	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, int room_id, SOCKET client_socket);
 	StatisticsManager& getStatisticsManager();
 	RoomManager& getRoomManager();
-	GameRequestHandler* createGameRequestHandler(LoggedUser user, Game& game);
+	GameRequestHandler* createGameRequestHandler(LoggedUser user, Game& game, SOCKET client_soc);
 	GameManager& getGameManager();
 };

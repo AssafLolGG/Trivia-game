@@ -16,9 +16,10 @@ private:
 	RequestResult submitAnswer(RequestInfo info);
 	RequestResult getGameResults(RequestInfo info);
 public:
-	GameRequestHandler(GameManager& game_manager, Game& game, RequestHandlerFactory& handler_factory, LoggedUser m_user_) : m_gameManager(game_manager),
+	GameRequestHandler(GameManager& game_manager, Game& game, SOCKET soc, RequestHandlerFactory& handler_factory, LoggedUser m_user_) : m_gameManager(game_manager),
 		m_game(game), m_handlerFactory(handler_factory), IRequestHandler()
 	{
+		this->m_socket = soc;
 		this->m_user = m_user_;
 	}
 	bool isRequestRelevant(RequestInfo& info) override;

@@ -171,10 +171,12 @@ namespace TriviaGUI
                             else if (server_message[0] == 12) // if the room started
                             {
                                 App.Current.Properties["isInRoom"] = false;
+                                ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
                                 TriviaGameRoom triviaGame = new TriviaGameRoom();
                                 triviaGame.Show();
 
                                 this.Close();
+                                return;
                             }
                         });
 

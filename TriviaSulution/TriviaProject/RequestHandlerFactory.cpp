@@ -54,9 +54,9 @@ RoomManager& RequestHandlerFactory::getRoomManager()
     return this->m_room_manager;
 }
 
-GameRequestHandler* RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
+GameRequestHandler* RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game, SOCKET client_soc)
 {
-    return new GameRequestHandler(this->m_game_manager, game, *this, user);
+    return new GameRequestHandler(this->m_game_manager, game, client_soc, *this, user);
 }
 
 GameManager& RequestHandlerFactory::getGameManager()

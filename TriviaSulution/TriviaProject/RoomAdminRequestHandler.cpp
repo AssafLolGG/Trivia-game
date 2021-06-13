@@ -19,11 +19,11 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 			Game& gameCreated = this->m_handler_factory.getGameManager().createGame(*the_room);
 			result.players_in_room_sockets = the_room->getAllSockets();
 			result.response_to_other_players = JsonResponsePacketSerializer::serializeResponse(start_room);
-			result.new_handler = this->m_handler_factory.createGameRequestHandler(this->m_user, gameCreated);
+			result.new_handler = this->m_handler_factory.createGameRequestHandler(this->m_user, gameCreated, this->m_client);
 			for (int i = 0; i < result.players_in_room_sockets.size(); i++) // assigning new handlers to all players
 			{
 				LoggedUser logged(the_room->getAllUsers()[i]); // memory leak - fix
-				result.players_in_room_request_handlers.push_back(this->m_handler_factory.createGameRequestHandler(logged, gameCreated));
+				result.players_in_room_request_handlers.push_back(this->m_handler_factory.createGameRequestHandler(logged, gameCreated, result.players_in_room_sockets[i]));
 			}
 		}
 	}
