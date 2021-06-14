@@ -162,6 +162,8 @@ namespace TriviaGUI
                             else if (server_message[0] == 11) // if the room closed
                             {
                                 App.Current.Properties["isInRoom"] = false;
+                                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
                                 RoomMenu rmenu = new RoomMenu();
                                 rmenu.Show();
 
@@ -171,24 +173,22 @@ namespace TriviaGUI
                             else if (server_message[0] == 12) // if the room started
                             {
                                 App.Current.Properties["isInRoom"] = false;
-                                ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+                                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
                                 TriviaGameRoom triviaGame = new TriviaGameRoom();
                                 triviaGame.Show();
 
                                 this.Close();
-                                return;
+
+                                throw (new Exception());
                             }
                         });
-
+                        Thread.Sleep(3000);
                     }
                 }
                 catch(Exception E)
                 {
                     App.Current.Properties["isInRoom"] = false;
-                    RoomMenu rmenu = new RoomMenu();
-                    rmenu.Show();
-
-                    this.Close();
                     return;
                 }
                 finally
@@ -196,7 +196,6 @@ namespace TriviaGUI
 
                 }
 
-                Thread.Sleep(3000);
             }
         }
     }

@@ -49,6 +49,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 
 			request = createRequestInfo(buffer_vector);
 
+			std::cout << client_socket << " :" << request_handler->GetRequestHandlerType() << " " << request.id << "\n";
 			if (request_handler->isRequestRelevant(request))
 			{
 				result = request_handler->handleRequest(request);

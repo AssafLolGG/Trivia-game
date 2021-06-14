@@ -67,7 +67,8 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 
 	result.new_handler = this->m_handler_factory.createLoginRequestHandler(this->m_socket); // return login request after signing out
 	result.respone = JsonResponsePacketSerializer::serializeResponse(logout);
-	for (auto it = this->m_room_manager.getAllRooms().begin(); it != this->m_room_manager.getAllRooms().end(); it++)
+	auto rooms = this->m_room_manager.getAllRooms();
+	for (auto it = rooms.begin(); it != rooms.end(); it++)
 	{
 		it->second.removeUser(this->m_user, this->m_socket);
 	}

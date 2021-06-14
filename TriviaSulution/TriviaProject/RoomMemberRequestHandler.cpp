@@ -59,6 +59,10 @@ RequestResult RoomMemberRequestHandler::getPlayersInRoom(RequestInfo& info)
 /* checking if the request code match the codes that the room member accept*/
 bool RoomMemberRequestHandler::isRequestRelevant(RequestInfo& info)
 {
+	if (info.id == GET_QUESTION_CODE)
+	{
+		std::cout << "HERE!\n";
+	}
 	return info.id == LEAVE_ROOM_CODE || info.id == GET_ROOMDATA_CODE || info.id == GET_PLAYERS_IN_ROOM_CODE;
 }
 
