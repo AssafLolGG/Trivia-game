@@ -180,9 +180,13 @@ namespace TriviaGUI
 
                                 this.Close();
 
-                                throw (new Exception());
+                                return;
                             }
                         });
+                        if(server_message[0] == 12 || server_message[0] == 11)
+                        {
+                            return;
+                        }
                         Thread.Sleep(3000);
                     }
                 }

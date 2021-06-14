@@ -99,81 +99,97 @@ namespace TriviaGUI
                 byte[] client_message = { 16 };
                 byte[] server_message = { };
                 Newtonsoft.Json.Linq.JObject json_returned;
+
+                serverConnection.GetStream().Write(client_message, 0, 1); // overriding previous server message - probably
+
                 for (int i = 0; i < questionsLeft; i++)
                 {
                     Thread.Sleep(1000);
                     App.Current.Properties["TimeLeft"] = time_out;
-                    serverConnection.GetStream().Write(client_message, 0, 1);
                     serverConnection.GetStream().Write(client_message, 0, 1);
                     while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
 
                     server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
                     json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
 
-                    string questionText = json_returned["question"].ToString();
-                    string ans1 = json_returned["answers"][0][1].ToString();
-                    string ans2 = json_returned["answers"][1][1].ToString();
-                    string ans3 = json_returned["answers"][2][1].ToString();
-                    string ans4 = json_returned["answers"][3][1].ToString();
-                    this.Dispatcher.Invoke(() =>
+                    if (json_returned.ContainsKey("question"))
                     {
-                        this.Question_Text_TB.Text = questionText;
-                        this.Ans_1_TB.Content = ans1;
-                        this.Ans_2_TB.Content = ans2;
-                        this.Ans_3_TB.Content = ans3;
-                        this.Ans_4_TB.Content = ans4;
-                        this.ShowQuestionScreen();
-                        Waiting_TB.Visibility = Visibility.Hidden;
+                        string questionText = json_returned["question"].ToString();
+                        string ans1 = json_returned["answers"][0][1].ToString();
+                        string ans2 = json_returned["answers"][1][1].ToString();
+                        string ans3 = json_returned["answers"][2][1].ToString();
+                        string ans4 = json_returned["answers"][3][1].ToString();
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            this.Question_Text_TB.Text = questionText;
+                            this.Ans_1_TB.Content = ans1;
+                            this.Ans_2_TB.Content = ans2;
+                            this.Ans_3_TB.Content = ans3;
+                            this.Ans_4_TB.Content = ans4;
+                            this.ShowQuestionScreen();
+                            Waiting_TB.Visibility = Visibility.Hidden;
+                        }
+                        );
+                        App.Current.Properties["QuestionsShown"] = true;
+                        Thread threadTimeOut = new Thread(new ThreadStart(WaitForTimeOut));
+                        threadTimeOut.Start();
+
+                        // creating timer to show the user time left till time out
+                        _time = TimeSpan.FromSeconds((int)App.Current.Properties["TimeLeft"]);
+
+                        _timer = new System.Windows.Threading.DispatcherTimer(new TimeSpan(0, 0, 1), System.Windows.Threading.DispatcherPriority.Normal, delegate
+                        {
+                            timer_TB.Text = "Seconds Left: " + _time.ToString("c") + "s"; // print time to screen
+
+                            if (_time == TimeSpan.Zero) _timer.Stop();
+                            _time = _time.Add(TimeSpan.FromSeconds(-1));
+
+                        }, Application.Current.Dispatcher);
+
+                        _timer.Start();
+
+                        App.Current.Properties["ThreadTimeOut"] = threadTimeOut;
+
+                        while ((bool)App.Current.Properties["QuestionsShown"] == true) ;
+
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            HideQuestionScreen();
+                            Waiting_TB.Visibility = Visibility.Visible;
+                        });
+
+                        while (_timer.IsEnabled == true) ;
+
+                        if (vecChoices.Count < i + 1)
+                        {
+                            vecChoices.Add(1);
+                        }
+
+                        int choice = vecChoices[vecChoices.Count - 1];
+                        Dictionary<string, string> submitAnswer = new Dictionary<string, string>();
+
+                        submitAnswer["ANSWER_ID"] = choice.ToString();
+
+                        string json_parsed = JsonConvert.SerializeObject(submitAnswer);
+
+                        byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
+                        byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(15, json_byted);
+
+                        serverConnection.GetStream().Write(data_encoded, 0, 1000);
+                        while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+
+                        ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
                     }
-                    );
-                    App.Current.Properties["QuestionsShown"] = true;
-                    Thread threadTimeOut = new Thread(new ThreadStart(WaitForTimeOut));
-                    threadTimeOut.Start();
-
-                    // creating timer to show the user time left till time out
-                    _time = TimeSpan.FromSeconds((int)App.Current.Properties["TimeLeft"]);
-
-                    _timer = new System.Windows.Threading.DispatcherTimer(new TimeSpan(0, 0, 1), System.Windows.Threading.DispatcherPriority.Normal, delegate
-                    {
-                        timer_TB.Text = "Seconds Left: " + _time.ToString("c") + "s";
-                        if (_time == TimeSpan.Zero) _timer.Stop();
-                        _time = _time.Add(TimeSpan.FromSeconds(-1));
-                    }, Application.Current.Dispatcher);
-
-                    _timer.Start();
-
-                    App.Current.Properties["ThreadTimeOut"] = threadTimeOut;
-                    while ((bool)App.Current.Properties["QuestionsShown"] == true) ;
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        HideQuestionScreen();
-                        Waiting_TB.Visibility = Visibility.Visible;
-                    });
-
-                    while (_timer.IsEnabled == true) ;
-                    if (vecChoices.Count < i + 1)
-                    {
-                        vecChoices.Add(1);
-                    }
-                    int choice = vecChoices[vecChoices.Count - 1];
-                    Dictionary<string, string> submitAnswer = new Dictionary<string, string>();
-                    submitAnswer["ANSWER_ID"] = choice.ToString();
-                    string json_parsed = JsonConvert.SerializeObject(submitAnswer);
-                    byte[] json_byted = System.Text.Encoding.ASCII.GetBytes(json_parsed);
-                    byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(15, json_byted);
-
-                    serverConnection.GetStream().Write(data_encoded, 0, 1000);
-                    while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-
-                    ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
                 }
 
                 this.Dispatcher.Invoke(() =>
                 {
                     Waiting_TB.Visibility = Visibility.Hidden;
                 });
+
                 serverConnection = (TcpClient)App.Current.Properties["server"];
                 Array.Clear(client_message, 0, client_message.Length);
+
                 client_message[0] = 14;
                 serverConnection.GetStream().Write(client_message, 0, 1);
 
