@@ -81,12 +81,14 @@ namespace TriviaGUI
         {
             InitializeComponent();
             this.vecChoices = new List<int>();
-            object a = App.Current.Properties["numOfQuestions"];
-            this.questionsLeft =int.Parse(App.Current.Properties["numOfQuestions"].ToString());
+
+            this.questionsLeft = int.Parse(App.Current.Properties["numOfQuestions"].ToString());
             this.time_out = int.Parse(App.Current.Properties["timeOutPerQuestion"].ToString());
+
             App.Current.Properties["TimeLeft"] = time_out;
             App.Current.Properties["timeOut"] = false;
             Thread screenSwitchThread = new Thread(new ThreadStart(QuestionsScreenSwitch));
+
             screenSwitchThread.Start();
             App.Current.Properties["screenChangingThread"] = screenSwitchThread;
         }
@@ -102,7 +104,7 @@ namespace TriviaGUI
 
                 serverConnection.GetStream().Write(client_message, 0, 1); // overriding previous server message - probably
 
-                for (int i = 0; i < questionsLeft; i++)
+                for (int i = 0; i < questionsLeft * 2; i++)
                 {
                     Thread.Sleep(1000);
                     App.Current.Properties["TimeLeft"] = time_out;
@@ -160,7 +162,7 @@ namespace TriviaGUI
 
                         while (_timer.IsEnabled == true) ;
 
-                        if (vecChoices.Count < i + 1)
+                        if (vecChoices.Count < i + 1) // checked if one of the buttons have been clicked
                         {
                             vecChoices.Add(1);
                         }
