@@ -2,10 +2,6 @@
 
 RequestResult GameRequestHandler::getQuestion(RequestInfo info)
 {
-	if (this->m_user.getUserName() == "a")
-	{
-
-	}
     RequestResult result;
     GetQuestionResponse getQuestion;
     int i = 0;

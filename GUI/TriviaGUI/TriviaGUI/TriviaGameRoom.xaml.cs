@@ -102,9 +102,9 @@ namespace TriviaGUI
                 byte[] server_message = { };
                 Newtonsoft.Json.Linq.JObject json_returned;
 
-                serverConnection.GetStream().Write(client_message, 0, 1); // overriding previous server message - probably
+               // overriding previous server message - probably
 
-                for (int i = 0; i < questionsLeft * 2; i++)
+                for (int i = 0; i < questionsLeft; i++)
                 {
                     Thread.Sleep(1000);
                     App.Current.Properties["TimeLeft"] = time_out;
