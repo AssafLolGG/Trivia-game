@@ -176,7 +176,7 @@ namespace TriviaGUI
                                 while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
                                 server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
 
-                                byte[] fixing_message = { 16 };
+                                byte[] fixing_message = { 0 };
                                 serverConnection.GetStream().Write(fixing_message, 0, 1);
 
                                 TriviaGameRoom triviaGame = new TriviaGameRoom();
