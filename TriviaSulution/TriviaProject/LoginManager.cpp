@@ -29,6 +29,19 @@ bool LoggedUser::operator<(const LoggedUser& other) const
 	return this->getUserName() < other.getUserName();
 }
 
+bool LoginManager::isUserActive(std::string username)
+{
+	for (LoggedUser user : this->_loggedUsers)
+	{
+		if (user.getUserName() == username)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 /*getting username
   input: string username, string password, string email
   output: none */
@@ -99,12 +112,16 @@ bool LoginManager::signup(std::string username, std::string password, std::strin
   output: if the login attempt failed */
 bool LoginManager::login(std::string username, std::string password)
 {
-    if (this->_db_access->doesUserExist(username) &&
-        this->_db_access->doesPasswordMatch(username, password))
-    {
-        this->_loggedUsers.push_back(LoggedUser(username));
-        return true;
-    }
+	if (!this->isUserActive(username))
+	{
+		if (this->_db_access->doesUserExist(username) &&
+			this->_db_access->doesPasswordMatch(username, password));
+		{
+			this->_loggedUsers.push_back(LoggedUser(username));
+			return true;
+		}
+	}
+    
     return false;
 }
 

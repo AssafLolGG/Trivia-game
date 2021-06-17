@@ -32,6 +32,8 @@ class LoginManager
 private:
 	IDatabase* _db_access;
 	std::vector<LoggedUser> _loggedUsers;
+
+	bool isUserActive(std::string username);
 public:
 	LoginManager(IDatabase* db);
 	bool signup(std::string username, std::string password, std::string email, std::string address, std::string phone, std::string birthday);
