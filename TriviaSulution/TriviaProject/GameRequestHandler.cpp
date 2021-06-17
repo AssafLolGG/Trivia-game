@@ -48,8 +48,7 @@ RequestResult GameRequestHandler::getGameResults(RequestInfo info)
     GetGameResultsResponse getGameResults;
     
     getGameResults.results = std::vector<PlayerResults>();
-    
-    
+
     for (auto player : this->m_game.getPlayers())
     {
         PlayerResults playerResult;
