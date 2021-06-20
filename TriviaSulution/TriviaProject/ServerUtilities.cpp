@@ -73,6 +73,7 @@ GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUs
 	GetRoomDataResponse roomDataResponse;
 	Room* theRoom = room_manager.getRoom(room_id);
 
+	// gets the roomdata, into a structure
 	if (room_id != INVALID_INDEX && theRoom)
 	{
 		std::vector<string> usersInRoom = theRoom->getAllUsers();

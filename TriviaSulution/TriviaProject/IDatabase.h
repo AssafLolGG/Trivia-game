@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 using std::string;
 

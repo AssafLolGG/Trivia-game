@@ -107,19 +107,27 @@ statisticsDB Game::getUserNewStatistics(LoggedUser user, statisticsDB currentSta
 {
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
 	{
+		// gets if it's this iterator contain the user data
 		if (user.getUserName() == iter->first.getUserName())
 		{
+			// adds the stats from last game, to the current user's stats
 			currentStatistics.games_played = std::to_string(std::stoi(currentStatistics.games_played) + 1);
 			currentStatistics.questions_last_game = std::to_string(this->m_questions.size());
 			currentStatistics.right_answers = std::to_string(std::stoi(currentStatistics.right_answers) + iter->second.correctAnswerCount);
 			currentStatistics.score_last_game = std::to_string(iter->second.correctAnswerCount - iter->second.wrongAnswerCount);
+			
+			// checks if the score last game is higher than the highest score, and if so, replace him with the score from last game
 			if (std::stoi(currentStatistics.score_last_game) > std::stoi(currentStatistics.highest_score))
 			{
 				currentStatistics.highest_score = currentStatistics.score_last_game;
 			}
+			
+			// adds more stats to the new updated stats
 			currentStatistics.time_played_last_game = std::to_string(this->m_timeOut);
 			currentStatistics.time_played = std::to_string(std::stoi(currentStatistics.time_played) + this->m_timeOut);
 			currentStatistics.total_answers = std::to_string(std::stoi(currentStatistics.total_answers) + this->m_questions.size());
+			
+			// returned the updated statistics
 			return currentStatistics;
 		}
 	}
@@ -127,6 +135,7 @@ statisticsDB Game::getUserNewStatistics(LoggedUser user, statisticsDB currentSta
 
 bool Game::isUserInGame(LoggedUser user)
 {
+	// searches if the user is in the game or not in the game's player list.
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
 	{
 		if (iter->first.getUserName() == user.getUserName())
@@ -139,6 +148,7 @@ bool Game::isUserInGame(LoggedUser user)
 
 GameData Game::getUserData(LoggedUser user)
 {
+	// gets the current user's gamedata, which contains data related to his game performance
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
 	{
 		if (iter->first.getUserName() == user.getUserName())
@@ -149,6 +159,11 @@ GameData Game::getUserData(LoggedUser user)
 	return GameData();
 }
 
+/*
+returns a map containing all the players and their gamedata.
+input: None.
+output: the map of users and their game stats.
+*/
 std::map<LoggedUser, GameData> Game::getPlayers()
 {
 	return this->m_players;
@@ -156,6 +171,7 @@ std::map<LoggedUser, GameData> Game::getPlayers()
 
 bool Game::checkIfFinished()
 {
+	// check if every user finished his list of question
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
 	{
 		if (iter->second.isThereQuestions)

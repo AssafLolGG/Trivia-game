@@ -113,20 +113,21 @@ void Communicator::handleNewClient(SOCKET client_socket)
 				auto handlerID = it->second->GetRequestHandlerType();
 				RequestInfo info;
 				info.buffer = std::vector<uint8_t>();
-				info.id = -1;
-				if (handlerID == 3)
+				info.id = 0;
+
+				if (handlerID == ROOM_MEMBER_REQUEST_HANDLER_ID)
 				{
 					dynamic_cast<RoomMemberRequestHandler*>(it->second)->leaveGame(info, true);
 				}
-				if (handlerID == 2)
+				if (handlerID == MENU_REQUEST_HANDLER_ID)
 				{
 					dynamic_cast<MenuRequestHandler*>(it->second)->signout(info);
 				}
-				else if (handlerID == 4)
+				else if (handlerID == ROOM_ADMIN_REQUEST_HANDLER_ID)
 				{
 					dynamic_cast<RoomAdminRequestHandler*>(it->second)->closeGame(info, true);
 				}
-				else if (handlerID == 5)
+				else if (handlerID == GAME_REQUEST_HANDLER_ID)
 				{
 					dynamic_cast<GameRequestHandler*>(it->second)->leaveGame(info, true);
 				}

@@ -9,11 +9,13 @@ RequestResult LoginRequestHandler::login(RequestInfo& info)
     LoginRequest login_request = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
     LoginResponse login_response;
 
+	// login the user, and checks if the login attempt was successfully.
     login_response.status = this->m_login_manager.login(login_request.username, login_request.password) == true ? TRUE : FALSE;
 
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(login_response);
-    // checks if the the user managed to login succeessfully.
+    
+	// checks if the the user managed to login succeessfully.
     if (login_response.status == TRUE)
     {
         LoggedUser user(login_request.username);
@@ -35,10 +37,13 @@ RequestResult LoginRequestHandler::signup(RequestInfo& info)
 {
     SignupRequest signup_request = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
 	SignupResponse signup_response;
+	
+	// signs up the user, and checks if the sign up was successfully.
 	signup_response.status = this->m_login_manager.signup(signup_request.username, signup_request.password, signup_request.email, signup_request.address, signup_request.phone, signup_request.birthdate) == true ? TRUE : FALSE;
     RequestResult result;
     result.respone = JsonResponsePacketSerializer::serializeResponse(signup_response);
-    // checks if the the user managed to signup succeessfully.
+    
+	// checks if the the user managed to signup succeessfully.
     if (signup_response.status == TRUE)
     {
         result.new_handler = this->m_request_handler_factory.createMenuRequestHandler(LoggedUser(signup_request.username), this->m_socket);
@@ -75,18 +80,24 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
     RequestResult result;
 
     // checking type of request
-    if (info.id == LOGIN_CODE)
+    if (info.id == LOGIN_CODE) // login
     {
         result = this->login(info);
     }
-    else
+    else if(info.id == SIGNUP_CODE) // signup
     {
         result = this->signup(info);
     }
+
     return result;
 }
 
+/*
+function to get the type of the menu request handler's id.
+input: None.
+output: the id of the handler.
+*/
 int LoginRequestHandler::GetRequestHandlerType()
 {
-	return 1;
+	return LOGIN_REQUEST_HANDLER_ID;
 }

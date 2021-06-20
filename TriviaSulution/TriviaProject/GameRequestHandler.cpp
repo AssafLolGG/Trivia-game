@@ -102,12 +102,14 @@ RequestResult GameRequestHandler::leaveGame(RequestInfo info, bool is_exit_from_
     return result;
 }
 
+/* gets if the request coming from the user is relevent or not. */
 bool GameRequestHandler::isRequestRelevant(RequestInfo& info)
 {
     return info.id == GET_QUESTION_CODE || info.id == LEAVE_GAME_CODE ||
         info.id == GET_GAME_RESULTS_CODE || info.id == SUBMIT_ANSWER_CODE;
 }
 
+/* handles the user's requests related to his game. */
 RequestResult GameRequestHandler::handleRequest(RequestInfo& info)
 {
 	RequestResult result;
@@ -131,8 +133,13 @@ RequestResult GameRequestHandler::handleRequest(RequestInfo& info)
 	return result;
 }
 
+/*
+function to get the type of the request handler.
+input: None.
+output: the id of the handler.
+*/
 int GameRequestHandler::GetRequestHandlerType()
 {
-	return 5;
+	return GAME_REQUEST_HANDLER_ID;
 }
 

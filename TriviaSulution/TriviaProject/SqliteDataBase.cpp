@@ -330,6 +330,9 @@ std::vector<Question> SqliteDataBase::getAllQuestions()
 	std::string sql_statement = "SELECT * FROM Answers inner join Questions ON Answers.question_id = Questions.question_id;";
 	std::vector<Question> questionsVector = std::vector<Question>();
 	int res = sqlite3_exec(_db, sql_statement.c_str(), callbackQuestionsAndAnswers, &questionsVector, nullptr);
+	
+	// shuffles the list of questions!
+	std::random_shuffle(questionsVector.begin(), questionsVector.end());
 
 	return questionsVector;
 }
