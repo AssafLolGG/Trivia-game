@@ -24,17 +24,11 @@ TopFivePlayers StatisticsManager::getHighScore()
 	// pushing to the vector the highest scores.
 	try
 	{
-		top_five.top_score.push_back(topStatistics[0].highest_score);
-		top_five.top_score.push_back(topStatistics[1].highest_score);
-		top_five.top_score.push_back(topStatistics[2].highest_score);
-		top_five.top_score.push_back(topStatistics[3].highest_score);
-		top_five.top_score.push_back(topStatistics[4].highest_score);
-
-		top_five.top_players.push_back(top_users[0].username);
-		top_five.top_players.push_back(top_users[1].username);
-		top_five.top_players.push_back(top_users[2].username);
-		top_five.top_players.push_back(top_users[3].username);
-		top_five.top_players.push_back(top_users[4].username);
+		for (int i = 0; i < topStatistics.size() && i < 5; i++)
+		{
+			top_five.top_score.push_back(topStatistics[i].highest_score);
+			top_five.top_players.push_back(top_users[i].username);
+		}
 	}
 	catch (...)
 	{

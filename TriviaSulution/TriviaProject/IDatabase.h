@@ -57,5 +57,6 @@ public:
 	virtual std::vector<Question> getQuestions(int num_of_questions);
 	virtual std::vector<User> getTop5Players() = 0;
 	virtual std::vector<statisticsDB> getTopFiveScore() = 0;
+	virtual void updateStatistics(statisticsDB newStatistics) = 0;
 };
 

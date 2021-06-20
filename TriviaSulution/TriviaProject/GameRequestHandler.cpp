@@ -33,6 +33,12 @@ RequestResult GameRequestHandler::submitAnswer(RequestInfo info)
 		{
 			submitAnswer.status = this->m_game.getUserData(this->m_user).isThereQuestions == true ? STATUS_OK : STATUS_FAIL;
 			this->m_game.getQuestionForUser(this->m_user);
+
+			// update user's statistics
+			if (this->m_game.getUserData(this->m_user).isThereQuestions == false)
+			{
+				this->m_gameManager.updateStatistics(this->m_user);
+			}
 		}
 		else
 		{

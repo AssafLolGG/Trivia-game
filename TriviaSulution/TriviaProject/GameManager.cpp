@@ -1,9 +1,9 @@
 #include "GameManager.h"
 
-Game::Game(std::vector<string> users, std::vector<Question> questions)
+Game::Game(std::vector<string> users, std::vector<Question> questions, unsigned int gameTimeOut)
 {
 	this->m_questions = questions;
-
+	this->m_timeOut = gameTimeOut;
 	for (string user : users)
 	{
 		GameData gData = GameData();
@@ -103,6 +103,28 @@ void Game::removePlayer(LoggedUser User)
 	}
 }
 
+statisticsDB Game::getUserNewStatistics(LoggedUser user, statisticsDB currentStatistics)
+{
+	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
+	{
+		if (user.getUserName() == iter->first.getUserName())
+		{
+			currentStatistics.games_played = std::to_string(std::stoi(currentStatistics.games_played) + 1);
+			currentStatistics.questions_last_game = std::to_string(this->m_questions.size());
+			currentStatistics.right_answers = std::to_string(std::stoi(currentStatistics.right_answers) + iter->second.correctAnswerCount);
+			currentStatistics.score_last_game = std::to_string(iter->second.correctAnswerCount - iter->second.wrongAnswerCount);
+			if (std::stoi(currentStatistics.score_last_game) > std::stoi(currentStatistics.highest_score))
+			{
+				currentStatistics.highest_score = currentStatistics.score_last_game;
+			}
+			currentStatistics.time_played_last_game = std::to_string(this->m_timeOut);
+			currentStatistics.time_played = std::to_string(std::stoi(currentStatistics.time_played) + this->m_timeOut);
+			currentStatistics.total_answers = std::to_string(std::stoi(currentStatistics.total_answers) + this->m_questions.size());
+			return currentStatistics;
+		}
+	}
+}
+
 bool Game::isUserInGame(LoggedUser user)
 {
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
@@ -171,7 +193,7 @@ Game& GameManager::getGame(LoggedUser user)
 
 Game& GameManager::createGame(Room roomInGame)
 {
-	this->m_games.push_back(Game(roomInGame.getAllUsers(), this->m_database->getQuestions(roomInGame.GetRoomdata().numOfQuestionsInGame)));
+	this->m_games.push_back(Game(roomInGame.getAllUsers(), this->m_database->getQuestions(roomInGame.GetRoomdata().numOfQuestionsInGame), roomInGame.GetRoomdata().timePerQuestion));
 	return this->m_games.back();
 }
 
@@ -185,4 +207,10 @@ void GameManager::deleteGame(Game gameToRemove)
 			return;
 		}
 	}
+}
+
+void GameManager::updateStatistics(LoggedUser user)
+{
+	Game& userGame = this->getGame(user);
+	this->m_database->updateStatistics(userGame.getUserNewStatistics(user, this->m_database->getStatistics(this->m_database->usernameToID(user.getUserName()))));
 }

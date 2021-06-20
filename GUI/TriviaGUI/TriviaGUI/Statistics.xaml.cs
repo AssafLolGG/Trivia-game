@@ -37,8 +37,8 @@ namespace TriviaGUI
             // writing personal statistics by the order they were received
             this.player_id_text.Text = personal_statistics[0];
             this.games_played_text.Text = personal_statistics[1];
-            this.total_answers_text.Text = personal_statistics[2];
-            this.right_answers_text.Text = personal_statistics[3];
+            this.right_answers_text.Text = personal_statistics[2];
+            this.total_answers_text.Text = personal_statistics[3];
             this.likeability_text.Text = personal_statistics[4];
             this.potential_text.Text = personal_statistics[5];
             this.time_played_text.Text = personal_statistics[6];
@@ -46,7 +46,7 @@ namespace TriviaGUI
             this.score_last_game_text.Text = personal_statistics[8];
             this.number_of_future_partners_text.Text = personal_statistics[9];
             this.questions_last_game_text.Text = personal_statistics[10];
-            this.player_score_text.Text = " Your Score: " + personal_statistics[11].Replace("\r", "").Replace(" ", "");
+            this.player_score_text.Text = " Your highest score: " + personal_statistics[11].Replace("\r", "").Replace(" ", "");
         }
 
         /// <summary>
