@@ -38,11 +38,19 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo& info)
 }
 
 /* closing the game and the room */
-RequestResult RoomAdminRequestHandler::closeGame(RequestInfo& info)
+RequestResult RoomAdminRequestHandler::closeGame(RequestInfo& info, bool is_exit_from_program)
 {
 	Room* the_room = this->m_room_manager.getRoom(room_id);
 	RequestResult result;
-	result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
+	if (!is_exit_from_program)
+	{
+		result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
+	}
+	else
+	{
+		result.new_handler = this->m_handler_factory.createLoginRequestHandler(this->m_client);
+		this->m_handler_factory.getLoginManager().logout(this->m_user.getUserName());
+	}
 	CloseRoomResponse close_room;
 
 	if (room_id != INVALID_INDEX && the_room != nullptr) // checking if the room id is valid, getting the current room for the server and checking if the room exists
@@ -147,3 +155,5 @@ int RoomAdminRequestHandler::GetRequestHandlerType()
 {
 	return 4;
 }
+
+

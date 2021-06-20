@@ -26,6 +26,6 @@ public:
 	bool isRequestRelevant(RequestInfo& info) override;
 	RequestResult handleRequest(RequestInfo& info) override;
 	int GetRequestHandlerType() override;
-	RequestResult leaveGame(RequestInfo& info);
+	RequestResult leaveGame(RequestInfo& info, bool is_exit_from_program = false);
 };
 

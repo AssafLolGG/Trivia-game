@@ -1,11 +1,19 @@
 #include "RoomMemberRequestHandler.h"
 
 /**/
-RequestResult RoomMemberRequestHandler::leaveGame(RequestInfo& info)
+RequestResult RoomMemberRequestHandler::leaveGame(RequestInfo& info, bool is_exit_from_program)
 {
 	Room* the_room = this->m_room_manager.getRoom(room_id);
 	RequestResult result;
-	result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
+	if (!is_exit_from_program)
+	{
+		result.new_handler = this->m_handler_factory.createMenuRequestHandler(this->m_user, this->m_client);
+	}
+	else
+	{
+		result.new_handler = this->m_handler_factory.createLoginRequestHandler(this->m_client);
+		this->m_handler_factory.getLoginManager().logout(this->m_user.getUserName());
+	}
 	LeaveRoomResponse leave_room;
 
 	if (room_id != INVALID_INDEX && the_room != NULL)

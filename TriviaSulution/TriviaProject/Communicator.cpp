@@ -116,7 +116,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 				info.id = -1;
 				if (handlerID == 3)
 				{
-					dynamic_cast<RoomMemberRequestHandler*>(it->second)->leaveGame(info);
+					dynamic_cast<RoomMemberRequestHandler*>(it->second)->leaveGame(info, true);
 				}
 				if (handlerID == 2)
 				{
@@ -124,12 +124,14 @@ void Communicator::handleNewClient(SOCKET client_socket)
 				}
 				else if (handlerID == 4)
 				{
-					dynamic_cast<RoomAdminRequestHandler*>(it->second)->closeGame(info);
+					dynamic_cast<RoomAdminRequestHandler*>(it->second)->closeGame(info, true);
 				}
 				else if (handlerID == 5)
 				{
-					dynamic_cast<GameRequestHandler*>(it->second)->leaveGame(info);
+					dynamic_cast<GameRequestHandler*>(it->second)->leaveGame(info, true);
 				}
+
+			
 				this->m_clients.erase(it);
 				closesocket(client_socket); // closing the client socket
 

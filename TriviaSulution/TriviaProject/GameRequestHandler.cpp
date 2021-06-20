@@ -80,7 +80,7 @@ RequestResult GameRequestHandler::getGameResults(RequestInfo info)
     return result;
 }
 
-RequestResult GameRequestHandler::leaveGame(RequestInfo info)
+RequestResult GameRequestHandler::leaveGame(RequestInfo info, bool is_exit_from_program)
 {
     RequestResult result;
     LeaveGameResponse leaveGame;
@@ -88,8 +88,16 @@ RequestResult GameRequestHandler::leaveGame(RequestInfo info)
     this->m_game.removePlayer(this->m_user);
     leaveGame.status = STATUS_OK;
 
-    result.new_handler = this->m_handlerFactory.createMenuRequestHandler(this->m_user, this->m_socket);
-    result.respone = JsonResponsePacketSerializer::serializeResponse(leaveGame);
+	if (!is_exit_from_program)
+	{
+		result.new_handler = this->m_handlerFactory.createMenuRequestHandler(this->m_user, this->m_socket);
+	}
+	else
+	{
+		result.new_handler = this->m_handlerFactory.createLoginRequestHandler(this->m_socket);
+		this->m_handlerFactory.getLoginManager().logout(this->m_user.getUserName());
+	}
+	result.respone = JsonResponsePacketSerializer::serializeResponse(leaveGame);
 
     return result;
 }
@@ -127,3 +135,4 @@ int GameRequestHandler::GetRequestHandlerType()
 {
 	return 5;
 }
+
