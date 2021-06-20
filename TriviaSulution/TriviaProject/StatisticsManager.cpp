@@ -55,6 +55,7 @@ std::vector<std::string> StatisticsManager::getUserStatistics(std::string userna
 
 	statisticsDB stats = this->m_database->getStatistics(user_id);
 
+	// pushes the statistics stats to vector
 	statisticsVector.push_back(std::to_string(user_id));
 	statisticsVector.push_back(stats.games_played);
 	statisticsVector.push_back(stats.right_answers);

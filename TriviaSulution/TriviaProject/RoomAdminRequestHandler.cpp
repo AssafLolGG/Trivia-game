@@ -166,7 +166,6 @@ RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo& info)
 	return result;
 }
 
-
 /*
 function to get the type of the request handler.
 input: None.

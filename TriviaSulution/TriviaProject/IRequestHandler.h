@@ -24,6 +24,7 @@ struct RequestInfo;
 struct RequestResult;
 struct LoginRequest;
 struct signupRequest;
+struct GetRoomDataResponse;
 
 struct RequestInfo
 {

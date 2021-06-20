@@ -93,7 +93,7 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo& info)
 }
 
 /*
-function to get the type of the menu request handler's id.
+function to get the type of the request handler.
 input: None.
 output: the id of the handler.
 */
