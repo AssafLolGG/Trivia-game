@@ -102,7 +102,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		}
 	}
 	
-	catch (...)
+	catch (...) // if the connection broke
 	{
 		std::cout << "connection stopped" << std::endl;
 

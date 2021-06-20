@@ -169,6 +169,13 @@ std::map<LoggedUser, GameData> Game::getPlayers()
 	return this->m_players;
 }
 
+/*
+function that checks if the game is finished or not.
+input: None.
+output:
+true - the game finished.
+false - the game didn't finish.
+*/
 bool Game::checkIfFinished()
 {
 	// check if every user finished his list of question
@@ -183,17 +190,31 @@ bool Game::checkIfFinished()
 }
 
 
-
+/*
+ctor function of game manager class.
+input: the database of the server.
+output: new instance of gameManager.
+*/
 GameManager::GameManager(IDatabase* db)
 {
 	this->m_database = db;
 }
 
+/*
+function that returns all the games existed.
+input: None.
+output: vector of games containing all the games.
+*/
 std::vector<Game> GameManager::getGames() const
 {
 	return this->m_games;
 }
 
+/*
+function that gets the game a user is currently in.
+input: the logged user instance of the user.
+output: the game the user's currently in.
+*/
 Game& GameManager::getGame(LoggedUser user)
 {
 	for (Game& game : this->m_games)
@@ -205,14 +226,22 @@ Game& GameManager::getGame(LoggedUser user)
 	}
 }
 
-
-
+/*
+function that creates a game.
+input: the room that is creating a game.
+output: the game, the function created for the room.
+*/
 Game& GameManager::createGame(Room roomInGame)
 {
 	this->m_games.push_back(Game(roomInGame.getAllUsers(), this->m_database->getQuestions(roomInGame.GetRoomdata().numOfQuestionsInGame), roomInGame.GetRoomdata().timePerQuestion));
 	return this->m_games.back();
 }
 
+/*
+function that deletes a game.
+input: the game that needs to be deleted by the caller.
+output: None.
+*/
 void GameManager::deleteGame(Game gameToRemove)
 {
 	for (auto iter = this->m_games.begin(); iter != this->m_games.end(); iter++)
@@ -225,6 +254,12 @@ void GameManager::deleteGame(Game gameToRemove)
 	}
 }
 
+/*
+function that updates user statistics, after a certain game
+the user was in, ended.
+input: the user's logged user instance.
+output: None.
+*/
 void GameManager::updateStatistics(LoggedUser user)
 {
 	Game& userGame = this->getGame(user);

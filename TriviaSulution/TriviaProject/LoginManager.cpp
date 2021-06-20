@@ -24,6 +24,11 @@ std::string LoggedUser::getUserName() const
     return this->_username;
 }
 
+/*
+overriding < operator function.
+input: other logged user.
+output: if this logged user < other logged user.
+*/
 bool LoggedUser::operator<(const LoggedUser& other) const
 {
 	return this->getUserName() < other.getUserName();
@@ -49,6 +54,7 @@ LoginManager::LoginManager(IDatabase* db)
 {
     this->_db_access = db;
 }
+
 bool LoginManager::signup(std::string username, std::string password, std::string email, std::string address, std::string phone, std::string birthday)
 {
 	// gets the street, appartment, city separated by ',' in address.

@@ -99,9 +99,12 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetPersonal
 	return getCompleteMessage(GET_STATISTICS_CODE, jsonSerialized);
 }
 
+/* serialize response for get-room-data request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomDataResponse roomData)
 {
 	json responseJson;
+
+	// insert the room data into the json.
 	responseJson["status"] = roomData.status;
 	responseJson["id"] = roomData.id;
 	responseJson["name"] = roomData.name;
@@ -115,83 +118,108 @@ std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetRoomData
 	return getCompleteMessage(GET_ROOMDATA_CODE, jsonSerialized);
 }
 
+/* serialize response for getting top five players request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(TopFivePlayers top_five)
 {
 	json responseJson;
+
 	responseJson["players"] = stringVectorToString(top_five.top_players);
 	responseJson["score"] = stringVectorToString(top_five.top_score);
+	
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(GET_TOP_FIVE_CODE, jsonSerialized);
 }
 
+/* serialize response for closing a room request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(CloseRoomResponse closeRoom)
 {
 	json responseJson;
+
 	responseJson["status"] = closeRoom.status;
+
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(CLOSE_ROOM_CODE, jsonSerialized);
 }
 
+/* serialize response for starting a room request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(StartRoomResponse startRoom)
 {
 	json responseJson;
+
 	responseJson["status"] = startRoom.status;
+
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(START_ROOM_CODE, jsonSerialized);
 }
 
+/* serialize response for leaving a room request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LeaveRoomResponse leaveRoom)
 {
 	json responseJson;
+
 	responseJson["status"] = leaveRoom.status;
+	
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(LEAVE_ROOM_CODE, jsonSerialized);
 }
 
+/* serialize response for getting a game's results request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetGameResultsResponse getGameResults)
 {
 	json responseJson;
+
 	responseJson["status"] = getGameResults.status;
 	responseJson["results"] = getGameResults.results;
+	
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(GET_GAME_RESULTS_CODE, jsonSerialized);
 }
 
+/* serialize response for submiting an answer request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(SubmitAnswerResponse submitAnswer)
 {
 	json responseJson;
+
 	responseJson["status"] = submitAnswer.status;
+	
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(SUBMIT_ANSWER_CODE, jsonSerialized);
 }
 
+/* serialize response for getting question request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(GetQuestionResponse getQuestion)
 {
 	json responseJson;
+
 	responseJson["status"] = getQuestion.status;
 	responseJson["question"] = getQuestion.question;
 	responseJson["answers"] = getQuestion.Answers;
+
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(GET_QUESTION_CODE, jsonSerialized);
 }
 
+/* serialize response for leaving a game request */
 std::vector<uint8_t> JsonResponsePacketSerializer::serializeResponse(LeaveGameResponse leaveGame)
 {
 	json responseJson;
+
 	responseJson["status"] = leaveGame.status;
+
 	std::string jsonSerialized = responseJson.dump();
 
 	return getCompleteMessage(LEAVE_GAME_CODE, jsonSerialized);
 }
 
 
+/* function that converts player result to json */
 void to_json(json& j, const PlayerResults& result)
 {
 	j = 
@@ -251,36 +279,55 @@ string roomDataToString(std::vector<RoomData> rooms)
 string stringVectorToString(std::vector<string> strings)
 {
 	string str = "";
-	string temp;
+	const string devidor = ", ";
 
 	for (int i = 0; i < strings.size(); i++)
 	{
-		str += strings[i] + ", ";
+		str += strings[i] + devidor;
 	}
 
 	if (str != "")
 	{
-		str.erase(str.size() - 2);
+		str.erase(str.size() - devidor.size());
 	}
 	return str;
 }
 
+/*
+function that convert a vector of roomdata to string.
+input: the vector of roomdata.
+output: the string that is all the members of the vector connected with ", " as a devidor.
+*/
 string roomDataVectorToRoomIdString(std::vector<RoomData> rooms)
 {
 	std::vector<string> rooms_id_vector;
+
+	// gets all the id of the rooms into string vector.
 	for (auto iter = rooms.begin(); iter != rooms.end(); iter++)
 	{
 		rooms_id_vector.push_back(std::to_string(iter->id));
 	}
+
+	// returns all the rooms id, in a string.
 	return stringVectorToString(rooms_id_vector);
 }
 
+/*
+function that convert answers vector to string.
+input: vector of answers.
+output: the string which has all the members of the vector connected
+with a devidor.
+*/
 string answerVectorToString(std::vector<Answer> answers)
 {
 	std::vector<string> answers_vector;
+
+	// gets all the answers text.
 	for (auto iter = answers.begin(); iter != answers.end(); iter++)
 	{
 		answers_vector.push_back(iter->answerText);
 	}
+
+	// returns all the answers concated and devided by ", "
 	return stringVectorToString(answers_vector);
 }
