@@ -53,19 +53,15 @@ void Game::getQuestionForUser(LoggedUser User)
 
 	if (userIter != this->m_players.end())
 	{
-		if (userIter->second.currentQuestionID + 1 < this->m_questions.size())
+		if ((userIter->second.currentQuestionID + 1) < this->m_questions.size())
 		{
 			userIter->second.currentQuestionID++;
 			userIter->second.currentQuestion = this->m_questions[userIter->second.currentQuestionID];
 		}
-		else
-		{
-			userIter->second.isThereQuestions = false;
-		}
 	}
 }
 
-void Game::submitAnswer(LoggedUser User, string answer)
+bool Game::submitAnswer(LoggedUser User, string answer)
 {
 	auto userIter = this->m_players.end();
 	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
@@ -86,7 +82,13 @@ void Game::submitAnswer(LoggedUser User, string answer)
 		{
 			userIter->second.wrongAnswerCount++;
 		}
+		if ((userIter->second.currentQuestionID + 1) >= this->m_questions.size())
+		{
+			userIter->second.isThereQuestions = false;
+		}
+		return true;
 	}
+	return false;
 }
 
 void Game::removePlayer(LoggedUser User)
@@ -132,22 +134,14 @@ std::map<LoggedUser, GameData> Game::getPlayers()
 
 bool Game::checkIfFinished()
 {
-	if (this->isFinished)
+	for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
 	{
-		return true;
-	}
-	else
-	{
-		for (auto iter = this->m_players.begin(); iter != this->m_players.end(); iter++)
+		if (iter->second.isThereQuestions)
 		{
-			if (iter->second.isThereQuestions)
-			{
-				return false;
-			}
+			return false;
 		}
-		this->isFinished = true;
-		return true;
 	}
+	return true;
 }
 
 

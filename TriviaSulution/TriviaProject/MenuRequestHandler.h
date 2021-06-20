@@ -14,7 +14,6 @@ class MenuRequestHandler : public IRequestHandler
 	StatisticsManager& m_statistics_manager;
 	RequestHandlerFactory& m_handler_factory;
 
-	RequestResult signout(RequestInfo info);
 	RequestResult getRooms(RequestInfo info);
 	RequestResult getPlayersInRoom(RequestInfo info);
 	RequestResult getPersonalStats(RequestInfo info);
@@ -32,5 +31,6 @@ public:
 	bool isRequestRelevant(RequestInfo& info) override;
 	RequestResult handleRequest(RequestInfo& info) override;
 	int GetRequestHandlerType() override;
+	RequestResult signout(RequestInfo info);
 };
 

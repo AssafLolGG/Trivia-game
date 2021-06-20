@@ -16,7 +16,6 @@ RequestResult GameRequestHandler::getQuestion(RequestInfo info)
     result.new_handler = new GameRequestHandler(*this);
     result.respone = JsonResponsePacketSerializer::serializeResponse(getQuestion);
     
-	this->m_game.getQuestionForUser(this->m_user);
 
     return result;
 }
@@ -29,9 +28,17 @@ RequestResult GameRequestHandler::submitAnswer(RequestInfo info)
 
     if (infoDitails.answerID >= 1 && infoDitails.answerID <= this->m_game.getUserData(this->m_user).currentQuestion.answers.size())
     {
-        this->m_game.submitAnswer(this->m_user, this->m_game.getUserData(this->m_user).currentQuestion.answers[infoDitails.answerID - 1].answerText);
-        submitAnswer.status = this->m_game.getUserData(this->m_user).isThereQuestions == true ? STATUS_OK : STATUS_FAIL;
-    }
+        bool isAnswerd = this->m_game.submitAnswer(this->m_user, this->m_game.getUserData(this->m_user).currentQuestion.answers[infoDitails.answerID - 1].answerText);
+		if (isAnswerd)
+		{
+			submitAnswer.status = this->m_game.getUserData(this->m_user).isThereQuestions == true ? STATUS_OK : STATUS_FAIL;
+			this->m_game.getQuestionForUser(this->m_user);
+		}
+		else
+		{
+			submitAnswer.status = STATUS_FAIL;
+		}
+	}
     else
     {
         submitAnswer.status = STATUS_FAIL;
@@ -46,20 +53,21 @@ RequestResult GameRequestHandler::getGameResults(RequestInfo info)
 {
     RequestResult result;
     GetGameResultsResponse getGameResults;
-    
+	bool gameFinished = this->m_game.checkIfFinished();
     getGameResults.results = std::vector<PlayerResults>();
-
-    for (auto player : this->m_game.getPlayers())
-    {
-        PlayerResults playerResult;
-        playerResult.averageAnswerTime = player.second.averageAnswerTime;
-        playerResult.CorrectAnswersCount = player.second.correctAnswerCount;
-        playerResult.WrongAnswerCount = player.second.wrongAnswerCount;
-        playerResult.Username = player.first.getUserName();
-		getGameResults.results.push_back(playerResult);
-    }
-    
-    getGameResults.status = this->m_game.checkIfFinished() ? STATUS_OK : STATUS_FAIL;
+	if (gameFinished)
+	{
+		for (auto player : this->m_game.getPlayers())
+		{
+			PlayerResults playerResult;
+			playerResult.averageAnswerTime = player.second.averageAnswerTime;
+			playerResult.CorrectAnswersCount = player.second.correctAnswerCount;
+			playerResult.WrongAnswerCount = player.second.wrongAnswerCount;
+			playerResult.Username = player.first.getUserName();
+			getGameResults.results.push_back(playerResult);
+		}
+	}
+    getGameResults.status = gameFinished ? STATUS_OK : STATUS_FAIL;
     result.new_handler = new GameRequestHandler(*this);
     result.respone = JsonResponsePacketSerializer::serializeResponse(getGameResults);
 

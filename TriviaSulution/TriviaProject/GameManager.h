@@ -35,7 +35,6 @@ struct GameData
 class Game
 {
 private:
-	bool isFinished = false;
 	std::vector<Question> m_questions;
 	std::map<LoggedUser, GameData> m_players;
 
@@ -43,7 +42,7 @@ public:
 	Game(std::vector<string> users, std::vector<Question> questions);
 	bool operator==(const Game& other) const;
 	void getQuestionForUser(LoggedUser User);
-	void submitAnswer(LoggedUser User, string answer);
+	bool submitAnswer(LoggedUser User, string answer);
 	void removePlayer(LoggedUser User);
 	bool isUserInGame(LoggedUser);
 	GameData getUserData(LoggedUser user);

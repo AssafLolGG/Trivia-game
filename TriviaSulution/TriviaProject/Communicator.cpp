@@ -118,6 +118,10 @@ void Communicator::handleNewClient(SOCKET client_socket)
 				{
 					dynamic_cast<RoomMemberRequestHandler*>(it->second)->leaveGame(info);
 				}
+				if (handlerID == 2)
+				{
+					dynamic_cast<MenuRequestHandler*>(it->second)->signout(info);
+				}
 				else if (handlerID == 4)
 				{
 					dynamic_cast<RoomAdminRequestHandler*>(it->second)->closeGame(info);

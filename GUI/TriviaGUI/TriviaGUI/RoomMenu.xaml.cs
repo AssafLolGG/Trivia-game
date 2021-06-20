@@ -150,10 +150,6 @@ namespace TriviaGUI
                 {
                 }
             }
-            else
-            {
-                this.refresh_room_list.Start();
-            }
             
         }
 

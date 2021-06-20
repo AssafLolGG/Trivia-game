@@ -187,47 +187,14 @@ namespace TriviaGUI
                 this.Dispatcher.Invoke(() =>
                 {
                     Waiting_TB.Visibility = Visibility.Hidden;
+                    timer_TB.Visibility = Visibility.Hidden;
                 });
-
-                serverConnection = (TcpClient)App.Current.Properties["server"];
-                Array.Clear(client_message, 0, client_message.Length);
-
-                client_message[0] = 14;
-                serverConnection.GetStream().Write(client_message, 0, 1);
-
-                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
-
-                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
-                json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-                playersResult resultsInList = new playersResult();
-                Newtonsoft.Json.Linq.JArray results = (Newtonsoft.Json.Linq.JArray)json_returned["results"];
-
-                for (int i = 0; i < results.Count; i++)
+                while (!getGameResults())
                 {
-                    Newtonsoft.Json.Linq.JToken currentResult = results[i];
-                    playerResult result = new playerResult();
-                    result.Username = currentResult["username"].ToString();
-                    result.WrongAnswerCount = int.Parse(currentResult["num_of_wrong_answers"].ToString());
-                    result.CorrectAnswersCount = int.Parse(currentResult["num_of_correct_answers"].ToString());
-                    result.averageAnswerTime = int.Parse(currentResult["average_answer_time"].ToString());
-                    resultsInList.results.Add(result);
+                    Thread.Sleep(1000);
                 }
 
-                foreach (playerResult p in resultsInList.results)
-                {
-                    string currentResult = $"name: {p.Username}\r\ncorrect answers: {p.CorrectAnswersCount}\r\n";
-                    currentResult += $"wrong answers: {p.WrongAnswerCount}\r\nAverage time to answer: {p.averageAnswerTime}";
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        ListBoxItem item = new ListBoxItem();
-                        item.Content = currentResult;
-                        this.Results_list.Items.Add(item);
-                    });
-                }
-                this.Dispatcher.Invoke(() =>
-                {
-                    this.Results_list.Visibility = Visibility.Visible;
-                });
+                
             }
             catch (Exception)
             {
@@ -276,6 +243,61 @@ namespace TriviaGUI
             rmenu.Show();
             this.Close();
 
+        }
+
+        bool getGameResults()
+        {
+            Newtonsoft.Json.Linq.JObject json_returned;
+            byte[] client_message = {0};
+            byte[] server_message = { };
+            TcpClient serverConnection = (TcpClient)App.Current.Properties["server"];
+            Array.Clear(client_message, 0, client_message.Length);
+
+            client_message[0] = 14;
+            serverConnection.GetStream().Write(client_message, 0, 1);
+
+            while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+
+            server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
+            json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
+            if (int.Parse(json_returned["status"].ToString()) == 1)
+            {
+                playersResult resultsInList = new playersResult();
+
+                Newtonsoft.Json.Linq.JArray results = (Newtonsoft.Json.Linq.JArray)json_returned["results"];
+
+                for (int i = 0; i < results.Count; i++)
+                {
+                    Newtonsoft.Json.Linq.JToken currentResult = results[i];
+                    playerResult result = new playerResult();
+                    result.Username = currentResult["username"].ToString();
+                    result.WrongAnswerCount = int.Parse(currentResult["num_of_wrong_answers"].ToString());
+                    result.CorrectAnswersCount = int.Parse(currentResult["num_of_correct_answers"].ToString());
+                    result.averageAnswerTime = int.Parse(currentResult["average_answer_time"].ToString());
+                    resultsInList.results.Add(result);
+                }
+
+                foreach (playerResult p in resultsInList.results)
+                {
+                    string currentResult = $"name: {p.Username}\r\ncorrect answers: {p.CorrectAnswersCount}\r\n";
+                    currentResult += $"wrong answers: {p.WrongAnswerCount}\r\nAverage time to answer: {p.averageAnswerTime}";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        ListBoxItem item = new ListBoxItem();
+                        item.Content = currentResult;
+                        this.Results_list.Items.Add(item);
+                    });
+                }
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.Results_list.Visibility = Visibility.Visible;
+                });
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
