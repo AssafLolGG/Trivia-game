@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-       Title="LogIn_screen" Height="1000" Width="800" MaxHeight="1000" MaxWidth="800"
+       Title="LogIn_screen" Height="1000" Width="800" MaxHeight="1000" MaxWidth="800" MinHeight="1000" MinWidth="800"
         Background="BurlyWood">
     <Grid RenderTransformOrigin="0.574,0.323">
         <Grid.ColumnDefinitions>

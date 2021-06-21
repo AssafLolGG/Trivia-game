@@ -142,7 +142,7 @@ namespace TriviaGUI
                             if (server_message[0] == 5)
                             {
                                 Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-                                players = json_returned["players"].ToString().Split(',');
+                                players = json_returned["players"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                                 if (players != null)
                                 {

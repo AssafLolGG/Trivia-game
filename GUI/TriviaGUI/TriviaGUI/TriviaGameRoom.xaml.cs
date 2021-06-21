@@ -106,7 +106,6 @@ namespace TriviaGUI
 
                 for (int i = 0; i < questionsLeft; i++)
                 {
-                    Thread.Sleep(1000);
                     App.Current.Properties["TimeLeft"] = time_out;
                     serverConnection.GetStream().Write(client_message, 0, 1);
                     while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
