@@ -189,11 +189,13 @@ Room* RoomManager::getRoom(unsigned int id)
 	}
 }
 
+/* returns all the rooms. */
 std::map<unsigned int, Room>& RoomManager::getAllRooms()
 {
 	return this->m_rooms;
 }
 
+/* returns the amount of rooms */
 int RoomManager::getRoomCount() const
 {
     return this->m_rooms.size();

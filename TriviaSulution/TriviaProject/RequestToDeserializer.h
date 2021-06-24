@@ -41,3 +41,8 @@ struct GetRoomDataRequest
 {
 	int room_id;
 };
+
+struct SubmitAnswerRequest
+{
+	int answerID;
+};

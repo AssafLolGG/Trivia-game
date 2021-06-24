@@ -76,11 +76,11 @@ namespace TriviaGUI
                 App.Current.Properties["IsPlayingMusic"] = false;
             }
 
-            Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
+            //Thread connectThreadTwo = new Thread(new ThreadStart(PlaySound));
 
-            App.Current.Properties["ThreadOfSound"] = connectThreadTwo;
-            App.Current.Properties["ThreadOfConnecting"] = connectThreadTwo;
-            connectThreadTwo.Start();
+            //App.Current.Properties["ThreadOfSound"] = connectThreadTwo;
+            App.Current.Properties["ThreadOfConnecting"] = connect_thread;
+            //connectThreadTwo.Start();
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace TriviaGUI
                     byte[] data_encoded = ServerFunctions.ServerFunctions.getCompleteMsg(1, json_byted);
 
                     serverConnection.GetStream().Write(data_encoded, 0, 1000);
-                    System.Threading.Thread.Sleep(100);
+                    while (serverConnection.Available == 0) ;
 
                     byte[] serverOutput = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection);
                     Newtonsoft.Json.Linq.JObject dis = ServerFunctions.ServerFunctions.diserallizeResponse(serverOutput);

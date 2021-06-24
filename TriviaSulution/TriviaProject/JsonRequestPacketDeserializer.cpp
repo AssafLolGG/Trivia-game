@@ -83,6 +83,7 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(st
 
     result = JsonRequestPacketDeserializer::getJson(buffer);
 
+	// deserialializing ditails related to the room to be created.
     create_room.room_name = result.value(ROOM_NAME, "");
     create_room.max_users = std::stoi(result.value(MAX_USERS_IN_ROOM, ""));
     create_room.question_count = std::stoi(result.value(QUESTION_COUNT, ""));
@@ -91,6 +92,7 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(st
     return create_room;
 }
 
+/* Deserialize get room data request */
 GetRoomDataRequest JsonRequestPacketDeserializer::deserializeRoomDataRequest(std::vector<uint8_t> buffer)
 {
 	json result;
@@ -99,4 +101,14 @@ GetRoomDataRequest JsonRequestPacketDeserializer::deserializeRoomDataRequest(std
 
 	roomDataReq.room_id = std::stoi(result.value(ROOM_ID, ""));
 	return roomDataReq;
+}
+
+/* Deserialize submit answer request */
+SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(std::vector<uint8_t> buffer)
+{
+	json result;
+	SubmitAnswerRequest submitAnswerReq;
+	result = JsonRequestPacketDeserializer::getJson(buffer);
+	submitAnswerReq.answerID = std::stoi(result.value(ANSWER_ID, ""));
+	return submitAnswerReq;
 }

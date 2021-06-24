@@ -4,7 +4,7 @@
     and initaliize his attribiuts.
     input: a database.
     output: an object of RequestHandlerFactory. */
-RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_login_manager(LoginManager(db))
+RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_login_manager(LoginManager(db)), m_game_manager(GameManager(db))
 {
     this->m_database = db;
     this->m_statistics_manager = StatisticsManager(this->m_database);
@@ -32,17 +32,19 @@ MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler(LoggedUser u
     return new MenuRequestHandler(this->m_room_manager, this->m_statistics_manager, *this, user, client_socket);
 }
 
+/* function that creates room admin requset handler. */
 RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, int room_id, SOCKET client_socket)
 {
 	return new RoomAdminRequestHandler(this->m_room_manager, room_id, *this, user, client_socket);
 }
 
+/* function that creates room member requset handler. */
 RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, int room_id, SOCKET client_socket)
 {
 	return new RoomMemberRequestHandler(this->m_room_manager, room_id, *this, user, client_socket);
 }
 
-/* getter to static manager */
+/* getter to statistics manager */
 StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 {
     return this->m_statistics_manager;
@@ -52,4 +54,16 @@ StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 RoomManager& RequestHandlerFactory::getRoomManager()
 {
     return this->m_room_manager;
+}
+
+/* function that creates game requset handler. */
+GameRequestHandler* RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game, SOCKET client_soc)
+{
+    return new GameRequestHandler(this->m_game_manager, game, client_soc, *this, user);
+}
+
+/* function to get the game manager of the request handler factory. */
+GameManager& RequestHandlerFactory::getGameManager()
+{
+    return this->m_game_manager;
 }

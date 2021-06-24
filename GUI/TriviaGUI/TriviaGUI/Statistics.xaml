@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TriviaGUI"
         mc:Ignorable="d"
-        Title="Statistics" Height="1000" Width="800" Background="#C39BD3">
+        Title="Statistics" Height="1000" Width="800" MaxHeight="1000" MaxWidth="800" MinHeight="1000" MinWidth="800" Background="#C39BD3">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -55,7 +55,7 @@
                 <TextBlock Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Player Id:</TextBlock>
                 <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Games Played:</TextBlock>
                 <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Right Answers:</TextBlock>
-                <TextBlock Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Right Answers:</TextBlock>
+                <TextBlock Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Total Answers:</TextBlock>
                 <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Likeability:</TextBlock>
                 <TextBlock Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Potential:</TextBlock>
                 <TextBlock Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="#515A5A">Time Played:</TextBlock>

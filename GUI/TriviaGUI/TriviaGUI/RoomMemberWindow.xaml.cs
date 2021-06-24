@@ -51,6 +51,9 @@ namespace TriviaGUI
             string question_num = room_data["questionsNumber"].ToString();
             string time_per_question = room_data["timePerQuestion"].ToString();
 
+            App.Current.Properties["numOfQuestions"] = (int.Parse(room_data["questionsNumber"].ToString()) + 1).ToString();
+            App.Current.Properties["timeOutPerQuestion"] = room_data["timePerQuestion"].ToString();
+
             prepareText(room_id, room_name, max_players, question_num, time_per_question);
         }
 
@@ -139,7 +142,7 @@ namespace TriviaGUI
                             if (server_message[0] == 5)
                             {
                                 Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-                                players = json_returned["players"].ToString().Split(',');
+                                players = json_returned["players"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                                 if (players != null)
                                 {
@@ -159,6 +162,8 @@ namespace TriviaGUI
                             else if (server_message[0] == 11) // if the room closed
                             {
                                 App.Current.Properties["isInRoom"] = false;
+                                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
                                 RoomMenu rmenu = new RoomMenu();
                                 rmenu.Show();
 
@@ -167,20 +172,31 @@ namespace TriviaGUI
                             }
                             else if (server_message[0] == 12) // if the room started
                             {
-                                Thread t = new Thread(new ThreadStart(() => MessageBox.Show("The Room Started")));
-                                t.Start();
+                                App.Current.Properties["isInRoom"] = false;
+                                while (serverConnection.Available == 0) ; // wait until a new message arrived from the server
+                                server_message = ServerFunctions.ServerFunctions.ReadServerMessage(serverConnection); // reading json from server
+
+                                byte[] fixing_message = { 0 };
+                                serverConnection.GetStream().Write(fixing_message, 0, 1);
+
+                                TriviaGameRoom triviaGame = new TriviaGameRoom();
+                                triviaGame.Show();
+
+                                this.Close();
+
+                                return;
                             }
                         });
-
+                        if(server_message[0] == 12 || server_message[0] == 11)
+                        {
+                            return;
+                        }
+                        Thread.Sleep(3000);
                     }
                 }
                 catch(Exception E)
                 {
                     App.Current.Properties["isInRoom"] = false;
-                    RoomMenu rmenu = new RoomMenu();
-                    rmenu.Show();
-
-                    this.Close();
                     return;
                 }
                 finally
@@ -188,7 +204,6 @@ namespace TriviaGUI
 
                 }
 
-                Thread.Sleep(3000);
             }
         }
     }

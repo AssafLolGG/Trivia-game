@@ -8,8 +8,14 @@
 #include "Converter.h"
 #include "JsonResponsePacketSerializer.h"
 #include "JsonRequestPacketDeserializer.h"
+
 #define STATUS_FAIL 0
 #define STATUS_OK 1
+#define LOGIN_REQUEST_HANDLER_ID 1
+#define MENU_REQUEST_HANDLER_ID 2
+#define ROOM_MEMBER_REQUEST_HANDLER_ID 3
+#define ROOM_ADMIN_REQUEST_HANDLER_ID 4
+#define GAME_REQUEST_HANDLER_ID 5
 
 using json = nlohmann::json;
 
@@ -18,6 +24,7 @@ struct RequestInfo;
 struct RequestResult;
 struct LoginRequest;
 struct signupRequest;
+struct GetRoomDataResponse;
 
 struct RequestInfo
 {
@@ -40,5 +47,6 @@ class IRequestHandler
 public:
 	virtual bool isRequestRelevant(RequestInfo& info) = 0;
 	virtual RequestResult handleRequest(RequestInfo& info) = 0;
+	virtual int GetRequestHandlerType() = 0;
 };
 

@@ -1,5 +1,11 @@
 #include "ServerUtilities.h"
 
+/*
+function that recieves the message from the client.
+input: the socket of the client, and a buffer to store within the message
+from the client through the socket.
+output: if the message recieved or no from the socket.
+*/
 bool receiveMassageFromClient(SOCKET& client_socket, char* message_buffer)
 {
 	int received = recv(client_socket, message_buffer, BUFFER_CAPACITY - 1, NULL);
@@ -19,6 +25,12 @@ bool receiveMassageFromClient(SOCKET& client_socket, char* message_buffer)
 	return true;
 }
 
+/*
+function that creates request info out of buffer sent by a socket.
+input: the buffer sent in the socket.
+output: the request info describing the request the user 
+requested.
+*/
 RequestInfo createRequestInfo(std::vector<uint8_t>& buffer_vector)
 {
 	// checks the wanted request from user, to send a proper response.
@@ -32,20 +44,12 @@ RequestInfo createRequestInfo(std::vector<uint8_t>& buffer_vector)
 
 	return request;
 }
- 
-bool isLoggedIn(IRequestHandler* new_handler, RequestHandlerFactory& handler_factory, SOCKET client_socket)
-{
-	if (new_handler != nullptr) // if an error doesn't occurs
-	{
-		return true;
-	}
-	else
-	{
-		new_handler = handler_factory.createLoginRequestHandler(client_socket);
-		return false;
-	}
-}
 
+/*
+function that sets a handler to certain client.
+input: the handler to set, the clients-handlers map, and the client socket.
+output: None.
+*/
 void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IRequestHandler*>& clients, SOCKET& client_socket)
 {
 	for (auto it = clients.begin(); it != clients.end(); ++it) // going through all of the clients
@@ -57,6 +61,11 @@ void insertHandlerToClient(IRequestHandler* new_handler, std::map<SOCKET, IReque
 	}
 }
 
+/*
+function that gets the current handler of a client.
+input: the sockets-handlers map, and the client socket.
+output: the handler of the client.
+*/
 IRequestHandler* getHandlerOfClient(std::map<SOCKET, IRequestHandler*>& clients, SOCKET& client_socket)
 {
 	for (auto it = clients.begin(); it != clients.end(); ++it) // going through all of the clients
@@ -68,14 +77,22 @@ IRequestHandler* getHandlerOfClient(std::map<SOCKET, IRequestHandler*>& clients,
 	}
 }
 
+/*
+function that gets the room data of certain room.
+input: the room manager, id, and the user logged to the room.
+output: The response that is the result of such action.
+*/
 GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUser logged)
 {
 	GetRoomDataResponse roomDataResponse;
 	Room* theRoom = room_manager.getRoom(room_id);
 
+	// gets the roomdata, into a structure
 	if (room_id != INVALID_INDEX && theRoom)
 	{
 		std::vector<string> usersInRoom = theRoom->getAllUsers();
+		
+		// finds if the user is even in the desired room
 		if (std::find(usersInRoom.begin(), usersInRoom.end(), logged.getUserName()) != usersInRoom.end())
 		{
 			RoomData roomdataOfTheRoom = theRoom->GetRoomdata();
@@ -87,7 +104,7 @@ GetRoomDataResponse getRoomData(RoomManager& room_manager, int room_id, LoggedUs
 			roomDataResponse.numOfQuestionsInGame = roomdataOfTheRoom.numOfQuestionsInGame;
 			roomDataResponse.timePerQuestion = roomdataOfTheRoom.timePerQuestion;
 		}
-		else
+		else // if the user isn't in the room
 		{
 			roomDataResponse.status = STATUS_FAIL;
 		}

@@ -49,6 +49,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 
 			request = createRequestInfo(buffer_vector);
 
+			std::cout << client_socket << " :" << request_handler->GetRequestHandlerType() << " " << request.id << "\n";
 			if (request_handler->isRequestRelevant(request))
 			{
 				result = request_handler->handleRequest(request);
@@ -101,7 +102,7 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		}
 	}
 	
-	catch (...)
+	catch (...) // if the connection broke
 	{
 		std::cout << "connection stopped" << std::endl;
 
@@ -109,6 +110,29 @@ void Communicator::handleNewClient(SOCKET client_socket)
 		{
 			if (it->first == client_socket)
 			{
+				auto handlerID = it->second->GetRequestHandlerType();
+				RequestInfo info;
+				info.buffer = std::vector<uint8_t>();
+				info.id = 0;
+
+				if (handlerID == ROOM_MEMBER_REQUEST_HANDLER_ID)
+				{
+					dynamic_cast<RoomMemberRequestHandler*>(it->second)->leaveGame(info, true);
+				}
+				if (handlerID == MENU_REQUEST_HANDLER_ID)
+				{
+					dynamic_cast<MenuRequestHandler*>(it->second)->signout(info);
+				}
+				else if (handlerID == ROOM_ADMIN_REQUEST_HANDLER_ID)
+				{
+					dynamic_cast<RoomAdminRequestHandler*>(it->second)->closeGame(info, true);
+				}
+				else if (handlerID == GAME_REQUEST_HANDLER_ID)
+				{
+					dynamic_cast<GameRequestHandler*>(it->second)->leaveGame(info, true);
+				}
+
+			
 				this->m_clients.erase(it);
 				closesocket(client_socket); // closing the client socket
 

@@ -76,7 +76,7 @@ int bitsToBytes(int startingIndex, uint8_t* bitsArray)
 {
 	int byte = bitsArray[startingIndex];
 	int bit = 0;
-	for (int j = 0; j < 7; j++)
+	for (int j = 0; j < NUM_OF_BITS_IN_BYTE - 1; j++)
 	{
 		bit = bitsArray[startingIndex + j + 1];
 		byte = stringNumbers(byte, bit);

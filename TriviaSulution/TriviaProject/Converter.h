@@ -6,6 +6,7 @@
 
 #define BINARY_BASE 2
 #define DECIMAL_BASE 10
+#define NUM_OF_BITS_IN_BYTE 8
 
 void decToBinary(int numToConvert, unsigned char* buffer, int lengthOfBuffer); // copied from serializer. to avoid conflict remove from serializer after merge and delete this comment.
 

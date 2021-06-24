@@ -16,6 +16,8 @@ std::vector<uint8_t> getCompleteMessage(unsigned char ResponseCode, std::string 
 string roomDataToString(std::vector<RoomData> rooms);
 string stringVectorToString(std::vector<string> strings);
 string roomDataVectorToRoomIdString(std::vector<RoomData> rooms);
+string answerVectorToString(std::vector<Answer> answers);
+void to_json(json& j, const PlayerResults& result);
 
 class JsonResponsePacketSerializer
 {
@@ -35,5 +37,9 @@ public:
 	static std::vector<uint8_t> serializeResponse(CloseRoomResponse);
 	static std::vector<uint8_t> serializeResponse(StartRoomResponse);
 	static std::vector<uint8_t> serializeResponse(LeaveRoomResponse);
+	static std::vector<uint8_t> serializeResponse(GetGameResultsResponse);
+	static std::vector<uint8_t> serializeResponse(SubmitAnswerResponse);
+	static std::vector<uint8_t> serializeResponse(GetQuestionResponse);
+	static std::vector<uint8_t> serializeResponse(LeaveGameResponse);
 };
 

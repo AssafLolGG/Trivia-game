@@ -35,5 +35,6 @@ public:
 	std::vector<User> getTop5Players();
 	std::vector<statisticsDB> getTopFiveScore();
 	statisticsDB getStatistics(int user_id);
+	void updateStatistics(statisticsDB newStatistics);
 };
 

@@ -38,7 +38,7 @@ namespace TriviaGUI
                     dis.Invoke(() =>
                     {
                         Newtonsoft.Json.Linq.JObject json_returned = ServerFunctions.ServerFunctions.diserallizeResponse(server_message);
-                        players = json_returned["players"].ToString().Split(',');
+                        players = json_returned["players"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (players != null) // players will be null if an error in the server has happend
                         {

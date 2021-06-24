@@ -18,7 +18,6 @@ private:
 	RequestHandlerFactory& m_handler_factory;
 
 	RequestResult startGame(RequestInfo& info);
-	RequestResult closeGame(RequestInfo& info);
 	RequestResult getRoomState(RequestInfo& info);
 	RequestResult getPlayersInRoom(RequestInfo& info);
 
@@ -32,6 +31,7 @@ public:
 	}
 	bool isRequestRelevant(RequestInfo& info) override;
 	RequestResult handleRequest(RequestInfo& info) override;
-	
+	int GetRequestHandlerType() override;
+	RequestResult closeGame(RequestInfo& info, bool is_exit_from_program = false);
 };
 

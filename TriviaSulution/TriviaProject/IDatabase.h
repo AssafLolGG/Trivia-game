@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 using std::string;
 
@@ -9,11 +11,13 @@ struct Answer
 	bool isCorrect;
 	std::string answerText;
 };
-struct Question
+class Question
 {
+public:
 	int id;
 	std::vector<Answer> answers;
 	std::string questionText;
+	string getCorrectAnswer();
 };
 
 struct User
@@ -55,5 +59,6 @@ public:
 	virtual std::vector<Question> getQuestions(int num_of_questions);
 	virtual std::vector<User> getTop5Players() = 0;
 	virtual std::vector<statisticsDB> getTopFiveScore() = 0;
+	virtual void updateStatistics(statisticsDB newStatistics) = 0;
 };
 
