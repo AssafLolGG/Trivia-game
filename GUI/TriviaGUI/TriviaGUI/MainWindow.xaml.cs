@@ -109,7 +109,7 @@ namespace TriviaGUI
 
                 MessageBox.Show("Calculating if you are a bot or not..");
 
-                if (rand.Next(1, 1) == 1) // checking if the user is a bot or not (a joke, it's random)
+                if (rand.Next(1, 3) == 1) // checking if the user is a bot or not (a joke, it's random)
                 {
                     Thread.Sleep(500 * rand.Next(1, 10)); // artificially making the waiting time longer
 
