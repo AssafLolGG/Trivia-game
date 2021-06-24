@@ -123,8 +123,8 @@ statisticsDB Game::getUserNewStatistics(LoggedUser user, statisticsDB currentSta
 			}
 			
 			// adds more stats to the new updated stats
-			currentStatistics.time_played_last_game = std::to_string(this->m_timeOut);
-			currentStatistics.time_played = std::to_string(std::stoi(currentStatistics.time_played) + this->m_timeOut);
+			currentStatistics.time_played_last_game = std::to_string(this->m_timeOut * this->m_questions.size());
+			currentStatistics.time_played = std::to_string(std::stoi(currentStatistics.time_played) + std::stoi(currentStatistics.time_played_last_game));
 			currentStatistics.total_answers = std::to_string(std::stoi(currentStatistics.total_answers) + this->m_questions.size());
 			
 			// returned the updated statistics
