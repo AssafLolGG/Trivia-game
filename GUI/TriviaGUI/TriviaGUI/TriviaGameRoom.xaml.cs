@@ -115,11 +115,11 @@ namespace TriviaGUI
 
                     if (json_returned.ContainsKey("question"))
                     {
-                        string questionText = json_returned["question"].ToString();
-                        string ans1 = json_returned["answers"][0][1].ToString();
-                        string ans2 = json_returned["answers"][1][1].ToString();
-                        string ans3 = json_returned["answers"][2][1].ToString();
-                        string ans4 = json_returned["answers"][3][1].ToString();
+                        string questionText = json_returned["question"].ToString().Replace("&#039;", "'");
+                        string ans1 = json_returned["answers"][0][1].ToString().Replace("&#039;", "'");
+                        string ans2 = json_returned["answers"][1][1].ToString().Replace("&#039;", "'");
+                        string ans3 = json_returned["answers"][2][1].ToString().Replace("&#039;", "'");
+                        string ans4 = json_returned["answers"][3][1].ToString().Replace("&#039;", "'");
                         this.Dispatcher.Invoke(() =>
                         {
                             this.Question_Text_TB.Text = questionText;
